@@ -6,28 +6,16 @@
   
   # Directory to publish (Vite default output)
   publish = "dist"
-  
-  # Functions directory (if using Netlify Functions)
-  functions = "netlify/functions"
-  
-  # Environment variables for build process
-  [build.environment]
-    NODE_VERSION = "20"
-    NPM_VERSION = "10"
+
+# Environment variables for build process
+[build.environment]
+  NODE_VERSION = "20"
 
 # SPA redirect rules for React Router
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  conditions = {Role = ["admin", "user"]}
-
-# API proxy rules (if needed for backend integration)
-[[redirects]]
-  from = "/api/*"
-  to = "https://api.ferajsolar.com/:splat"
-  status = 200
-  force = true
 
 # Security headers
 [[headers]]
@@ -37,7 +25,6 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.ferajsolar.com https://fonts.googleapis.com https://fonts.gstatic.com"
 
 # Cache static assets
 [[headers]]
@@ -45,59 +32,16 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-[[headers]]
-  for = "*.js"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "*.css"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-# Cache images with shorter TTL
-[[headers]]
-  for = "/images/*"
-  [headers.values]
-    Cache-Control = "public, max-age=86400"
-
 # Environment-specific configurations
 [context.production]
   command = "npm run build"
   [context.production.environment]
     NODE_ENV = "production"
-    VITE_API_URL = "https://api.ferajsolar.com/v1"
-    VITE_APP_ENV = "production"
 
 [context.deploy-preview]
   command = "npm run build"
   [context.deploy-preview.environment]
     NODE_ENV = "staging"
-    VITE_API_URL = "https://staging-api.ferajsolar.com/v1"
-    VITE_APP_ENV = "staging"
 
 [context.branch-deploy]
   command = "npm run build"
-  [context.branch-deploy.environment]
-    NODE_ENV = "development"
-    VITE_API_URL = "https://dev-api.ferajsolar.com/v1"
-    VITE_APP_ENV = "development"
-
-# Form handling (if using Netlify Forms)
-# Remove if not needed
-[build.processing]
-  skip_processing = false
-
-[build.processing.css]
-  bundle = true
-  minify = true
-
-[build.processing.js]
-  bundle = true
-  minify = true
-
-[build.processing.html]
-  pretty_urls = true
-
-[build.processing.images]
-  compress = true
