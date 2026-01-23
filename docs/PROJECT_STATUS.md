@@ -27,10 +27,12 @@
 - ✅ Zero TypeScript errors
 
 ### What's Not Yet Implemented
-- ⏳ **Product migration to Supabase (SQL script ready)**
+- ⏳ **Product migration to Supabase (SQL script ready)** - 15 min task
+- ⏳ **Admin dashboard with user & product management** - NEXT PRIORITY
+- ⏳ Admin can elevate users to admin role
+- ⏳ Admin can add/edit/delete products
 - ⏳ Product search functionality
 - ⏳ Order creation from cart
-- ⏳ Admin dashboard for product management
 - ⏳ Testing framework
 - ⏳ Code quality tools (ESLint, Prettier)
 - ⏳ CI/CD pipeline
@@ -39,9 +41,9 @@
 
 ---
 
-## Next Steps (Prioritized)
+## Next Steps (Prioritized)CURRENT SPRINT - v1.3.0)
 
-### 🚀 Immediate Priority (NEXT SPRINT)
+**See detailed plan**: [docs/guides/ADMIN_FEATURES_PLAN.md](../docs/guides/ADMIN_FEATURES_PLAN.md)
 
 #### 1. Populate Products in Supabase ⏱️ READY
 **Goal**: Add sample products to database  
@@ -58,6 +60,41 @@
 **File to use**:
 - [docs/architecture/migrate-products.sql](../docs/architecture/migrate-products.sql)
 - [docs/deployment/PRODUCTS_MIGRATION.md](../docs/deployment/PRODUCTS_MIGRATION.md) (guide)
+
+#### 2. Admin Features - User & Product Management ⏱️ NEXT
+**Goal**: Enable admins to manage users and products  
+**Status**: Planning complete, ready to implement  
+**Priority**: P0 (Core admin feature)  
+**Estimated Time**: 8-10 hours (2-3 days)
+
+**Phase A: Admin Infrastructure (1-2 hours)**
+- [ ] Create AdminRoute component for route protection
+- [ ] Create AdminLayout component with sidebar
+- [ ] Update App.tsx with admin routes
+- [ ] Add database RLS policies for admin access
+
+**Phase B: User Management (2-3 hours)**
+- [ ] Create users.service.ts for user CRUD
+- [ ] Create AdminUsers page
+- [ ] Implement role elevation (customer → admin)
+- [ ] Add user search and filtering
+- [ ] Add confirmation dialogs
+- [ ] Test user role changes
+
+**Phase C: Product Management (3-4 hours)**
+- [ ] Create ProductForm component with validation
+- [ ] Create AdminProducts page
+- [ ]c/app/components/layouts/AdminLayout.tsx`
+- `src/app/components/admin/ProductForm.tsx`
+- `src/app/components/admin/UserRoleModal.tsx`
+- `src/app/pages/admin/Dashboard.tsx`
+- `src/app/pages/admin/Users.tsx`
+- `src/app/pages/admin/Products.tsx`
+- `src/services/users.service.ts`
+
+**See full implementation plan**: [ADMIN_FEATURES_PLAN.md](../docs/guides/ADMIN_FEATURES_PLAN.md)
+
+#### 3. Complete Orders System ⏱️ AFTER ADMINmd](../docs/deployment/PRODUCTS_MIGRATION.md) (guide)
 
 #### 2. Complete Orders System ⏱️ NEXT
 **Goal**: Enable users to create orders from cart  
@@ -173,8 +210,12 @@
 - Vite 6.3.5
 - Tailwind CSS 4.1.12
 - Radix UI (40+ components)
-- @supabase/supabase-js
-- zod
+- @sup**Admin features implementation (v1.3.0)** - NEXT PRIORITY
+  - [ ] Admin route protection
+  - [ ] User management (elevate to admin)
+  - [ ] Product management (add/edit/delete)
+  - [ ] Admin dashboard
+- [ ] Order creation from cart (after admin features)
 - react-router-dom
 - sonner (toast notifications)
 
@@ -203,21 +244,34 @@
 - [x] Users can view order history (empty state ready)
 - [x] **Products load from Supabase database**
 - [x] **Products can be filtered by category**
-- [x] **Products show stock availability**
-- [x] **Users can add products to cart**
+- [🔐 **Admin features implementation (8-10 hours, 2-3 days)** - **NEXT**
+   - User management with role elevation
+   - Product management (add/edit/delete)
+   - Admin dashboard with overview
+   - **Full plan**: [ADMIN_FEATURES_PLAN.md](../docs/guides/ADMIN_FEATURES_PLAN.md)
+3. Order creation from cart (3-4 hours) - **AFTER ADMIN**
 
-### In Progress ⏳
-- [ ] Run product migration (15 min task)
-- [ ] Order creation from cart (next priority)
-- [ ] Admins can manage products
-- [ ] Admins can manage orders
+**Blockers:** None
 
-### Not Started ❌
-- [ ] Test coverage >80%
-- [ ] Bundle size <1MB
-- [ ] Lighthouse score >90
-- [ ] Deployed to production
+**Planning Complete:**
+- ✅ Admin features fully documented in [ADMIN_FEATURES_PLAN.md](../docs/guides/ADMIN_FEATURES_PLAN.md)
+- ✅ Architecture designed (routes, components, services)
+- ✅ Database policies planned
+- ✅ Implementation phases defined (A: Infrastructure, B: Users, C: Products, D: Dashboard)
+- ✅ Testing checklist prepared
+- ✅ Security considerations documented
 
+**Recent Completions (v1.2.0):**  
+- ✅ Products integration with Supabase complete
+- ✅ Created products.service.ts with full CRUD operations
+- ✅ Updated Products page with database fetch
+- ✅ Added loading states and error handling
+- ✅ Stock management implemented
+- ✅ Migration scripts and guides created
+- ✅ Category filtering working
+- ✅ Out-of-stock indicators added
+
+**Team:** Development in progress - **v1.3.0 Admin Features Next**
 ---
 
 ## Questions & Decisions Needed
