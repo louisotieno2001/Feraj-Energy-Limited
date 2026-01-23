@@ -77,7 +77,7 @@ jspm_packages/
 
 # Gatsby files
 .cache/
-public/
+# public/ - Removed: Vite/React projects need public folder for static assets
 
 # Storybook build outputs
 .out/
