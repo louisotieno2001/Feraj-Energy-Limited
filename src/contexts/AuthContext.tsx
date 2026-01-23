@@ -8,6 +8,10 @@ interface Profile {
   full_name: string | null;
   avatar_url: string | null;
   role: 'customer' | 'admin' | 'installer';
+  phone: string | null;
+  company_name: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 interface AuthContextType {
@@ -90,9 +94,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       setSession(null);
       setProfile(null);
-      
-      // Clear any cached data
-      localStorage.removeItem('sb-' + import.meta.env.VITE_SUPABASE_URL?.split('//')[1]?.split('.')[0] + '-auth-token');
     } catch (error) {
       console.error('Error signing out:', error);
       throw error;

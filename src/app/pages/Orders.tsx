@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Package, Clock, CheckCircle, XCircle, Truck } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabase';
+import { toast } from 'sonner';
 
 interface Order {
   id: string;
@@ -16,9 +18,30 @@ export function Orders() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // TODO: Fetch orders from Supabase
-    // For now, show empty state
-    setLoading(false);
+    const fetchOrders = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('orders')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        setOrders(data || []);
+      } catch (error: any) {
+        console.error('Error fetching orders:', error);
+        toast.error('Failed to load orders');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
   }, [user]);
 
   const getStatusIcon = (status: string) => {

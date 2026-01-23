@@ -9,9 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### In Progress
+- Comprehensive testing framework setup
+- ESLint and Prettier configuration
+- CI/CD pipeline implementation
+- Products integration with Supabase (next priority)
+- Admin dashboard development
+
 ### Planned Features
 - Real-time inventory management system
-- Customer portal with order tracking
 - Payment gateway integration (M-Pesa, Stripe)
 - Multi-language support (English, Swahili)
 - Live chat support system
@@ -19,22 +25,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Email notification system
 - Advanced search and filtering
 - Progressive Web App (PWA) features
-- Admin dashboard for product and order management
-
-### In Progress
-- Comprehensive testing framework setup
-- ESLint and Prettier configuration
-- CI/CD pipeline implementation
-- Products integration with Supabase
-- Code quality improvements
 
 ### Known Issues
 - [HIGH] No test coverage
 - [HIGH] Missing error boundaries
-- [MEDIUM] Missing favicon in some pages
-- [MEDIUM] Console warnings in development mode
-- [MEDIUM] Bundle size optimization needed (2.1MB)
+- [MEDIUM] Bundle size optimization needed (2.4MB - target <1MB)
 - [LOW] Missing max-feng.jpeg team member photo
+
+---
+
+## [1.1.1] - 2026-01-23
+
+### Fixed
+- **TypeScript Errors** - Fixed Profile interface to include `phone`, `company_name`, `created_at`, `updated_at` fields
+- **tsconfig Warning** - Removed `noEmit` from tsconfig.node.json to fix project reference warning
+- **Orders Page** - Implemented Supabase integration to fetch user orders from database
+- **AuthContext** - Removed problematic localStorage cleanup code with import.meta.env error
+
+### Added
+- **SEO Meta Tags** - Comprehensive Open Graph and Twitter Card meta tags in index.html
+- **Favicon** - Added favicon and apple-touch-icon using company logo
+- **Meta Keywords** - Added relevant keywords for better search engine visibility
+- **Theme Color** - Added green theme color for mobile browsers
+
+### Changed
+- **Orders Component** - Now fetches real data from Supabase instead of showing TODO
+- **HTML Title** - Enhanced title with "in Kenya" for better local SEO
 
 ---
 
