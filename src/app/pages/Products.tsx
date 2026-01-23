@@ -21,16 +21,21 @@ export function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        console.log('🔄 Fetching products from Supabase...');
         setLoading(true);
         setError(null);
         const data = await getProducts();
+        console.log('✅ Products fetched:', data.length, 'products');
+        console.log('Products data:', data);
         setProducts(data);
       } catch (err: any) {
-        console.error('Error fetching products:', err);
+        console.error('❌ Error fetching products:', err);
+        console.error('Error details:', err.message, err.code, err.details);
         setError(err.message || 'Failed to load products');
         toast.error('Failed to load products');
       } finally {
         setLoading(false);
+        console.log('🏁 Loading complete');
       }
     };
 

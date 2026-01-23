@@ -464,14 +464,24 @@ Add these environment variables in Netlify dashboard:
 2. ✅ Run database migrations
 3. ✅ Configure authentication
 4. ✅ Test signup/login flow
-5. ⏳ Add sample products to database
-6. ⏳ Implement orders functionality
-7. ⏳ Build admin dashboard
+5. ✅ Add sample products to database
+6. ✅ Configure admin access
+7. ⏳ Implement orders functionality
 8. ⏳ Deploy to production
 
 ---
 
-**Need Help?**  
-- [Supabase Documentation](https://supabase.com/docs)
-- [Supabase Discord](https://discord.supabase.com)
+## Quick Start SQL Scripts
+
+### Populate Products Database
+Run [`EMERGENCY_DIAGNOSTIC.sql`](./EMERGENCY_DIAGNOSTIC.sql) to:
+- Check if products exist
+- Verify RLS policies are working
+- Test public access (anon role)
+- Insert 6 sample products if needed
+
+### Create Admin User
+Run [`MAKE_ADMIN.sql`](./MAKE_ADMIN.sql) to:
+- Promote a user to admin role
+- Verify admin access granted
 - [Project Repository](https://github.com/onyangojerry/Feraj-Energy-Limited)

@@ -32,8 +32,6 @@
 - ✅ Zero TypeScript errors
 
 ### What's Not Yet Implemented
-- ⏳ **Product migration to Supabase (SQL script ready)** - 15 min task
-- ⏳ **RLS policies for admin features (documentation ready)** - 10 min task
 - ⏳ Product search functionality
 - ⏳ Order creation from cart
 - ⏳ Testing framework
@@ -44,18 +42,30 @@
 
 ---
 
-### 🚀 Immediate Tasks (CURRENT SPRINT - v1.3.0 Deployment)
+### 🚀 Immediate Tasks (CURRENT SPRINT - v1.3.0 Testing)
 
 **See detailed documentation**:
-- [Admin Features Plan](../docs/guides/ADMIN_FEATURES_PLAN.md)
-- [Admin RLS Policies](../docs/deployment/ADMIN_RLS_POLICIES.md)
-- [Products Migration Guide](../docs/deployment/PRODUCTS_MIGRATION.md)
+- [Admin Features Tests](../docs/testing/ADMIN_FEATURES_TESTS.md) - 13 test checklist (P0 priority)
+- [Product Image Management](../docs/guides/PRODUCT_IMAGE_MANAGEMENT.md)
+- [Fixed RLS Policies](../docs/deployment/FIXED_RLS_POLICIES.md)
+- [Troubleshooting Products Loading](../docs/troubleshooting/PRODUCTS_NOT_LOADING.md)
 
-#### 1. Populate Products in Supabase ⏱️ READY
-**Goal**: Add sample products to database  
-**Status**: Migration script ready  
-**Priority**: P0 (Blocker)  
-**Estimated Time**: 15 minutes
+#### 1. Database Setup ✅ COMPLETED
+**Goal**: Products and RLS policies configured  
+**Status**: ✅ Completed  
+**Actions Completed**:
+- ✅ Fixed infinite recursion in RLS policies using SECURITY DEFINER function
+- ✅ Populated 18 products in database (6 via INSERT, 12 existing)
+- ✅ Verified public access works (SET ROLE anon test passed)
+- ✅ Created admin user access
+
+**Quick Start SQL Scripts**: See [`docs/deployment/EMERGENCY_DIAGNOSTIC.sql`](../docs/deployment/EMERGENCY_DIAGNOSTIC.sql) and [`docs/deployment/MAKE_ADMIN.sql`](../docs/deployment/MAKE_ADMIN.sql)
+
+#### 2. Admin Features Testing ⏱️ IN PROGRESS
+**Goal**: Complete testing checklist before production  
+**Status**: Testing admin product management  
+**Priority**: P0 (Blocking Production)  
+**Estimated Time**: 20-30 minutes
 
 **Tasks**:
 - [ ] Run migrate-products.sql in Supabase SQL Editor
