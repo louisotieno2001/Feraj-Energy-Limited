@@ -13,8 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive testing framework setup
 - ESLint and Prettier configuration
 - CI/CD pipeline implementation
-- Products integration with Supabase (next priority)
 - Admin dashboard development
+- Order creation from cart functionality
 
 ### Planned Features
 - Real-time inventory management system
@@ -31,6 +31,69 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [HIGH] Missing error boundaries
 - [MEDIUM] Bundle size optimization needed (2.4MB - target <1MB)
 - [LOW] Missing max-feng.jpeg team member photo
+
+---
+
+## [1.2.0] - 2026-01-23
+
+### Added - Products Integration with Supabase
+
+#### Products Service Layer
+- **products.service.ts** - Complete CRUD operations for products
+  - `getProducts()` - Fetch all active products
+  - `getAllProducts()` - Admin function to fetch all products
+  - `getProductById()` - Fetch single product
+  - `getProductsByCategory()` - Filter by category
+  - `createProduct()` - Admin product creation
+  - `updateProduct()` - Admin product updates
+  - `deleteProduct()` - Soft delete (set is_active to false)
+  - `searchProducts()` - Search by name/description
+  - `updateProductStock()` - Update stock quantities
+
+#### Custom Hooks
+- **useProducts.ts** - React hook for fetching products with loading states
+  - Handles loading states
+  - Error handling
+  - Category filtering support
+
+#### Frontend Updates
+- **Products.tsx** - Complete rewrite with Supabase integration
+  - Real-time data fetching from database
+  - Loading spinner during fetch
+  - Error handling with retry button
+  - Stock quantity display
+  - Out of stock indicators
+  - Disabled add-to-cart for out of stock items
+  - Image fallback handling
+  - Category mapping (database → display names)
+  - KES currency display
+
+#### Migration Tools
+- **migrate-products.sql** - SQL script to insert sample products
+  - 6 sample products with Kenyan pricing
+  - Proper category mapping
+  - Stock quantities included
+  - Product specifications as JSONB
+  - Image URLs array
+- **PRODUCTS_MIGRATION.md** - Complete migration guide
+  - Step-by-step instructions
+  - Troubleshooting tips
+  - Verification steps
+  - Rollback procedures
+
+### Changed
+- Products now fetched from Supabase instead of static data
+- Prices converted to KES (Kenyan Shillings)
+- Category values aligned with database schema (panels, inverters, batteries, accessories)
+- Stock management enabled
+
+### Technical Details
+- TypeScript interfaces aligned with Supabase schema
+- Row Level Security policies ensure public can view active products
+- Admin-only operations for product management
+- JSONB for specifications array
+- TEXT[] for images array
+- Proper null handling for optional fields
 
 ---
 
