@@ -87,6 +87,8 @@
 - `src/app/pages/admin/Products.tsx`
 - `src/app/components/admin/ProductForm.tsx`
 
+**Documentation**: [PRODUCT_IMAGE_MANAGEMENT.md](PRODUCT_IMAGE_MANAGEMENT.md)
+
 **Features**:
 - View all products (including inactive) in a table with:
   - Product image
@@ -107,9 +109,10 @@
   - Full modal form with validation
   - Fields: Name*, Description*, Category*, Price (KES)*, Stock Quantity*
   - Specifications as key-value pairs (dynamic add/remove)
-  - Multiple images with URLs (dynamic add/remove with preview)
+  - **Multiple images with URLs** (dynamic add/remove with live preview)
+  - Image URL validation and error handling
   - Active/inactive toggle
-  - Live preview of images
+  - Live preview of images as you add them
 - **Edit Product**:
   - Pre-filled form with existing data
   - Same validation as create
@@ -264,7 +267,7 @@ git push origin main
 ### Current Limitations
 1. **No orders creation yet**: Orders page exists but cart → order flow not implemented
 2. **Revenue placeholder**: Dashboard shows KES 0 for revenue (needs order implementation)
-3. **No image upload**: Admin must provide image URLs (no file upload yet)
+3. **Image management**: URL-based only (must host images externally). See [PRODUCT_IMAGE_MANAGEMENT.md](PRODUCT_IMAGE_MANAGEMENT.md) for hosting options
 4. **Specifications as strings**: Stored as string array, not structured JSON
 5. **No product variants**: Each product is a single SKU
 

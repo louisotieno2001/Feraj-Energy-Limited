@@ -25,6 +25,7 @@
 - ✅ **Admin dashboard with role-based access control**
 - ✅ **Admin user management (view all users, change roles)**
 - ✅ **Admin product management (CRUD operations)**
+- ✅ **Product image management (multiple images per product via URLs)**
 - ✅ **Admin dashboard with statistics**
 - ✅ Role-based access control (customer, admin, installer)
 - ✅ SEO optimization with meta tags
