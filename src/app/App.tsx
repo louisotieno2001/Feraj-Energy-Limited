@@ -6,6 +6,7 @@ import { Home } from '@/app/pages/Home';
 import { Products } from '@/app/pages/Products';
 import { Cart } from '@/app/pages/Cart';
 import { Login } from '@/app/pages/Login';
+import { ResetPassword } from '@/app/pages/ResetPassword';
 import { About } from '@/app/pages/About';
 import { Partnerships } from '@/app/pages/Partnerships';
 import { WhyGreen } from '@/app/pages/WhyGreen';
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/products" element={<Products />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/about" element={<About />} />
             <Route path="/partnerships" element={<Partnerships />} />
             <Route path="/why-green" element={<WhyGreen />} />

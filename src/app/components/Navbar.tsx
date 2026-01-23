@@ -1,11 +1,25 @@
-import { Link } from 'react-router-dom';
-import { ShoppingCart, User, Menu, X } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ShoppingCart, User, Menu, X, LogOut } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const cartCount = JSON.parse(localStorage.getItem('cart') || '[]').length;
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast.success('Logged out successfully');
+      navigate('/');
+      setIsOpen(false);
+    } catch (error) {
+      toast.error('Failed to log out');
+    }
+  };
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -42,11 +56,19 @@ export function Navbar() {
                 </span>
               )}
             </Link>
-            {isLoggedIn ? (
-              <Link to="/login" onClick={() => localStorage.removeItem('isLoggedIn')} className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-md hover:bg-gray-200 transition">
-                <User className="h-5 w-5" />
-                Logout
-              </Link>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-700">
+                  {profile?.full_name || user.email}
+                </span>
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-md hover:bg-gray-200 transition"
+                >
+                  <LogOut className="h-5 w-5" />
+                  Logout
+                </button>
+              </div>
             ) : (
               <Link to="/login" className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
                 Login
@@ -82,8 +104,13 @@ export function Navbar() {
             <Link to="/why-green" className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md" onClick={() => setIsOpen(false)}>Why Green Energy</Link>
             <Link to="/energy-stats" className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md" onClick={() => setIsOpen(false)}>Energy Stats</Link>
             <Link to="/team" className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md" onClick={() => setIsOpen(false)}>Our Team</Link>
-            {isLoggedIn ? (
-              <Link to="/login" onClick={() => { localStorage.removeItem('isLoggedIn'); setIsOpen(false); }} className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md">Logout</Link>
+            {user ? (
+              <button
+                onClick={handleSignOut}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md"
+              >
+                Logout
+              </button>
             ) : (
               <Link to="/login" className="block px-3 py-2 bg-green-600 text-white rounded-md text-center" onClick={() => setIsOpen(false)}>Login</Link>
             )}
