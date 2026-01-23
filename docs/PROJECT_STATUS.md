@@ -96,47 +96,67 @@
 
 ## Next Steps (Prioritized)
 
-### Immediate Priority (Week 1)
+### 🚀 Immediate Priority (CURRENT SPRINT)
 
-#### 1. Add Protected Routes
+#### 1. Add Protected Routes ⏳ IN PROGRESS
 **Goal**: Secure pages that require authentication  
+**Status**: Ready to implement  
+**Priority**: P0 (Blocker for production)  
+**Estimated Time**: 1-2 hours
+
 **Tasks**:
-- Wrap Cart page with ProtectedRoute
-- Create Orders page with ProtectedRoute
-- Create Profile page with ProtectedRoute
-- Test route protection and redirects
+- [ ] Create Orders page component
+- [ ] Wrap Cart page with ProtectedRoute
+- [ ] Wrap Orders page with ProtectedRoute
+- [ ] Create Profile page with ProtectedRoute
+- [ ] Test route protection and redirects
+- [ ] Add loading states for protected routes
 
 **Files to modify**:
 - [src/app/App.tsx](../src/app/App.tsx)
 - [src/app/pages/Cart.tsx](../src/app/pages/Cart.tsx)
 
-#### 2. Create User Profile Page
+**New files**:
+- `src/app/pages/Orders.tsx`
+- `src/app/pages/Profile.tsx`
+
+#### 2. Create User Profile Page ⏳ IN PROGRESS
 **Goal**: Allow users to view and edit their profile  
+**Status**: Will implement after protected routes  
+**Priority**: P0 (Core feature)  
+**Estimated Time**: 2-3 hours
+
 **Tasks**:
-- Create Profile.tsx component
-- Display user information (name, email, role)
-- Add profile editing form
-- Add avatar upload (optional)
-- Implement profile update functionality
+- [ ] Create Profile.tsx component with layout
+- [ ] Display user information (name, email, role, created date)
+- [ ] Add profile editing form with validation
+- [ ] Implement profile update functionality
+- [ ] Add success/error notifications
+- [ ] Add avatar upload (future: Supabase Storage)
 
 **New files**:
-- `src/app/pages/Profile.tsx`
 - `src/services/profile.service.ts`
+- `src/hooks/useProfile.ts`
 
-#### 3. Integrate Products with Supabase
+#### 3. Integrate Products with Supabase ⏱️ NEXT
 **Goal**: Move product data from static files to database  
+**St📦 Medium Priority (Week 2)
+
+#### 4. Build Orders System ⏱️ QUEUEDrs
+
 **Tasks**:
-- Migrate product data to Supabase products table
-- Create ProductsService with CRUD operations
-- Update Products.tsx to fetch from Supabase
-- Add loading states and error handling
-- Implement product search/filtering
+- [ ] Insert sample products into Supabase products table
+- [ ] Create ProductsService with CRUD operations
+- [ ] Update Products.tsx to fetch from Supabase
+- [ ] Add loading states and error handling
+- [ ] Implement product search/filtering
+- [ ] Add pagination for product list
 
 **Files to modify**:
 - [src/app/pages/Products.tsx](../src/app/pages/Products.tsx)
 - [src/app/data/products.ts](../src/app/data/products.ts) (migrate data)
 
-**New files**:
+**New files**: ⏱️ QUEUED
 - `src/services/products.service.ts`
 - `src/hooks/useProducts.ts`
 
@@ -169,9 +189,9 @@
 - `src/app/pages/admin/Products.tsx`
 - `src/app/pages/admin/Orders.tsx`
 
-### Lower Priority (Week 3-4)
+### 🔧 Lower Priority (Week 3-4)
 
-#### 6. Testing Framework
+#### 6. Testing Framework ⏱️ PLANNED
 **Goal**: Add automated testing  
 **Tasks**:
 - Install Vitest and React Testing Library
@@ -180,7 +200,7 @@
 - Add integration tests for auth flow
 - Set up test coverage reporting
 
-#### 7. Code Quality Tools
+#### 7. Code Quality Tools ⏱️ PLANNED
 **Goal**: Enforce code standards  
 **Tasks**:
 - Configure ESLint
@@ -188,7 +208,7 @@
 - Set up Husky pre-commit hooks
 - Add lint-staged
 
-#### 8. Performance Optimization
+#### 8. Performance Optimization ⏱️ PLANNED
 **Goal**: Reduce bundle size and improve load times  
 **Tasks**:
 - Implement code splitting
@@ -197,7 +217,7 @@
 - Implement caching strategies
 - Target bundle size under 1MB
 
-#### 9. Production Deployment
+#### 9. Production Deployment ⏱️ PLANNED
 **Goal**: Deploy to Netlify with proper configuration  
 **Tasks**:
 - Add environment variables to Netlify
