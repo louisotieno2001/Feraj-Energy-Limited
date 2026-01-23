@@ -1,0 +1,170 @@
+import { supabase } from '@/lib/supabase';
+
+export interface Profile {
+  id: string;
+  email: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  role: 'customer' | 'admin' | 'installer';
+  phone: string | null;
+  company_name: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserStats {
+  totalUsers: number;
+  totalAdmins: number;
+  totalCustomers: number;
+  totalInstallers: number;
+  recentUsers: Profile[];
+}
+
+/**
+ * Fetch all users - Admin only
+ */
+export async function getAllUsers() {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data as Profile[];
+}
+
+/**
+ * Get user by ID
+ */
+export async function getUserById(userId: string) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single();
+
+  if (error) throw error;
+  return data as Profile;
+}
+
+/**
+ * Update user role - Admin only
+ */
+export async function updateUserRole(
+  userId: string,
+  newRole: 'customer' | 'admin' | 'installer'
+) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({
+      role: newRole,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', userId)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as Profile;
+}
+
+/**
+ * Search users by name or email
+ */
+export async function searchUsers(query: string) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .or(`full_name.ilike.%${query}%,email.ilike.%${query}%`)
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data as Profile[];
+}
+
+/**
+ * Get users by role
+ */
+export async function getUsersByRole(role: 'customer' | 'admin' | 'installer') {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('role', role)
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data as Profile[];
+}
+
+/**
+ * Get user statistics - Admin only
+ */
+export async function getUserStats(): Promise<UserStats> {
+  // Get all users
+  const { data: allUsers, error: allError } = await supabase
+    .from('profiles')
+    .select('*');
+
+  if (allError) throw allError;
+
+  // Get recent users (last 5)
+  const { data: recentUsers, error: recentError } = await supabase
+    .from('profiles')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(5);
+
+  if (recentError) throw recentError;
+
+  // Calculate stats
+  const totalUsers = allUsers.length;
+  const totalAdmins = allUsers.filter((u) => u.role === 'admin').length;
+  const totalCustomers = allUsers.filter((u) => u.role === 'customer').length;
+  const totalInstallers = allUsers.filter((u) => u.role === 'installer').length;
+
+  return {
+    totalUsers,
+    totalAdmins,
+    totalCustomers,
+    totalInstallers,
+    recentUsers: recentUsers as Profile[],
+  };
+}
+
+/**
+ * Update user profile - Admin can update any user
+ */
+export async function updateUserProfile(
+  userId: string,
+  updates: Partial<Omit<Profile, 'id' | 'email' | 'created_at'>>
+) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({
+      ...updates,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', userId)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as Profile;
+}
+
+/**
+ * Delete user (soft delete by setting role to inactive) - Use with caution
+ * Note: This doesn't actually delete the user, just changes their role
+ * For actual deletion, use Supabase dashboard
+ */
+export async function deactivateUser(userId: string) {
+  const { error } = await supabase
+    .from('profiles')
+    .update({
+      role: 'customer', // Demote to customer
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', userId);
+
+  if (error) throw error;
+}

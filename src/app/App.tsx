@@ -3,6 +3,8 @@ import { Toaster } from 'sonner';
 import { Navbar } from '@/app/components/Navbar';
 import { Footer } from '@/app/components/Footer';
 import { ProtectedRoute } from '@/app/components/ProtectedRoute';
+import { AdminRoute } from '@/app/components/AdminRoute';
+import { AdminLayout } from '@/app/components/layouts/AdminLayout';
 import { Home } from '@/app/pages/Home';
 import { Products } from '@/app/pages/Products';
 import { Cart } from '@/app/pages/Cart';
@@ -15,6 +17,9 @@ import { Partnerships } from '@/app/pages/Partnerships';
 import { WhyGreen } from '@/app/pages/WhyGreen';
 import { EnergyStats } from '@/app/pages/EnergyStats';
 import { Team } from '@/app/pages/Team';
+import { AdminDashboard } from '@/app/pages/admin/Dashboard';
+import { AdminUsers } from '@/app/pages/admin/Users';
+import { AdminProducts } from '@/app/pages/admin/Products';
 
 export default function App() {
   return (
@@ -59,6 +64,22 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+
+            {/* Admin Routes */}
+            <Route
+              path="/admin/*"
+              element={
+                <AdminRoute>
+                  <AdminLayout />
+                </AdminRoute>
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="orders" element={<Orders />} />
+            </Route>
           </Routes>
         </main>
         <Footer />
