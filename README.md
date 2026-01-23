@@ -19,10 +19,21 @@ This repository contains the complete company website for **Feraj Solar Limited*
 - **Leadership Team** - Meet our directors and executive team
 - **Product Catalog** - Solar panels, inverters, and energy solutions
 - **E-commerce Cart** - Interactive shopping experience
+- **User Authentication** - Secure signup/login with Supabase (JWT tokens)
+- **User Profiles** - Role-based access (customer, admin, installer)
 - **Energy Statistics** - Real-time solar energy data visualization
 - **Partnership Programs** - Business collaboration opportunities
 - **Interactive Globe** - Global solar energy visualization
 - **Responsive Design** - Optimized for all devices
+
+### Technology Stack
+
+- **Frontend**: React 18.3.1 + TypeScript + Vite 6.3.5
+- **Styling**: Tailwind CSS 4.1.12 + Radix UI
+- **Backend**: Supabase (PostgreSQL + Auth + Realtime)
+- **Authentication**: JWT-based with email verification
+- **Validation**: Zod schemas
+- **Deployment**: Netlify
 
 ## Repository Structure
 

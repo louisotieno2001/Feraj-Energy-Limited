@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned Features
-- Supabase backend integration for authentication
 - Real-time inventory management system
 - Customer portal with order tracking
 - Payment gateway integration (M-Pesa, Stripe)
@@ -20,23 +19,90 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Email notification system
 - Advanced search and filtering
 - Progressive Web App (PWA) features
+- Admin dashboard for product and order management
 
 ### In Progress
 - Comprehensive testing framework setup
 - ESLint and Prettier configuration
 - CI/CD pipeline implementation
-- Authentication system refactor with Supabase
+- Products integration with Supabase
 - Code quality improvements
 
 ### Known Issues
-- [CRITICAL] Authentication using mock localStorage (insecure)
-- [CRITICAL] No backend integration
-- [CRITICAL] No input validation on forms
 - [HIGH] No test coverage
 - [HIGH] Missing error boundaries
-- [HIGH] No loading states for async operations
 - [MEDIUM] Missing favicon in some pages
 - [MEDIUM] Console warnings in development mode
+- [MEDIUM] Bundle size optimization needed (2.1MB)
+- [LOW] Missing max-feng.jpeg team member photo
+
+---
+
+## [1.1.0] - 2026-01-22
+
+### Added - Supabase Authentication System
+
+#### Backend Infrastructure
+- **Supabase Integration** - PostgreSQL database with real-time capabilities
+- **Database Schema** - Complete schema with 6 tables (profiles, products, orders, order_items, installation_requests, support_tickets)
+- **Row Level Security** - Database-level security policies for all tables
+- **Auto-profile Creation** - Trigger to create user profile on signup
+- **Performance Indexes** - Optimized queries with strategic indexes
+
+#### Authentication Features
+- **Secure Signup** - Email + password with validation (8+ chars, uppercase, lowercase, number, special char)
+- **Email Verification** - Optional email confirmation flow
+- **JWT Authentication** - Secure token-based authentication with auto-refresh
+- **Password Reset** - Complete password recovery flow via email
+- **Session Management** - Persistent sessions across page reloads
+- **Protected Routes** - Route guards for authenticated-only pages
+- **User Profile System** - Automatic profile creation with role-based access (customer, admin, installer)
+
+#### Frontend Implementation
+- **AuthContext Provider** - Global authentication state management
+- **AuthService** - Clean service layer for all auth operations
+- **Updated Login Page** - Real authentication flows with loading states and error handling
+- **Password Reset Page** - Dedicated page for password recovery
+- **Updated Navbar** - User profile display and logout functionality
+- **ProtectedRoute Component** - Reusable route protection with loading states
+- **Input Validation** - Zod schemas for client-side validation
+- **TypeScript Types** - Auto-generated Supabase database types
+
+#### Security Improvements
+- **Environment Variables** - Secure configuration management
+- **Input Validation** - Client and server-side validation
+- **Rate Limiting** - Built-in Supabase rate limiting (30 req/min)
+- **CORS Configuration** - Proper cross-origin resource sharing
+- **No localStorage Auth** - Removed insecure mock authentication
+
+#### Documentation
+- **SUPABASE_ARCHITECTURE.md** - Complete backend architecture design
+- **SUPABASE_SETUP.md** - Step-by-step setup guide with SQL schema
+- **Documentation Reorganization** - Moved all docs to `docs/` subdirectories
+- **supabase-schema.sql** - Clean, production-ready database schema
+
+#### Dependencies
+- `@supabase/supabase-js@^2.x` - Supabase client library
+- `zod@^3.x` - TypeScript-first schema validation
+
+### Changed
+- **Authentication Flow** - Migrated from mock localStorage to Supabase
+- **Login Component** - Complete rewrite with real authentication
+- **Navbar Component** - Added user profile and logout functionality
+- **App.tsx** - Added reset password route
+- **main.tsx** - Wrapped app with AuthProvider
+
+### Fixed
+- [CRITICAL] Insecure localStorage authentication replaced with JWT tokens
+- [CRITICAL] Backend integration completed with Supabase
+- [CRITICAL] Input validation added with Zod schemas
+- [HIGH] Loading states added for authentication operations
+
+### Security
+- Removed all mock authentication code
+- Implemented secure JWT-based authentication
+- Added Row Level Security policies
+- Implemented input validation on all auth forms
 
 ---
 
