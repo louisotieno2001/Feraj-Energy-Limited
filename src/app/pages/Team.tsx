@@ -50,7 +50,7 @@ export function Team() {
                       </a>
                     )}
                     <a
-                      href={`mailto:${member.name.toLowerCase().replace(/ /g, '.')}@solartech.com`}
+                      href={`mailto:${member.name.toLowerCase().replace(/ /g, '.')}@ferajsolar.com`}
                       className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition text-sm"
                     >
                       <Mail className="h-4 w-4" />

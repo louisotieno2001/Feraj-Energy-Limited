@@ -13,12 +13,15 @@ export function Navbar() {
 
   const handleSignOut = async () => {
     try {
+      setIsOpen(false); // Close mobile menu first
       await signOut();
       toast.success('Logged out successfully');
-      navigate('/');
-      setIsOpen(false);
-    } catch (error) {
-      toast.error('Failed to log out');
+      navigate('/', { replace: true });
+      // Force reload to clear any cached state
+      window.location.reload();
+    } catch (error: any) {
+      console.error('Logout error:', error);
+      toast.error('Failed to log out. Please try again.');
     }
   };
 
@@ -133,9 +136,14 @@ export function Navbar() {
                         </Link>
                       </DropdownMenu.Item>
                       <DropdownMenu.Separator className="h-px bg-gray-200 my-1" />
-                      <DropdownMenu.Item asChild>
+                      <DropdownMenu.Item 
+                        onSelect={(e) => {
+                          e.preventDefault();
+                          handleSignOut();
+                        }}
+                      >
                         <button
-                          onClick={handleSignOut}
+                          type="button"
                           className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded cursor-pointer outline-none"
                         >
                           <LogOut className="h-4 w-4" />

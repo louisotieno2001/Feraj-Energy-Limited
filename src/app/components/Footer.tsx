@@ -53,7 +53,7 @@ export function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-sm">
-              <li>Email: info@solartech.com</li>
+              <li>Email: info@ferajsolar.com</li>
               <li>Phone: +1 (555) 123-4567</li>
               <li>Address: 123 Solar Avenue</li>
               <li>San Francisco, CA 94102</li>
@@ -62,7 +62,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-sm text-center">
-          <p>&copy; {new Date().getFullYear()} SolarTech. All rights reserved. Powering a sustainable future.</p>
+          <p>&copy; {new Date().getFullYear()} Feraj Solar. All rights reserved. Powering a sustainable future.</p>
         </div>
       </div>
     </footer>

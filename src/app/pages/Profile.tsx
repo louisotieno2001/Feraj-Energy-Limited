@@ -64,8 +64,34 @@ export function Profile() {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Skeleton Header */}
+          <div className="mb-8 animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-1/3 mb-3"></div>
+            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+          </div>
+          
+          {/* Skeleton Card */}
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-gray-200 px-6 py-8">
+              <div className="flex items-center gap-6">
+                <div className="h-24 w-24 rounded-full bg-gray-300"></div>
+                <div className="flex-1 space-y-3">
+                  <div className="h-7 bg-gray-300 rounded w-1/2"></div>
+                  <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+                  <div className="h-6 bg-gray-300 rounded w-20"></div>
+                </div>
+              </div>
+            </div>
+            <div className="px-6 py-8 space-y-6 animate-pulse">
+              <div className="h-10 bg-gray-200 rounded"></div>
+              <div className="h-10 bg-gray-200 rounded"></div>
+              <div className="h-10 bg-gray-200 rounded"></div>
+              <div className="h-10 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

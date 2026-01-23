@@ -185,7 +185,7 @@ export function About() {
               <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
                 <h3 className="font-semibold text-lg mb-2">Company Founded</h3>
                 <p className="text-gray-600">
-                  Dr. Sarah Chen and team establish SolarTech with a vision to democratize solar energy
+                  Dr. Sarah Chen and team establish Feraj Solar with a vision to democratize solar energy
                 </p>
               </div>
             </div>
