@@ -82,19 +82,34 @@
 **File to use**:
 - [docs/deployment/ADMIN_RLS_POLICIES.md](../docs/deployment/ADMIN_RLS_POLICIES.md)
 
-#### 3. Test Admin Features ⏱️ READY
+#### 3. Test Admin Features ⏱️ HIGH PRIORITY
 **Goal**: Verify all admin functionality works  
 **Status**: Code complete, ready for testing  
-**Priority**: P0 (Validation)  
-**Estimated Time**: 30 minutes
+**Priority**: P0 (CRITICAL - Blocking Production)  
+**Estimated Time**: 20-30 minutes
 
-**Tasks**:
-- [ ] Log in as admin user
-- [ ] Navigate to /admin/dashboard
-- [ ] Test user management (view users, change roles)
-- [ ] Test product management (create, edit, delete)
-- [ ] Verify non-admin users cannot access /admin routes
-- [ ] Document any bugs
+**Comprehensive Testing Required**: [ADMIN_FEATURES_TESTS.md](testing/ADMIN_FEATURES_TESTS.md)
+
+**Critical Tests (P0)**:
+- [ ] Test 1: Admin dashboard access and statistics
+- [ ] Test 2: Products display on public site (6 products from database)
+- [ ] Test 3: Admin user management (view, search, role elevation)
+- [ ] Test 4: Admin product management view (all products with controls)
+- [ ] Test 5: Create new product (appears immediately on site)
+- [ ] Test 6: Edit product (changes reflect immediately)
+- [ ] Test 7: Delete product (removes from site immediately)
+- [ ] Test 9: Non-admin access control (security verification)
+
+**High Priority Tests (P1)**:
+- [ ] Test 8: Product image management (multiple images)
+- [ ] Test 10: Product stock management (color-coded indicators)
+- [ ] Test 11: Product active/inactive toggle (visibility control)
+
+**Medium Priority Tests (P2)**:
+- [ ] Test 12: Search and filter functionality
+- [ ] Test 13: Responsive design (mobile testing)
+
+**Documentation**: Complete 13-test checklist with success criteria, failure scenarios, and troubleshooting steps.
 
 ### 🎯 High Priority (Week 2)
 
