@@ -2,7 +2,7 @@
 
 [build]
   # Build command
-  command = "npm install --include=dev && npm run build"
+  command = "npm run build"
   
   # Directory to publish (Vite default output)
   publish = "dist"
@@ -10,6 +10,7 @@
 # Environment variables for build process
 [build.environment]
   NODE_VERSION = "20"
+  NPM_FLAGS = "--include=dev"
 
 # SPA redirect rules for React Router
 [[redirects]]
