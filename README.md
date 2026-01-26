@@ -149,6 +149,61 @@ VITE_API_URL=your-api-url
 VITE_CONTACT_EMAIL=info@ferajsolar.com
 ```
 
+## Production Deployment
+
+### Netlify Deployment
+
+1. **Connect Repository**
+   - Go to [Netlify](https://app.netlify.com)
+   - Click "New site from Git"
+   - Connect your GitHub repository
+
+2. **Build Settings**
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+   - Node version: 20
+
+3. **Environment Variables**
+   Set the following in Netlify dashboard under Site settings > Environment variables:
+
+   ```env
+   VITE_APP_ENV=production
+   VITE_APP_NAME=Feraj Solar Limited
+   VITE_APP_VERSION=1.3.0
+   VITE_SUPABASE_URL=https://elknxopptqjmxfpgkvaq.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-production-anon-key
+   VITE_API_URL=https://api.ferajsolar.com/v1
+   VITE_ENABLE_ANALYTICS=true
+   VITE_ENABLE_ERROR_REPORTING=true
+   VITE_GOOGLE_ANALYTICS_ID=GA_MEASUREMENT_ID
+   VITE_SENTRY_DSN=your-sentry-dsn
+   ```
+
+4. **Domain Configuration**
+   - Add custom domain: ferajsolar.com
+   - Configure DNS settings as instructed
+
+5. **SSL Certificate**
+   - Netlify provides automatic HTTPS
+   - Certificate renews automatically
+
+### Pre-Deployment Checklist
+
+- [ ] Run `npm run lint` - No ESLint errors
+- [ ] Run `npm run build` - Build succeeds
+- [ ] Run `npm run test` - All tests pass
+- [ ] Update version in package.json
+- [ ] Commit all changes
+- [ ] Push to main branch
+- [ ] Verify environment variables in Netlify
+
+### Monitoring & Maintenance
+
+- **Analytics**: Google Analytics integration
+- **Error Tracking**: Sentry for error monitoring
+- **Performance**: Netlify Analytics for site metrics
+- **Uptime**: Monitor with external services
+
 ## Documentation Index
 
 ### Development Docs
