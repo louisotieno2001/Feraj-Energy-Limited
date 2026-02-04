@@ -139,15 +139,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-
-      // Clear all state
+    } catch (error) {
+      console.error('Error signing out:', error);
+    } finally {
+      // Always clear local state even if remote sign out fails
       setUser(null);
       setSession(null);
       setProfile(null);
       setPermissions(null);
-    } catch (error) {
-      console.error('Error signing out:', error);
-      throw error;
     }
   };
 
