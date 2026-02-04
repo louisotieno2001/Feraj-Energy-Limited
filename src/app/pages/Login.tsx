@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, AlertCircle, CheckCircle } from 'lucide-react';
+import { Mail, Lock, User, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { AuthService } from '@/services/auth.service';
 import { registerSchema, loginSchema } from '@/utils/validation';
@@ -16,14 +16,18 @@ export function Login() {
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user) {
-      navigate('/products');
+    if (user && profile) {
+      if (['admin', 'co_admin', 'employee'].includes(profile.role)) {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/products', { replace: true });
+      }
     }
-  }, [user, navigate]);
+  }, [user, profile, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,10 +37,10 @@ export function Login() {
       if (isLogin) {
         // Validate login input
         loginSchema.parse({ email, password });
-        
+
         // Sign in
         const { error } = await AuthService.signIn(email, password);
-        
+
         if (error) {
           if (error.message.includes('Invalid login credentials')) {
             toast.error('Invalid email or password');
@@ -47,16 +51,16 @@ export function Login() {
           }
           return;
         }
-        
+
         toast.success('Login successful!');
         navigate('/products');
       } else {
         // Validate signup input
         registerSchema.parse({ email, password, fullName });
-        
+
         // Sign up
         const { error } = await AuthService.signUp(email, password, fullName);
-        
+
         if (error) {
           if (error.message.includes('already registered')) {
             toast.error('An account with this email already exists');
@@ -65,8 +69,10 @@ export function Login() {
           }
           return;
         }
-        
-        toast.success('Account created! Please check your email to verify your account.');
+
+        toast.success(
+          'Account created! Please check your email to verify your account.'
+        );
         setEmailSent(true);
         setIsLogin(true);
       }
@@ -95,16 +101,16 @@ export function Login() {
       }
 
       const { error } = await AuthService.resetPassword(email);
-      
+
       if (error) {
         toast.error(error.message);
         return;
       }
-      
+
       toast.success('Password reset email sent! Check your inbox.');
       setShowResetPassword(false);
       setEmailSent(true);
-    } catch (error) {
+    } catch {
       toast.error('Failed to send reset email. Please try again.');
     } finally {
       setLoading(false);
@@ -118,12 +124,14 @@ export function Login() {
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <div className="flex items-center gap-3">
-              <img 
-                src="/images/logos/feraj-solar-logo.png" 
-                alt="Feraj Solar Limited Logo" 
+              <img
+                src="/images/logos/feraj-solar-logo.png"
+                alt="Feraj Solar Limited Logo"
                 className="h-16 w-16 object-contain"
               />
-              <span className="text-2xl font-bold text-gray-900">Feraj Solar Limited</span>
+              <span className="text-2xl font-bold text-gray-900">
+                Feraj Solar Limited
+              </span>
             </div>
           </div>
 
@@ -133,7 +141,8 @@ export function Login() {
               <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm text-green-800">
-                  Please check your email and click the verification link to activate your account.
+                  Please check your email and click the verification link to
+                  activate your account.
                 </p>
               </div>
             </div>
@@ -146,7 +155,8 @@ export function Login() {
                 Reset Password
               </h2>
               <p className="text-sm text-gray-600 mb-6 text-center">
-                Enter your email address and we'll send you a link to reset your password.
+                Enter your email address and we&apos;ll send you a link to reset
+                your password.
               </p>
               <form onSubmit={handleResetPassword} className="space-y-6">
                 <div>
@@ -274,7 +284,8 @@ export function Login() {
                   </div>
                   {!isLogin && (
                     <p className="mt-2 text-xs text-gray-500">
-                      Must be at least 8 characters with uppercase, lowercase, number, and special character
+                      Must be at least 8 characters with uppercase, lowercase,
+                      number, and special character
                     </p>
                   )}
                 </div>
@@ -301,14 +312,18 @@ export function Login() {
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                       {isLogin ? 'Signing in...' : 'Creating account...'}
                     </span>
+                  ) : isLogin ? (
+                    'Sign In'
                   ) : (
-                    isLogin ? 'Sign In' : 'Create Account'
+                    'Create Account'
                   )}
                 </button>
               </form>
 
               <p className="mt-6 text-center text-sm text-gray-600">
-                {isLogin ? "Don't have an account? " : 'Already have an account? '}
+                {isLogin
+                  ? "Don't have an account? "
+                  : 'Already have an account? '}
                 <button
                   onClick={() => {
                     setIsLogin(!isLogin);

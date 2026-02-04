@@ -20,6 +20,7 @@ import { Team } from '@/app/pages/Team';
 import { AdminDashboard } from '@/app/pages/admin/Dashboard';
 import { AdminUsers } from '@/app/pages/admin/Users';
 import { AdminProducts } from '@/app/pages/admin/Products';
+import { AdminAudit } from '@/app/pages/admin/Audit';
 
 export default function App() {
   return (
@@ -38,7 +39,7 @@ export default function App() {
             <Route path="/why-green" element={<WhyGreen />} />
             <Route path="/energy-stats" element={<EnergyStats />} />
             <Route path="/team" element={<Team />} />
-            
+
             {/* Protected Routes */}
             <Route
               path="/cart"
@@ -78,6 +79,7 @@ export default function App() {
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="users" element={<AdminUsers />} />
               <Route path="products" element={<AdminProducts />} />
+              <Route path="audit" element={<AdminAudit />} />
               <Route path="orders" element={<Orders />} />
             </Route>
           </Routes>

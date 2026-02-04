@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, AlertCircle, CheckCircle } from 'lucide-react';
+import { Lock, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { AuthService } from '@/services/auth.service';
 import { updatePasswordSchema } from '@/utils/validation';
@@ -20,18 +20,18 @@ export function ResetPassword() {
     try {
       // Validate input
       updatePasswordSchema.parse({ password, confirmPassword });
-      
+
       // Update password
       const { error } = await AuthService.updatePassword(password);
-      
+
       if (error) {
         toast.error(error.message);
         return;
       }
-      
+
       setSuccess(true);
       toast.success('Password updated successfully!');
-      
+
       // Redirect to login after 2 seconds
       setTimeout(() => {
         navigate('/login');
@@ -77,12 +77,14 @@ export function ResetPassword() {
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <div className="flex items-center gap-3">
-              <img 
-                src="/images/logos/feraj-solar-logo.png" 
-                alt="Feraj Solar Limited Logo" 
+              <img
+                src="/images/logos/feraj-solar-logo.png"
+                alt="Feraj Solar Limited Logo"
                 className="h-16 w-16 object-contain"
               />
-              <span className="text-2xl font-bold text-gray-900">Feraj Solar Limited</span>
+              <span className="text-2xl font-bold text-gray-900">
+                Feraj Solar Limited
+              </span>
             </div>
           </div>
 
@@ -108,7 +110,8 @@ export function ResetPassword() {
                 />
               </div>
               <p className="mt-2 text-xs text-gray-500">
-                Must be at least 8 characters with uppercase, lowercase, number, and special character
+                Must be at least 8 characters with uppercase, lowercase, number,
+                and special character
               </p>
             </div>
 

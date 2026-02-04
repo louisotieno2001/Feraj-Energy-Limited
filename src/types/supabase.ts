@@ -16,7 +16,7 @@ export interface Database {
           full_name: string | null;
           avatar_url: string | null;
           phone: string | null;
-          role: 'customer' | 'admin' | 'installer';
+          role: 'customer' | 'employee' | 'co_admin' | 'admin';
           company_name: string | null;
           created_at: string;
           updated_at: string;
@@ -27,7 +27,7 @@ export interface Database {
           full_name?: string | null;
           avatar_url?: string | null;
           phone?: string | null;
-          role?: 'customer' | 'admin' | 'installer';
+          role?: 'customer' | 'employee' | 'co_admin' | 'admin';
           company_name?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -38,10 +38,43 @@ export interface Database {
           full_name?: string | null;
           avatar_url?: string | null;
           phone?: string | null;
-          role?: 'customer' | 'admin' | 'installer';
+          role?: 'customer' | 'employee' | 'co_admin' | 'admin';
           company_name?: string | null;
           created_at?: string;
           updated_at?: string;
+        };
+      };
+      user_permissions: {
+        Row: {
+          user_id: string;
+          can_manage_products: boolean;
+          can_manage_tickets: boolean;
+          can_promote_to_co_admin: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+      };
+      audit_logs: {
+        Row: {
+          id: string;
+          actor_user_id: string | null;
+          target_user_id: string | null;
+          action: string;
+          metadata: Json | null;
+          created_at: string;
+        };
+      };
+      tickets: {
+        Row: {
+          id: string;
+          created_by: string;
+          assigned_to: string | null;
+          status: 'open' | 'in_progress' | 'resolved';
+          subject: string;
+          message: string;
+          response: string | null;
+          created_at: string;
+          updated_at: string;
         };
       };
       products: {
@@ -63,7 +96,13 @@ export interface Database {
         Row: {
           id: string;
           user_id: string;
-          status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+          status:
+            | 'pending'
+            | 'confirmed'
+            | 'processing'
+            | 'shipped'
+            | 'delivered'
+            | 'cancelled';
           total_amount: number;
           shipping_address: Json;
           payment_method: string | null;

@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getProducts, getProductsByCategory, Product } from '@/services/products.service';
+import {
+  getProducts,
+  getProductsByCategory,
+  Product,
+} from '@/services/products.service';
 
 export function useProducts(category?: string) {
   const [products, setProducts] = useState<Product[]>([]);
@@ -11,11 +15,11 @@ export function useProducts(category?: string) {
       try {
         setLoading(true);
         setError(null);
-        
-        const data = category 
+
+        const data = category
           ? await getProductsByCategory(category)
           : await getProducts();
-        
+
         setProducts(data);
       } catch (err: any) {
         console.error('Error fetching products:', err);

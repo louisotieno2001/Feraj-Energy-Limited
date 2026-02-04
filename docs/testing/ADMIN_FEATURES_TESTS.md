@@ -1,5 +1,15 @@
 # Admin Features Testing Checklist
 
+## Status Update (February 4, 2026)
+- Roles now supported: admin, co_admin, employee, customer (installer replaced by employee).
+- Staff access: admin/co_admin/employee can access /admin; user management limited to admin/co_admin.
+- Co-admins cannot change admin/co_admin roles; they can manage employee/customer roles.
+- Per-user permissions added: can_manage_products, can_manage_tickets, can_promote_to_co_admin (admin-only).
+- Audit & monitoring: /admin/audit shows activity feed + ticket queue; profile sensitive edits, role/permission changes, and product CRUD are logged.
+- Product images: URL or device upload, max 4 images, 2MB per image, primary image = first.
+- Environment files (.env, .env.local, etc.) must never be committed; use host env vars.
+- Linting: Prettier applied; ESLint passes with warnings only (mostly any/fast-refresh).
+
 **Priority**: P0 (Critical - Must Complete Before Production)  
 **Status**: Ready to Test  
 **Estimated Time**: 20-30 minutes  
@@ -471,14 +481,119 @@ Before testing, ensure:
 
 ---
 
+## Test 14: Role Elevation Rules ⭐ CRITICAL
+
+**Priority**: P0  
+**Objective**: Verify admin and co-admin role change rules
+
+### Steps:
+1. Log in as **admin**
+2. Navigate to `/admin/users`
+3. Select a customer and set role to **co_admin**
+4. Select a co-admin and set role to **admin**
+5. Log in as **co_admin**
+6. Try to change an **admin** role (should be blocked)
+7. Try to change a **co_admin** role (should be blocked)
+8. Change an **employee** to **customer**
+
+### Expected Results:
+- ✅ Admin can promote/demote all roles
+- ✅ Co-admin cannot change admin/co-admin roles
+- ✅ Co-admin can change employee/customer roles
+- ✅ Changes reflected immediately in table
+
+---
+
+## Test 15: Permissions Checkboxes ⭐ HIGH
+
+**Priority**: P1  
+**Objective**: Verify per-user permissions and product/ticket access
+
+### Steps:
+1. Log in as **admin**
+2. Open a user in `/admin/users`
+3. Toggle **Handle products** and **Handle tickets**
+4. Save changes
+5. Log in as that user (employee role)
+6. Verify access:
+   - Products page only if **Handle products** is enabled
+   - Ticket actions only if **Handle tickets** is enabled
+
+### Expected Results:
+- ✅ Permissions saved and enforced
+- ✅ Access reflects permissions in UI
+
+---
+
+## Test 16: Audit Panel ⭐ HIGH
+
+**Priority**: P1  
+**Objective**: Verify audit feed visibility and logging
+
+### Steps:
+1. Log in as admin or co-admin
+2. Visit `/admin/audit`
+3. Create or update a product
+4. Change a user role or permissions
+5. Edit your profile phone/company
+
+### Expected Results:
+- ✅ Audit feed shows entries for each action
+- ✅ Entries include metadata (product ID, role change, profile changes)
+
+---
+
+## Test 17: Tickets ⭐ HIGH
+
+**Priority**: P1  
+**Objective**: Verify ticket queue and resolution
+
+### Steps:
+1. Ensure at least one ticket exists in database
+2. Log in as employee without **Handle tickets**
+3. Visit `/admin/audit` and confirm read-only
+4. Log in as admin/co-admin (or employee with permission)
+5. Resolve a ticket and add a response
+
+### Expected Results:
+- ✅ Read-only view for users without permission
+- ✅ Resolution allowed only with permission
+- ✅ Resolution logged in audit feed
+
+---
+
+## Test 18: Device Image Upload ⭐ HIGH
+
+**Priority**: P1  
+**Objective**: Verify device upload flow and image limits
+
+### Steps:
+1. Log in as admin or co-admin
+2. Go to `/admin/products` → Add Product
+3. Upload 1–2 images from device (under 2MB)
+4. Set a non-primary image as **Primary**
+5. Try to upload more than 4 images
+
+### Expected Results:
+- ✅ Uploaded images show preview
+- ✅ Primary badge updates correctly
+- ✅ Max 4 images enforced
+- ✅ Over-limit uploads show error toast
+
+---
+
 ## Success Criteria
 
 **Admin features are production-ready when:**
 - ✅ All P0 tests pass without errors
 - ✅ Admin can view/create/edit/delete products
 - ✅ Admin can view/manage user roles
+- ✅ Role elevation rules enforced (admin/co-admin)
+- ✅ Permissions enforce product/ticket access
 - ✅ Products appear immediately on public site after creation
 - ✅ Non-admin users cannot access admin features
+- ✅ Audit panel shows change log entries
+- ✅ Ticket queue visible to staff, actions gated by permission
 - ✅ No console errors during normal usage
 - ✅ Statistics display correctly
 - ✅ Search and filters work
@@ -507,6 +622,6 @@ Before testing, ensure:
 
 ---
 
-**Last Updated**: January 23, 2026  
+**Last Updated**: February 4, 2026  
 **Version**: v1.3.0  
 **Status**: Ready for Testing

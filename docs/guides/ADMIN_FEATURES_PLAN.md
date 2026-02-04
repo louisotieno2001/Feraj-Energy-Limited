@@ -1,5 +1,15 @@
 # Admin Features Implementation Plan
 
+## Status Update (February 4, 2026)
+- Roles now supported: admin, co_admin, employee, customer (installer replaced by employee).
+- Staff access: admin/co_admin/employee can access /admin; user management limited to admin/co_admin.
+- Co-admins cannot change admin/co_admin roles; they can manage employee/customer roles.
+- Per-user permissions added: can_manage_products, can_manage_tickets, can_promote_to_co_admin (admin-only).
+- Audit & monitoring: /admin/audit shows activity feed + ticket queue; profile sensitive edits, role/permission changes, and product CRUD are logged.
+- Product images: URL or device upload, max 4 images, 2MB per image, primary image = first.
+- Environment files (.env, .env.local, etc.) must never be committed; use host env vars.
+- Linting: Prettier applied; ESLint passes with warnings only (mostly any/fast-refresh).
+
 **Created**: January 23, 2026  
 **Version**: v1.3.0 (Planned)  
 **Status**: Planning Phase
@@ -8,7 +18,13 @@
 
 ## Overview
 
-This document outlines the implementation plan for admin dashboard features, including user management (role elevation) and product management (CRUD operations).
+This document outlines the implementation plan for admin dashboard features. **Implementation has progressed** beyond this plan. Current behavior includes staff roles (admin/co_admin/employee), per-user permissions, and an audit/ticket panel.
+
+### Current Implementation Summary
+- Staff roles: admin, co_admin, employee (customer remains default)
+- Co-admin limitations enforced (cannot change admin/co_admin)
+- Per-user permissions: products/tickets/co-admin promotion
+- Audit & monitoring panel at `/admin/audit`
 
 ---
 
@@ -19,21 +35,23 @@ This document outlines the implementation plan for admin dashboard features, inc
 ```
 User Roles Hierarchy:
 ├── customer (default)     - Can browse, purchase, view own orders
-├── installer             - Can browse, manage installations
+├── employee              - Staff access; permissions required for products/tickets
+├── co_admin              - Staff access; can manage employees/customers
 └── admin                 - Full system access
-    ├── Manage users (elevate to admin)
+    ├── Manage users (all roles)
     ├── Manage products (CRUD)
-    ├── Manage orders (view all, update status)
+    ├── Manage tickets/audit
     └── View analytics
 ```
 
 ### Route Protection
 
 ```
-/admin/*                  - Admin only (role check)
+/admin/*                  - Staff access (admin/co_admin/employee)
   ├── /admin/dashboard    - Admin overview
   ├── /admin/users        - User management
   ├── /admin/products     - Product management
+  ├── /admin/audit        - Audit & tickets
   └── /admin/orders       - Order management
 ```
 
@@ -109,7 +127,7 @@ Add admin routes:
 getAllUsers(): Promise<Profile[]>
 
 // Update user role
-updateUserRole(userId: string, newRole: 'customer' | 'admin' | 'installer'): Promise<Profile>
+updateUserRole(userId: string, newRole: 'customer' | 'admin' | 'employee'): Promise<Profile>
 
 // Get user by ID
 getUserById(userId: string): Promise<Profile>
@@ -128,7 +146,7 @@ searchUsers(query: string): Promise<Profile[]>
 **Features**:
 - ✅ List all users with pagination
 - ✅ Search users by name/email
-- ✅ Filter by role (customer, admin, installer)
+- ✅ Filter by role (customer, admin, employee)
 - ✅ View user details
 - ✅ Elevate user to admin
 - ✅ Demote admin to customer

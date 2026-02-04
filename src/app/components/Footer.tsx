@@ -9,21 +9,32 @@ export function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img 
-                src="/images/logos/feraj-solar-logo.png" 
-                alt="Feraj Solar Limited Logo" 
+              <img
+                src="/images/logos/feraj-solar-logo.png"
+                alt="Feraj Solar Limited Logo"
                 className="h-12 w-12 object-contain"
               />
-              <span className="text-xl font-bold text-white">Feraj Solar Limited</span>
+              <span className="text-xl font-bold text-white">
+                Feraj Solar Limited
+              </span>
             </div>
             <p className="text-sm mb-4">
-              Leading Kenya's clean energy revolution with innovative solar solutions for a sustainable and energy-independent future.
+              Leading Kenya&apos;s clean energy revolution with innovative solar
+              solutions for a sustainable and energy-independent future.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-green-500 transition"><Facebook className="h-5 w-5" /></a>
-              <a href="#" className="hover:text-green-500 transition"><Twitter className="h-5 w-5" /></a>
-              <a href="#" className="hover:text-green-500 transition"><Linkedin className="h-5 w-5" /></a>
-              <a href="#" className="hover:text-green-500 transition"><Instagram className="h-5 w-5" /></a>
+              <a href="#" className="hover:text-green-500 transition">
+                <Facebook className="h-5 w-5" />
+              </a>
+              <a href="#" className="hover:text-green-500 transition">
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a href="#" className="hover:text-green-500 transition">
+                <Linkedin className="h-5 w-5" />
+              </a>
+              <a href="#" className="hover:text-green-500 transition">
+                <Instagram className="h-5 w-5" />
+              </a>
             </div>
           </div>
 
@@ -31,10 +42,38 @@ export function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4">Products</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/products" className="hover:text-green-500 transition">Solar Panels</Link></li>
-              <li><Link to="/products" className="hover:text-green-500 transition">Inverters</Link></li>
-              <li><Link to="/products" className="hover:text-green-500 transition">Battery Storage</Link></li>
-              <li><Link to="/products" className="hover:text-green-500 transition">Mounting Systems</Link></li>
+              <li>
+                <Link
+                  to="/products"
+                  className="hover:text-green-500 transition"
+                >
+                  Solar Panels
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/products"
+                  className="hover:text-green-500 transition"
+                >
+                  Inverters
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/products"
+                  className="hover:text-green-500 transition"
+                >
+                  Battery Storage
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/products"
+                  className="hover:text-green-500 transition"
+                >
+                  Mounting Systems
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -42,10 +81,32 @@ export function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/about" className="hover:text-green-500 transition">About Us</Link></li>
-              <li><Link to="/team" className="hover:text-green-500 transition">Our Team</Link></li>
-              <li><Link to="/partnerships" className="hover:text-green-500 transition">Partnerships</Link></li>
-              <li><Link to="/energy-stats" className="hover:text-green-500 transition">Energy Statistics</Link></li>
+              <li>
+                <Link to="/about" className="hover:text-green-500 transition">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/team" className="hover:text-green-500 transition">
+                  Our Team
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/partnerships"
+                  className="hover:text-green-500 transition"
+                >
+                  Partnerships
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/energy-stats"
+                  className="hover:text-green-500 transition"
+                >
+                  Energy Statistics
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -62,7 +123,10 @@ export function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-sm text-center">
-          <p>&copy; {new Date().getFullYear()} Feraj Solar. All rights reserved. Powering a sustainable future.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Feraj Solar. All rights reserved.
+            Powering a sustainable future.
+          </p>
         </div>
       </div>
     </footer>

@@ -99,7 +99,8 @@ export function Orders() {
               No Orders Yet
             </h2>
             <p className="text-gray-600 mb-6">
-              You haven't placed any orders yet. Start shopping for solar solutions!
+              You haven&apos;t placed any orders yet. Start shopping for solar
+              solutions!
             </p>
             <a
               href="/products"
@@ -123,7 +124,8 @@ export function Orders() {
                         Order #{order.id.slice(0, 8)}
                       </h3>
                       <p className="text-sm text-gray-600">
-                        Placed on {new Date(order.created_at).toLocaleDateString()}
+                        Placed on{' '}
+                        {new Date(order.created_at).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
@@ -136,7 +138,8 @@ export function Orders() {
                         order.status
                       )}`}
                     >
-                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                      {order.status.charAt(0).toUpperCase() +
+                        order.status.slice(1)}
                     </span>
                   </div>
                 </div>

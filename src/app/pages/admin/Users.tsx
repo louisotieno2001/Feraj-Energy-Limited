@@ -1,19 +1,37 @@
 import { useState, useEffect } from 'react';
-import { getAllUsers, updateUserRole, searchUsers, getUsersByRole, type Profile } from '@/services/users.service';
-import { Loader2, Search, Shield, User, Wrench, AlertCircle } from 'lucide-react';
+import {
+  getAllUsers,
+  updateUserRole,
+  type Profile,
+} from '@/services/users.service';
+import {
+  getUserPermissions,
+  upsertUserPermissions,
+  type UserPermissions,
+} from '@/services/permissions.service';
+import { createAuditLog } from '@/services/audit.service';
+import { Loader2, Search, Shield, User, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function AdminUsers() {
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, profile: currentProfile } = useAuth();
   const [users, setUsers] = useState<Profile[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [roleFilter, setRoleFilter] = useState<'all' | 'customer' | 'admin' | 'installer'>('all');
+  const [roleFilter, setRoleFilter] = useState<
+    'all' | 'customer' | 'employee' | 'co_admin' | 'admin'
+  >('all');
   const [selectedUser, setSelectedUser] = useState<Profile | null>(null);
+  const [selectedPermissions, setSelectedPermissions] =
+    useState<UserPermissions | null>(null);
+  const [selectedRole, setSelectedRole] = useState<Profile['role'] | null>(
+    null
+  );
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [loadingPermissions, setLoadingPermissions] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -57,30 +75,85 @@ export function AdminUsers() {
     setFilteredUsers(filtered);
   };
 
-  const handleRoleChange = async (newRole: 'customer' | 'admin' | 'installer') => {
-    if (!selectedUser) return;
+  const isAdmin = currentProfile?.role === 'admin';
+  const isCoAdmin = currentProfile?.role === 'co_admin';
+
+  const canManageUsers = !!(isAdmin || isCoAdmin);
+
+  const loadPermissionsForUser = async (userId: string) => {
+    try {
+      setLoadingPermissions(true);
+      const perms = await getUserPermissions(userId);
+      setSelectedPermissions(perms);
+    } catch {
+      // If no permissions row exists, default to null and let upsert create
+      setSelectedPermissions(null);
+    } finally {
+      setLoadingPermissions(false);
+    }
+  };
+
+  const applyUserChanges = async () => {
+    if (!selectedUser || !selectedRole) return;
 
     // Prevent user from demoting themselves
-    if (selectedUser.id === currentUser?.id && newRole !== 'admin') {
+    if (selectedUser.id === currentUser?.id && selectedRole !== 'admin') {
       toast.error('You cannot change your own admin role');
       return;
     }
 
     try {
       setUpdating(true);
-      await updateUserRole(selectedUser.id, newRole);
-      
-      // Update local state
-      setUsers((prev) =>
-        prev.map((u) => (u.id === selectedUser.id ? { ...u, role: newRole } : u))
-      );
-      
-      toast.success(`User role updated to ${newRole}`);
+
+      if (selectedRole !== selectedUser.role) {
+        await updateUserRole(selectedUser.id, selectedRole);
+
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.id === selectedUser.id ? { ...u, role: selectedRole } : u
+          )
+        );
+
+        if (currentUser?.id) {
+          await createAuditLog({
+            actor_user_id: currentUser.id,
+            target_user_id: selectedUser.id,
+            action: 'role.change',
+            metadata: { role: selectedRole },
+          });
+        }
+      }
+
+      if (selectedPermissions) {
+        const updated = await upsertUserPermissions(selectedUser.id, {
+          can_manage_products: selectedPermissions.can_manage_products,
+          can_manage_tickets: selectedPermissions.can_manage_tickets,
+          can_promote_to_co_admin: selectedPermissions.can_promote_to_co_admin,
+        });
+        setSelectedPermissions(updated);
+
+        if (currentUser?.id) {
+          await createAuditLog({
+            actor_user_id: currentUser.id,
+            target_user_id: selectedUser.id,
+            action: 'permissions.update',
+            metadata: {
+              can_manage_products: updated.can_manage_products,
+              can_manage_tickets: updated.can_manage_tickets,
+              can_promote_to_co_admin: updated.can_promote_to_co_admin,
+            },
+          });
+        }
+      }
+
+      toast.success('User updated');
       setShowRoleModal(false);
       setSelectedUser(null);
+      setSelectedRole(null);
+      setSelectedPermissions(null);
     } catch (error: any) {
-      console.error('Error updating role:', error);
-      toast.error('Failed to update user role');
+      console.error('Error updating user:', error);
+      toast.error('Failed to update user');
     } finally {
       setUpdating(false);
     }
@@ -90,8 +163,10 @@ export function AdminUsers() {
     switch (role) {
       case 'admin':
         return <Shield className="h-4 w-4" />;
-      case 'installer':
-        return <Wrench className="h-4 w-4" />;
+      case 'co_admin':
+        return <Shield className="h-4 w-4" />;
+      case 'employee':
+        return <User className="h-4 w-4" />;
       default:
         return <User className="h-4 w-4" />;
     }
@@ -101,7 +176,9 @@ export function AdminUsers() {
     switch (role) {
       case 'admin':
         return 'bg-purple-100 text-purple-800';
-      case 'installer':
+      case 'co_admin':
+        return 'bg-indigo-100 text-indigo-800';
+      case 'employee':
         return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-green-100 text-green-800';
@@ -115,6 +192,31 @@ export function AdminUsers() {
       </div>
     );
   }
+
+  if (!canManageUsers) {
+    return (
+      <div className="bg-white rounded-lg shadow p-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          User Management
+        </h1>
+        <p className="text-gray-600">
+          You do not have permission to manage users. Contact an admin to
+          request access.
+        </p>
+      </div>
+    );
+  }
+
+  const roleOrder: Array<Profile['role']> = [
+    'admin',
+    'co_admin',
+    'employee',
+    'customer',
+  ];
+  const groupedUsers = roleOrder.map((role) => ({
+    role,
+    users: filteredUsers.filter((u) => u.role === role),
+  }));
 
   return (
     <div>
@@ -139,15 +241,15 @@ export function AdminUsers() {
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600">Customers</div>
-          <div className="text-2xl font-bold text-green-600">
-            {users.filter((u) => u.role === 'customer').length}
+          <div className="text-sm text-gray-600">Co-admins</div>
+          <div className="text-2xl font-bold text-indigo-600">
+            {users.filter((u) => u.role === 'co_admin').length}
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600">Installers</div>
+          <div className="text-sm text-gray-600">Employees</div>
           <div className="text-2xl font-bold text-blue-600">
-            {users.filter((u) => u.role === 'installer').length}
+            {users.filter((u) => u.role === 'employee').length}
           </div>
         </div>
       </div>
@@ -174,129 +276,236 @@ export function AdminUsers() {
             className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
           >
             <option value="all">All Roles</option>
-            <option value="customer">Customers</option>
             <option value="admin">Admins</option>
-            <option value="installer">Installers</option>
+            <option value="co_admin">Co-admins</option>
+            <option value="employee">Employees</option>
+            <option value="customer">Customers</option>
           </select>
         </div>
       </div>
 
-      {/* Users Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Role
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Joined
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                          <span className="text-green-600 font-semibold">
-                            {user.full_name?.charAt(0) || user.email.charAt(0).toUpperCase()}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {user.full_name || 'No name'}
-                        </div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${getRoleBadgeColor(
-                        user.role
-                      )}`}
-                    >
-                      {getRoleIcon(user.role)}
-                      {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(user.created_at).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button
-                      onClick={() => {
-                        setSelectedUser(user);
-                        setShowRoleModal(true);
-                      }}
-                      className="text-green-600 hover:text-green-900"
-                      disabled={user.id === currentUser?.id}
-                    >
-                      {user.id === currentUser?.id ? '(You)' : 'Change Role'}
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {filteredUsers.length === 0 && (
-          <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-500">No users found</p>
+      {/* Users Table Groups */}
+      {groupedUsers.map((group) => (
+        <div
+          key={group.role}
+          className="bg-white rounded-lg shadow overflow-hidden mb-6"
+        >
+          <div className="px-6 py-4 border-b bg-gray-50">
+            <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              {group.role.replace('_', ' ')}
+            </h2>
           </div>
-        )}
-      </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-white">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    User
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Joined
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {group.users.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="h-10 w-10 flex-shrink-0">
+                          <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                            <span className="text-green-600 font-semibold">
+                              {user.full_name?.charAt(0) ||
+                                user.email.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.full_name || 'No name'}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {user.email}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${getRoleBadgeColor(
+                          user.role
+                        )}`}
+                      >
+                        {getRoleIcon(user.role)}
+                        {user.role.replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(user.created_at).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setSelectedRole(user.role);
+                          setShowRoleModal(true);
+                          loadPermissionsForUser(user.id);
+                        }}
+                        className="text-green-600 hover:text-green-900 disabled:text-gray-300"
+                        disabled={
+                          user.id === currentUser?.id ||
+                          (isCoAdmin &&
+                            (user.role === 'admin' || user.role === 'co_admin'))
+                        }
+                      >
+                        {user.id === currentUser?.id ? '(You)' : 'Manage'}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {group.users.length === 0 && (
+            <div className="text-center py-8">
+              <AlertCircle className="h-10 w-10 text-gray-300 mx-auto mb-2" />
+              <p className="text-gray-500 text-sm">No users in this group</p>
+            </div>
+          )}
+        </div>
+      ))}
+
+      {filteredUsers.length === 0 && (
+        <div className="text-center py-12">
+          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+          <p className="text-gray-500">No users found</p>
+        </div>
+      )}
 
       {/* Role Change Modal */}
       {showRoleModal && selectedUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Change User Role
+              Manage User
             </h3>
-            
+
             <div className="mb-4">
               <p className="text-sm text-gray-600 mb-2">User:</p>
-              <p className="font-medium">{selectedUser.full_name || selectedUser.email}</p>
+              <p className="font-medium">
+                {selectedUser.full_name || selectedUser.email}
+              </p>
               <p className="text-sm text-gray-500">{selectedUser.email}</p>
             </div>
 
             <div className="mb-6">
-              <p className="text-sm text-gray-600 mb-3">Select new role:</p>
+              <p className="text-sm text-gray-600 mb-3">Role:</p>
               <div className="space-y-2">
-                {(['customer', 'admin', 'installer'] as const).map((role) => (
+                {(isAdmin
+                  ? (['customer', 'employee', 'co_admin', 'admin'] as const)
+                  : (['customer', 'employee'] as const)
+                ).map((role) => (
                   <button
                     key={role}
-                    onClick={() => handleRoleChange(role)}
-                    disabled={updating || selectedUser.role === role}
+                    onClick={() => setSelectedRole(role)}
+                    disabled={updating}
                     className={`w-full flex items-center gap-3 px-4 py-3 border-2 rounded-lg transition ${
-                      selectedUser.role === role
+                      selectedRole === role
                         ? 'border-green-500 bg-green-50'
                         : 'border-gray-200 hover:border-green-300'
                     } ${updating ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {getRoleIcon(role)}
                     <span className="font-medium">
-                      {role.charAt(0).toUpperCase() + role.slice(1)}
+                      {role.replace('_', ' ')}
                     </span>
-                    {selectedUser.role === role && (
-                      <span className="ml-auto text-sm text-green-600">(Current)</span>
+                    {selectedRole === role && (
+                      <span className="ml-auto text-sm text-green-600">
+                        (Selected)
+                      </span>
                     )}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <p className="text-sm text-gray-600 mb-3">Privileges:</p>
+              {loadingPermissions && (
+                <p className="text-xs text-gray-500 mb-2">
+                  Loading permissions...
+                </p>
+              )}
+              <div className="space-y-3">
+                <label className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={selectedPermissions?.can_manage_products ?? false}
+                    onChange={(e) =>
+                      setSelectedPermissions((prev) => ({
+                        user_id: selectedUser.id,
+                        can_manage_products: e.target.checked,
+                        can_manage_tickets: prev?.can_manage_tickets ?? false,
+                        can_promote_to_co_admin:
+                          prev?.can_promote_to_co_admin ?? false,
+                        created_at:
+                          prev?.created_at ?? new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                      }))
+                    }
+                    disabled={loadingPermissions || updating}
+                  />
+                  <span className="text-sm text-gray-700">Handle products</span>
+                </label>
+                <label className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={selectedPermissions?.can_manage_tickets ?? false}
+                    onChange={(e) =>
+                      setSelectedPermissions((prev) => ({
+                        user_id: selectedUser.id,
+                        can_manage_products: prev?.can_manage_products ?? false,
+                        can_manage_tickets: e.target.checked,
+                        can_promote_to_co_admin:
+                          prev?.can_promote_to_co_admin ?? false,
+                        created_at:
+                          prev?.created_at ?? new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                      }))
+                    }
+                    disabled={loadingPermissions || updating}
+                  />
+                  <span className="text-sm text-gray-700">Handle tickets</span>
+                </label>
+                <label className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={selectedRole === 'co_admin'}
+                    onChange={(e) =>
+                      setSelectedRole(
+                        e.target.checked
+                          ? 'co_admin'
+                          : selectedRole === 'co_admin'
+                            ? 'employee'
+                            : selectedRole
+                      )
+                    }
+                    disabled={!isAdmin || updating}
+                  />
+                  <span className="text-sm text-gray-700">Make co-admin</span>
+                </label>
+                {!isAdmin && (
+                  <p className="text-xs text-gray-500">
+                    Only admins can promote a user to co-admin.
+                  </p>
+                )}
               </div>
             </div>
 
@@ -305,11 +514,20 @@ export function AdminUsers() {
                 onClick={() => {
                   setShowRoleModal(false);
                   setSelectedUser(null);
+                  setSelectedRole(null);
+                  setSelectedPermissions(null);
                 }}
                 disabled={updating}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition disabled:opacity-50"
               >
                 Cancel
+              </button>
+              <button
+                onClick={applyUserChanges}
+                disabled={updating || loadingPermissions}
+                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition disabled:opacity-50"
+              >
+                {updating ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </div>

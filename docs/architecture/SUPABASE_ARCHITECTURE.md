@@ -1,4 +1,14 @@
 # Supabase Backend Architecture
+
+## Status Update (February 4, 2026)
+- Roles now supported: admin, co_admin, employee, customer (installer replaced by employee).
+- Staff access: admin/co_admin/employee can access /admin; user management limited to admin/co_admin.
+- Co-admins cannot change admin/co_admin roles; they can manage employee/customer roles.
+- Per-user permissions added: can_manage_products, can_manage_tickets, can_promote_to_co_admin (admin-only).
+- Audit & monitoring: /admin/audit shows activity feed + ticket queue; profile sensitive edits, role/permission changes, and product CRUD are logged.
+- Product images: URL or device upload, max 4 images, 2MB per image, primary image = first.
+- Environment files (.env, .env.local, etc.) must never be committed; use host env vars.
+- Linting: Prettier applied; ESLint passes with warnings only (mostly any/fast-refresh).
 **Project**: Feraj Solar Limited Website  
 **Version**: 1.0  
 **Date**: January 22, 2026  
@@ -81,7 +91,7 @@ CREATE TABLE public.profiles (
   full_name TEXT,
   avatar_url TEXT,
   phone TEXT,
-  role TEXT DEFAULT 'customer' CHECK (role IN ('customer', 'admin', 'installer')),
+  role TEXT DEFAULT 'customer' CHECK (role IN ('customer', 'employee', 'co_admin', 'admin')),
   company_name TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -138,15 +148,50 @@ CREATE POLICY "Active products are viewable by everyone"
   ON public.products FOR SELECT
   USING (is_active = true);
 
--- Only admins can manage products
-CREATE POLICY "Admins can manage products"
-  ON public.products FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+-- Staff can manage products (admins/co-admins, employees with permission)
+-- See docs/deployment/ACCESS_CONTROL_SETUP.sql for current policies
+```
+
+#### 2.2.1 User Permissions Table
+
+```sql
+CREATE TABLE public.user_permissions (
+  user_id UUID PRIMARY KEY REFERENCES public.profiles(id),
+  can_manage_products BOOLEAN DEFAULT false,
+  can_manage_tickets BOOLEAN DEFAULT false,
+  can_promote_to_co_admin BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+#### 2.2.2 Audit Logs Table
+
+```sql
+CREATE TABLE public.audit_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  actor_user_id UUID REFERENCES public.profiles(id),
+  target_user_id UUID REFERENCES public.profiles(id),
+  action TEXT NOT NULL,
+  metadata JSONB,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+#### 2.2.3 Tickets Table
+
+```sql
+CREATE TABLE public.tickets (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_by UUID REFERENCES public.profiles(id),
+  assigned_to UUID REFERENCES public.profiles(id),
+  status TEXT DEFAULT 'open',
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  response TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 ```
 
 #### 2.3 Orders Table
@@ -226,7 +271,7 @@ CREATE TABLE public.installation_requests (
   preferred_date DATE,
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'scheduled', 'in_progress', 'completed', 'cancelled')),
   notes TEXT,
-  assigned_installer_id UUID REFERENCES public.profiles(id),
+  assigned_employee_id UUID REFERENCES public.profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

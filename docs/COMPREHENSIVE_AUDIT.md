@@ -1,4 +1,14 @@
 # Comprehensive Project Audit & Standards Review
+
+## Status Update (February 4, 2026)
+- Roles now supported: admin, co_admin, employee, customer (installer replaced by employee).
+- Staff access: admin/co_admin/employee can access /admin; user management limited to admin/co_admin.
+- Co-admins cannot change admin/co_admin roles; they can manage employee/customer roles.
+- Per-user permissions added: can_manage_products, can_manage_tickets, can_promote_to_co_admin (admin-only).
+- Audit & monitoring: /admin/audit shows activity feed + ticket queue; profile sensitive edits, role/permission changes, and product CRUD are logged.
+- Product images: URL or device upload, max 4 images, 2MB per image, primary image = first.
+- Environment files (.env, .env.local, etc.) must never be committed; use host env vars.
+- Linting: Prettier applied; ESLint passes with warnings only (mostly any/fast-refresh).
 **Date**: January 22, 2026  
 **Branch**: `feature/comprehensive-standards-review`  
 **Project**: Feraj Solar Limited Website
@@ -130,7 +140,7 @@ const { data, error } = await supabase.auth.signInWithPassword({
 - **Protected Routes**: Route guards for authenticated pages
 - **Input Validation**: Client-side validation with Zod
 - **Session Persistence**: Secure session management
-- **Role-Based Access**: Support for customer, admin, installer roles
+- **Role-Based Access**: Support for customer, employee, co_admin, admin roles
 
 ### Remaining Security Tasks:
 

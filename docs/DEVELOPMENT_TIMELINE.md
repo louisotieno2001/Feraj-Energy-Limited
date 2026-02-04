@@ -1,4 +1,14 @@
 # Development Timeline & Schedule
+
+## Status Update (February 4, 2026)
+- Roles now supported: admin, co_admin, employee, customer (installer replaced by employee).
+- Staff access: admin/co_admin/employee can access /admin; user management limited to admin/co_admin.
+- Co-admins cannot change admin/co_admin roles; they can manage employee/customer roles.
+- Per-user permissions added: can_manage_products, can_manage_tickets, can_promote_to_co_admin (admin-only).
+- Audit & monitoring: /admin/audit shows activity feed + ticket queue; profile sensitive edits, role/permission changes, and product CRUD are logged.
+- Product images: URL or device upload, max 4 images, 2MB per image, primary image = first.
+- Environment files (.env, .env.local, etc.) must never be committed; use host env vars.
+- Linting: Prettier applied; ESLint passes with warnings only (mostly any/fast-refresh).
 **Project**: Feraj Solar Limited Website  
 **Version**: v1.3.0 → v2.0.0  
 **Planning Date**: January 24, 2026  

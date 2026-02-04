@@ -1,35 +1,52 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  LayoutDashboard, 
-  Users, 
-  Package, 
-  ShoppingBag, 
-  LogOut, 
-  Menu, 
+import {
+  LayoutDashboard,
+  Users,
+  Package,
+  ShoppingBag,
+  LogOut,
+  Menu,
   X,
-  Home
+  Home,
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 export function AdminLayout() {
-  const { profile, signOut } = useAuth();
+  const { profile, permissions, signOut } = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const isAdmin = profile?.role === 'admin';
+  const isCoAdmin = profile?.role === 'co_admin';
+  const isEmployee = profile?.role === 'employee';
+
+  const canManageProducts =
+    isAdmin || isCoAdmin || (isEmployee && permissions?.can_manage_products);
+
   const navigation = [
-    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'Users', href: '/admin/users', icon: Users },
-    { name: 'Products', href: '/admin/products', icon: Package },
-    { name: 'Orders', href: '/admin/orders', icon: ShoppingBag },
-  ];
+    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, visible: true },
+    {
+      name: 'Users',
+      href: '/admin/users',
+      icon: Users,
+      visible: isAdmin || isCoAdmin,
+    },
+    {
+      name: 'Products',
+      href: '/admin/products',
+      icon: Package,
+      visible: canManageProducts,
+    },
+    { name: 'Audit', href: '/admin/audit', icon: ShoppingBag, visible: true },
+  ].filter((item) => item.visible);
 
   const handleSignOut = async () => {
     try {
       await signOut();
       toast.success('Logged out successfully');
-    } catch (error) {
+    } catch {
       toast.error('Failed to log out');
     }
   };
@@ -55,7 +72,9 @@ export function AdminLayout() {
           <div className="flex items-center justify-between h-16 px-6 border-b">
             <Link to="/admin" className="flex items-center gap-2">
               <LayoutDashboard className="h-6 w-6 text-green-600" />
-              <span className="text-lg font-bold text-gray-900">Admin Panel</span>
+              <span className="text-lg font-bold text-gray-900">
+                Admin Panel
+              </span>
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
@@ -68,9 +87,11 @@ export function AdminLayout() {
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
             {navigation.map((item) => {
-              const isActive = location.pathname === item.href ||
-                (item.href !== '/admin' && location.pathname.startsWith(item.href));
-              
+              const isActive =
+                location.pathname === item.href ||
+                (item.href !== '/admin' &&
+                  location.pathname.startsWith(item.href));
+
               return (
                 <Link
                   key={item.name}
@@ -94,17 +115,21 @@ export function AdminLayout() {
             <div className="flex items-center gap-3 mb-3">
               <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
                 <span className="text-green-600 font-semibold">
-                  {profile?.full_name?.charAt(0) || profile?.email?.charAt(0) || 'A'}
+                  {profile?.full_name?.charAt(0) ||
+                    profile?.email?.charAt(0) ||
+                    'A'}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">
                   {profile?.full_name || 'Admin'}
                 </p>
-                <p className="text-xs text-gray-500 truncate">{profile?.email}</p>
+                <p className="text-xs text-gray-500 truncate">
+                  {profile?.email}
+                </p>
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Link
                 to="/"
@@ -136,7 +161,7 @@ export function AdminLayout() {
             >
               <Menu className="h-6 w-6" />
             </button>
-            
+
             <div className="flex items-center gap-2 lg:hidden">
               <LayoutDashboard className="h-6 w-6 text-green-600" />
               <span className="text-lg font-bold text-gray-900">Admin</span>
@@ -144,7 +169,7 @@ export function AdminLayout() {
 
             <div className="flex items-center gap-4">
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Admin
+                {profile?.role ? profile.role.replace('_', ' ') : 'Staff'}
               </span>
             </div>
           </div>

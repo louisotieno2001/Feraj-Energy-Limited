@@ -1,6 +1,16 @@
 # Project Status & Next Steps
+
+## Status Update (February 4, 2026)
+- Roles now supported: admin, co_admin, employee, customer (installer replaced by employee).
+- Staff access: admin/co_admin/employee can access /admin; user management limited to admin/co_admin.
+- Co-admins cannot change admin/co_admin roles; they can manage employee/customer roles.
+- Per-user permissions added: can_manage_products, can_manage_tickets, can_promote_to_co_admin (admin-only).
+- Audit & monitoring: /admin/audit shows activity feed + ticket queue; profile sensitive edits, role/permission changes, and product CRUD are logged.
+- Product images: URL or device upload, max 4 images, 2MB per image, primary image = first.
+- Environment files (.env, .env.local, etc.) must never be committed; use host env vars.
+- Linting: Prettier applied; ESLint passes with warnings only (mostly any/fast-refresh).
 **Feraj Solar Limited Website**  
-**Last Updated**: January 23, 2026  
+**Last Updated**: February 4, 2026  
 **Current Version**: v1.3.0
 
 ---
@@ -25,17 +35,20 @@
 - ✅ **Admin dashboard with role-based access control**
 - ✅ **Admin user management (view all users, change roles)**
 - ✅ **Admin product management (CRUD operations)**
-- ✅ **Product image management (multiple images per product via URLs)**
+- ✅ **Product image management (URL + device upload, max 4, primary image)**
 - ✅ **Admin dashboard with statistics**
-- ✅ Role-based access control (customer, admin, installer)
+- ✅ Role-based access control (customer, employee, co_admin, admin)
+- ✅ Per-user permissions (products/tickets/co-admin promotion)
+- ✅ Audit & monitoring panel with activity feed and ticket queue
 - ✅ SEO optimization with meta tags
-- ✅ Zero TypeScript errors
+- ✅ Prettier formatting applied
 
 ### What's Not Yet Implemented
 - ⏳ Product search functionality
 - ⏳ Order creation from cart
-- ⏳ Testing framework
-- ⏳ Code quality tools (ESLint, Prettier)
+- ⏳ Customer ticket submission UI
+- ⏳ Product preview-before-publish
+- ⏳ Reduce ESLint warnings (any types, fast-refresh)
 - ⏳ CI/CD pipeline
 - ⏳ Production deployment to Netlify
 - ⏳ Bundle size optimization
@@ -77,8 +90,8 @@
 - [docs/architecture/migrate-products.sql](../docs/architecture/migrate-products.sql)
 - [docs/deployment/PRODUCTS_MIGRATION.md](../docs/deployment/PRODUCTS_MIGRATION.md) (guide)
 
-#### 2. Apply Admin RLS Policies ⏱️ READY
-**Goal**: Enable admin features with proper security  
+#### 2. Apply Access Control Policies ⏱️ READY
+**Goal**: Enable staff features with proper security  
 **Status**: Documentation complete, SQL ready  
 **Priority**: P0 (Security requirement)  
 **Estimated Time**: 10 minutes
@@ -90,7 +103,7 @@
 - [ ] Test admin access
 
 **File to use**:
-- [docs/deployment/ADMIN_RLS_POLICIES.md](../docs/deployment/ADMIN_RLS_POLICIES.md)
+- [docs/deployment/ACCESS_CONTROL_SETUP.sql](../docs/deployment/ACCESS_CONTROL_SETUP.sql)
 
 #### 3. Test Admin Features ⏱️ HIGH PRIORITY
 **Goal**: Verify all admin functionality works  

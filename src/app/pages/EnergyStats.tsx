@@ -16,11 +16,12 @@ export function EnergyStats() {
     }
   }, []);
 
-  const points = energyData.map(d => ({
+  const points = energyData.map((d) => ({
     lat: d.lat,
     lng: d.lng,
     size: Math.log(d.demand + 1) * 0.5,
-    color: d.renewable > 50 ? '#10b981' : d.renewable > 25 ? '#f59e0b' : '#ef4444',
+    color:
+      d.renewable > 50 ? '#10b981' : d.renewable > 25 ? '#f59e0b' : '#ef4444',
     country: d.country,
     ...d,
   }));
@@ -43,7 +44,8 @@ export function EnergyStats() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-4">Global Energy Demand</h1>
           <p className="text-xl text-gray-300">
-            Interactive 3D visualization of real-time energy demand and renewable energy adoption worldwide
+            Interactive 3D visualization of real-time energy demand and
+            renewable energy adoption worldwide
           </p>
         </div>
       </div>
@@ -55,10 +57,15 @@ export function EnergyStats() {
             <div className="bg-gray-700 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <Activity className="h-5 w-5 text-green-400" />
-                <span className="text-sm text-gray-300">Total Global Demand</span>
+                <span className="text-sm text-gray-300">
+                  Total Global Demand
+                </span>
               </div>
               <div className="text-2xl font-bold">
-                {energyData.reduce((sum, d) => sum + d.demand, 0).toLocaleString()} GW
+                {energyData
+                  .reduce((sum, d) => sum + d.demand, 0)
+                  .toLocaleString()}{' '}
+                GW
               </div>
             </div>
 
@@ -68,7 +75,11 @@ export function EnergyStats() {
                 <span className="text-sm text-gray-300">Avg. Renewable %</span>
               </div>
               <div className="text-2xl font-bold">
-                {Math.round(energyData.reduce((sum, d) => sum + d.renewable, 0) / energyData.length)}%
+                {Math.round(
+                  energyData.reduce((sum, d) => sum + d.renewable, 0) /
+                    energyData.length
+                )}
+                %
               </div>
             </div>
 
@@ -78,7 +89,8 @@ export function EnergyStats() {
                 <span className="text-sm text-gray-300">Increasing Demand</span>
               </div>
               <div className="text-2xl font-bold">
-                {energyData.filter(d => d.trend === 'increasing').length} Countries
+                {energyData.filter((d) => d.trend === 'increasing').length}{' '}
+                Countries
               </div>
             </div>
 
@@ -88,7 +100,8 @@ export function EnergyStats() {
                 <span className="text-sm text-gray-300">Decreasing Demand</span>
               </div>
               <div className="text-2xl font-bold">
-                {energyData.filter(d => d.trend === 'decreasing').length} Countries
+                {energyData.filter((d) => d.trend === 'decreasing').length}{' '}
+                Countries
               </div>
             </div>
           </div>
@@ -149,46 +162,69 @@ export function EnergyStats() {
             <div className="bg-gray-800 rounded-lg p-6 sticky top-24">
               {selectedCountry || hoveredCountry ? (
                 <div>
-                  <h2 className="text-2xl font-bold mb-4">{(selectedCountry || hoveredCountry).country}</h2>
-                  
+                  <h2 className="text-2xl font-bold mb-4">
+                    {(selectedCountry || hoveredCountry).country}
+                  </h2>
+
                   <div className="space-y-4">
                     <div>
-                      <div className="text-sm text-gray-400 mb-1">Energy Demand</div>
+                      <div className="text-sm text-gray-400 mb-1">
+                        Energy Demand
+                      </div>
                       <div className="text-3xl font-bold text-green-400">
                         {(selectedCountry || hoveredCountry).demand} GW
                       </div>
                     </div>
 
                     <div>
-                      <div className="text-sm text-gray-400 mb-1">Renewable Energy</div>
+                      <div className="text-sm text-gray-400 mb-1">
+                        Renewable Energy
+                      </div>
                       <div className="flex items-center gap-3">
-                        <div className="text-2xl font-bold">{(selectedCountry || hoveredCountry).renewable}%</div>
+                        <div className="text-2xl font-bold">
+                          {(selectedCountry || hoveredCountry).renewable}%
+                        </div>
                         <div className="flex-1 bg-gray-700 rounded-full h-3">
                           <div
                             className="bg-green-500 h-3 rounded-full transition-all"
-                            style={{ width: `${(selectedCountry || hoveredCountry).renewable}%` }}
+                            style={{
+                              width: `${(selectedCountry || hoveredCountry).renewable}%`,
+                            }}
                           ></div>
                         </div>
                       </div>
                     </div>
 
                     <div>
-                      <div className="text-sm text-gray-400 mb-2">Demand Trend</div>
+                      <div className="text-sm text-gray-400 mb-2">
+                        Demand Trend
+                      </div>
                       <div className="flex items-center gap-2 px-3 py-2 bg-gray-700 rounded-md">
-                        {getTrendIcon((selectedCountry || hoveredCountry).trend)}
-                        <span className="capitalize">{(selectedCountry || hoveredCountry).trend}</span>
+                        {getTrendIcon(
+                          (selectedCountry || hoveredCountry).trend
+                        )}
+                        <span className="capitalize">
+                          {(selectedCountry || hoveredCountry).trend}
+                        </span>
                       </div>
                     </div>
 
                     <div>
-                      <div className="text-sm text-gray-400 mb-2">Key Factors</div>
+                      <div className="text-sm text-gray-400 mb-2">
+                        Key Factors
+                      </div>
                       <ul className="space-y-2">
-                        {(selectedCountry || hoveredCountry).factors.map((factor: string, idx: number) => (
-                          <li key={idx} className="flex items-start gap-2 text-sm">
-                            <span className="text-green-400">•</span>
-                            <span>{factor}</span>
-                          </li>
-                        ))}
+                        {(selectedCountry || hoveredCountry).factors.map(
+                          (factor: string, idx: number) => (
+                            <li
+                              key={idx}
+                              className="flex items-start gap-2 text-sm"
+                            >
+                              <span className="text-green-400">•</span>
+                              <span>{factor}</span>
+                            </li>
+                          )
+                        )}
                       </ul>
                     </div>
                   </div>
@@ -196,9 +232,12 @@ export function EnergyStats() {
               ) : (
                 <div className="text-center py-12">
                   <Activity className="h-16 w-16 text-gray-600 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Select a Country</h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Select a Country
+                  </h3>
                   <p className="text-gray-400 text-sm">
-                    Click or hover over any point on the globe to view detailed energy statistics
+                    Click or hover over any point on the globe to view detailed
+                    energy statistics
                   </p>
                 </div>
               )}
@@ -231,13 +270,19 @@ export function EnergyStats() {
                         onClick={() => setSelectedCountry(country)}
                       >
                         <td className="py-3 px-4">{country.country}</td>
-                        <td className="py-3 px-4 text-right">{country.demand.toLocaleString()}</td>
                         <td className="py-3 px-4 text-right">
-                          <span className={`px-2 py-1 rounded text-sm ${
-                            country.renewable > 50 ? 'bg-green-900 text-green-300' :
-                            country.renewable > 25 ? 'bg-yellow-900 text-yellow-300' :
-                            'bg-red-900 text-red-300'
-                          }`}>
+                          {country.demand.toLocaleString()}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <span
+                            className={`px-2 py-1 rounded text-sm ${
+                              country.renewable > 50
+                                ? 'bg-green-900 text-green-300'
+                                : country.renewable > 25
+                                  ? 'bg-yellow-900 text-yellow-300'
+                                  : 'bg-red-900 text-red-300'
+                            }`}
+                          >
                             {country.renewable}%
                           </span>
                         </td>

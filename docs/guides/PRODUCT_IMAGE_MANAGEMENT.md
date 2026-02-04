@@ -1,5 +1,15 @@
 # Product Image Management Guide
 
+## Status Update (February 4, 2026)
+- Roles now supported: admin, co_admin, employee, customer (installer replaced by employee).
+- Staff access: admin/co_admin/employee can access /admin; user management limited to admin/co_admin.
+- Co-admins cannot change admin/co_admin roles; they can manage employee/customer roles.
+- Per-user permissions added: can_manage_products, can_manage_tickets, can_promote_to_co_admin (admin-only).
+- Audit & monitoring: /admin/audit shows activity feed + ticket queue; profile sensitive edits, role/permission changes, and product CRUD are logged.
+- Product images: URL or device upload, max 4 images, 2MB per image, primary image = first.
+- Environment files (.env, .env.local, etc.) must never be committed; use host env vars.
+- Linting: Prettier applied; ESLint passes with warnings only (mostly any/fast-refresh).
+
 **Last Updated**: January 23, 2026  
 **Version**: v1.3.0
 
@@ -7,7 +17,7 @@
 
 ## Overview
 
-Admins can add multiple images to products through the admin panel. The current implementation uses **URL-based image management**, where images are hosted externally and referenced by URL.
+Admins/co-admins (and employees with product permission) can add multiple images to products through the admin panel. The current implementation supports **URL-based images** and **device uploads**. Device uploads are stored as data URLs in the database for quick setup (no external hosting required).
 
 ---
 
@@ -24,17 +34,19 @@ Admins can add multiple images to products through the admin panel. The current 
    - Enter product name, description, category, price, stock quantity
    - Add specifications (optional)
 
-3. **Add Images**
+3. **Add Images (URL or Upload)**
    - Scroll to the **"Images"** section
    - Paste an image URL in the text field
    - Example: `https://example.com/images/solar-panel-550w.jpg`
    - Click the **+ (Plus)** button to add the image
    - **Live preview** appears showing the image
+   - Or click **"Upload from device"** to pick image files (JPG/PNG/WebP)
    - Repeat to add multiple images (recommended: 3-5 images per product)
 
 4. **Manage Images**
    - Hover over any image preview
    - Click the **trash icon** to remove an image
+   - Click **"Set primary"** to move an image to the first position
    - First image becomes the primary product thumbnail
 
 5. **Save Product**
@@ -87,16 +99,16 @@ Admins can add multiple images to products through the admin panel. The current 
 ### Image Specifications
 - **Format**: JPG, PNG, WebP, GIF
 - **Recommended size**: 800x800px to 1200x1200px
-- **File size**: Under 500 KB per image (for fast loading)
+- **File size**: Under 2 MB per image (enforced for device uploads)
 - **Aspect ratio**: Square (1:1) or landscape (4:3) preferred
 - **Minimum**: 1 image required per product
-- **Maximum**: No limit, but 3-5 images recommended
+- **Maximum**: 4 images per product (enforced)
 
 ---
 
 ## Where to Host Images
 
-Since the current implementation requires image URLs, you need to host images externally. Here are recommended options:
+If you use URLs, images must be hosted externally. Device uploads are stored directly in the database as data URLs for fast setup. For larger catalogs, external hosting is recommended to keep database rows small.
 
 ### Option 1: Imgur (Free, Easy)
 **Best for**: Quick uploads, testing

@@ -5,7 +5,7 @@ export interface Profile {
   email: string;
   full_name: string | null;
   avatar_url: string | null;
-  role: 'customer' | 'admin' | 'installer';
+  role: 'customer' | 'employee' | 'co_admin' | 'admin';
   phone: string | null;
   company_name: string | null;
   created_at: string;
@@ -16,7 +16,8 @@ export interface UserStats {
   totalUsers: number;
   totalAdmins: number;
   totalCustomers: number;
-  totalInstallers: number;
+  totalEmployees: number;
+  totalCoAdmins: number;
   recentUsers: Profile[];
 }
 
@@ -52,7 +53,7 @@ export async function getUserById(userId: string) {
  */
 export async function updateUserRole(
   userId: string,
-  newRole: 'customer' | 'admin' | 'installer'
+  newRole: 'customer' | 'employee' | 'co_admin' | 'admin'
 ) {
   const { data, error } = await supabase
     .from('profiles')
@@ -85,7 +86,9 @@ export async function searchUsers(query: string) {
 /**
  * Get users by role
  */
-export async function getUsersByRole(role: 'customer' | 'admin' | 'installer') {
+export async function getUsersByRole(
+  role: 'customer' | 'employee' | 'co_admin' | 'admin'
+) {
   const { data, error } = await supabase
     .from('profiles')
     .select('*')
@@ -120,13 +123,15 @@ export async function getUserStats(): Promise<UserStats> {
   const totalUsers = allUsers.length;
   const totalAdmins = allUsers.filter((u) => u.role === 'admin').length;
   const totalCustomers = allUsers.filter((u) => u.role === 'customer').length;
-  const totalInstallers = allUsers.filter((u) => u.role === 'installer').length;
+  const totalEmployees = allUsers.filter((u) => u.role === 'employee').length;
+  const totalCoAdmins = allUsers.filter((u) => u.role === 'co_admin').length;
 
   return {
     totalUsers,
     totalAdmins,
     totalCustomers,
-    totalInstallers,
+    totalEmployees,
+    totalCoAdmins,
     recentUsers: recentUsers as Profile[],
   };
 }

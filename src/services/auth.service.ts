@@ -11,7 +11,11 @@ export class AuthService {
   /**
    * Sign up a new user with email and password
    */
-  static async signUp(email: string, password: string, fullName: string): Promise<AuthResponse> {
+  static async signUp(
+    email: string,
+    password: string,
+    fullName: string
+  ): Promise<AuthResponse> {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -57,7 +61,9 @@ export class AuthService {
   /**
    * Send password reset email
    */
-  static async resetPassword(email: string): Promise<{ error: AuthError | null }> {
+  static async resetPassword(
+    email: string
+  ): Promise<{ error: AuthError | null }> {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
@@ -67,7 +73,9 @@ export class AuthService {
   /**
    * Update user password
    */
-  static async updatePassword(newPassword: string): Promise<{ error: AuthError | null }> {
+  static async updatePassword(
+    newPassword: string
+  ): Promise<{ error: AuthError | null }> {
     const { error } = await supabase.auth.updateUser({
       password: newPassword,
     });
@@ -77,7 +85,10 @@ export class AuthService {
   /**
    * Get current session
    */
-  static async getSession(): Promise<{ session: Session | null; error: AuthError | null }> {
+  static async getSession(): Promise<{
+    session: Session | null;
+    error: AuthError | null;
+  }> {
     const { data, error } = await supabase.auth.getSession();
     return {
       session: data.session,
@@ -88,7 +99,10 @@ export class AuthService {
   /**
    * Get current user
    */
-  static async getUser(): Promise<{ user: User | null; error: AuthError | null }> {
+  static async getUser(): Promise<{
+    user: User | null;
+    error: AuthError | null;
+  }> {
     const { data, error } = await supabase.auth.getUser();
     return {
       user: data.user,
@@ -99,7 +113,9 @@ export class AuthService {
   /**
    * Resend email verification
    */
-  static async resendVerificationEmail(email: string): Promise<{ error: AuthError | null }> {
+  static async resendVerificationEmail(
+    email: string
+  ): Promise<{ error: AuthError | null }> {
     const { error } = await supabase.auth.resend({
       type: 'signup',
       email,

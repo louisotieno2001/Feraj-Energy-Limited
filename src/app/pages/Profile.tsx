@@ -1,8 +1,17 @@
 import { useState, useEffect } from 'react';
-import { User, Mail, Phone, Building2, Calendar, Save, Shield } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Phone,
+  Building2,
+  Calendar,
+  Save,
+  Shield,
+} from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { supabase } from '@/lib/supabase';
+import { createAuditLog } from '@/services/audit.service';
 
 export function Profile() {
   const { user, profile, refreshProfile } = useAuth();
@@ -29,6 +38,18 @@ export function Profile() {
     setLoading(true);
 
     try {
+      const sensitiveBefore = {
+        phone: profile?.phone || '',
+        company_name: profile?.company_name || '',
+      };
+      const sensitiveAfter = {
+        phone: formData.phone,
+        company_name: formData.company_name,
+      };
+      const sensitiveChanged =
+        sensitiveBefore.phone !== sensitiveAfter.phone ||
+        sensitiveBefore.company_name !== sensitiveAfter.company_name;
+
       const { error } = await supabase
         .from('profiles')
         .update({
@@ -42,6 +63,19 @@ export function Profile() {
       if (error) throw error;
 
       await refreshProfile();
+
+      if (sensitiveChanged && user?.id) {
+        await createAuditLog({
+          actor_user_id: user.id,
+          target_user_id: user.id,
+          action: 'profile.update',
+          metadata: {
+            before: sensitiveBefore,
+            after: sensitiveAfter,
+          },
+        });
+      }
+
       toast.success('Profile updated successfully!');
       setEditing(false);
     } catch (error: any) {
@@ -55,7 +89,9 @@ export function Profile() {
     switch (role) {
       case 'admin':
         return 'bg-purple-100 text-purple-800';
-      case 'installer':
+      case 'co_admin':
+        return 'bg-indigo-100 text-indigo-800';
+      case 'employee':
         return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-green-100 text-green-800';
@@ -71,7 +107,7 @@ export function Profile() {
             <div className="h-8 bg-gray-200 rounded w-1/3 mb-3"></div>
             <div className="h-4 bg-gray-200 rounded w-2/3"></div>
           </div>
-          
+
           {/* Skeleton Card */}
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="bg-gray-200 px-6 py-8">
@@ -127,7 +163,9 @@ export function Profile() {
                     )}`}
                   >
                     <Shield className="h-3 w-3" />
-                    {profile.role.charAt(0).toUpperCase() + profile.role.slice(1)}
+                    {profile.role
+                      .replace('_', ' ')
+                      .replace(/\b\w/g, (char) => char.toUpperCase())}
                   </span>
                 </div>
               </div>

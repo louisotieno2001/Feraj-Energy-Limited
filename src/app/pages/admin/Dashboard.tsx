@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { getUserStats } from '@/services/users.service';
 import { getProducts, type Product } from '@/services/products.service';
-import { 
-  Users, 
-  Package, 
-  ShoppingCart, 
-  TrendingUp, 
+import {
+  Users,
+  Package,
+  ShoppingCart,
+  TrendingUp,
   AlertCircle,
   DollarSign,
-  Loader2
+  Loader2,
 } from 'lucide-react';
 import { Link } from 'react-router';
 
@@ -51,8 +51,12 @@ export function AdminDashboard() {
       ]);
 
       // Calculate product stats
-      const activeProducts = products.filter((p: Product) => p.is_active).length;
-      const outOfStockProducts = products.filter((p: Product) => p.stock_quantity === 0).length;
+      const activeProducts = products.filter(
+        (p: Product) => p.is_active
+      ).length;
+      const outOfStockProducts = products.filter(
+        (p: Product) => p.stock_quantity === 0
+      ).length;
       const lowStockProducts = products.filter(
         (p: Product) => p.stock_quantity > 0 && p.stock_quantity < 10
       ).length;
@@ -91,18 +95,23 @@ export function AdminDashboard() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
         <p className="mt-1 text-sm text-gray-600">
-          Overview of your platform's key metrics
+          Overview of your platform&apos;s key metrics
         </p>
       </div>
 
       {/* Main Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* Total Users */}
-        <Link to="/admin/users" className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+        <Link
+          to="/admin/users"
+          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Total Users</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalUsers}</p>
+              <p className="text-3xl font-bold text-gray-900">
+                {stats.totalUsers}
+              </p>
               {stats.recentUsers > 0 && (
                 <p className="text-sm text-green-600 mt-2">
                   +{stats.recentUsers} this month
@@ -116,11 +125,16 @@ export function AdminDashboard() {
         </Link>
 
         {/* Total Products */}
-        <Link to="/admin/products" className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+        <Link
+          to="/admin/products"
+          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Total Products</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalProducts}</p>
+              <p className="text-3xl font-bold text-gray-900">
+                {stats.totalProducts}
+              </p>
               <p className="text-sm text-gray-600 mt-2">
                 {stats.activeProducts} active
               </p>
@@ -132,11 +146,16 @@ export function AdminDashboard() {
         </Link>
 
         {/* Total Orders */}
-        <Link to="/admin/orders" className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+        <Link
+          to="/admin/orders"
+          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Total Orders</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalOrders}</p>
+              <p className="text-3xl font-bold text-gray-900">
+                {stats.totalOrders}
+              </p>
               <p className="text-sm text-gray-600 mt-2">All time</p>
             </div>
             <div className="h-12 w-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -165,11 +184,16 @@ export function AdminDashboard() {
       {/* Secondary Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {/* Out of Stock */}
-        <Link to="/admin/products" className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-red-500">
+        <Link
+          to="/admin/products"
+          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-red-500"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Out of Stock</p>
-              <p className="text-2xl font-bold text-red-600">{stats.outOfStockProducts}</p>
+              <p className="text-2xl font-bold text-red-600">
+                {stats.outOfStockProducts}
+              </p>
               <p className="text-xs text-gray-500 mt-1">products</p>
             </div>
             <AlertCircle className="h-8 w-8 text-red-600" />
@@ -177,23 +201,35 @@ export function AdminDashboard() {
         </Link>
 
         {/* Low Stock */}
-        <Link to="/admin/products" className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-orange-500">
+        <Link
+          to="/admin/products"
+          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-orange-500"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Low Stock</p>
-              <p className="text-2xl font-bold text-orange-600">{stats.lowStockProducts}</p>
-              <p className="text-xs text-gray-500 mt-1">products (&lt;10 units)</p>
+              <p className="text-2xl font-bold text-orange-600">
+                {stats.lowStockProducts}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                products (&lt;10 units)
+              </p>
             </div>
             <TrendingUp className="h-8 w-8 text-orange-600" />
           </div>
         </Link>
 
         {/* Active Products */}
-        <Link to="/admin/products" className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-green-500">
+        <Link
+          to="/admin/products"
+          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-green-500"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Active Products</p>
-              <p className="text-2xl font-bold text-green-600">{stats.activeProducts}</p>
+              <p className="text-2xl font-bold text-green-600">
+                {stats.activeProducts}
+              </p>
               <p className="text-xs text-gray-500 mt-1">visible to customers</p>
             </div>
             <Package className="h-8 w-8 text-green-600" />
@@ -203,7 +239,9 @@ export function AdminDashboard() {
 
       {/* Quick Actions */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          Quick Actions
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
             to="/admin/products"
@@ -212,7 +250,9 @@ export function AdminDashboard() {
             <Package className="h-6 w-6 text-green-600" />
             <div>
               <p className="font-medium text-gray-900">Add New Product</p>
-              <p className="text-sm text-gray-600">Create a new product listing</p>
+              <p className="text-sm text-gray-600">
+                Create a new product listing
+              </p>
             </div>
           </Link>
 
@@ -223,7 +263,9 @@ export function AdminDashboard() {
             <Users className="h-6 w-6 text-green-600" />
             <div>
               <p className="font-medium text-gray-900">Manage Users</p>
-              <p className="text-sm text-gray-600">View and update user roles</p>
+              <p className="text-sm text-gray-600">
+                View and update user roles
+              </p>
             </div>
           </Link>
 
@@ -246,13 +288,20 @@ export function AdminDashboard() {
           <div className="flex items-start gap-3">
             <AlertCircle className="h-6 w-6 text-orange-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold text-orange-900 mb-2">Inventory Alerts</h3>
+              <h3 className="font-semibold text-orange-900 mb-2">
+                Inventory Alerts
+              </h3>
               <ul className="space-y-1 text-sm text-orange-800">
                 {stats.outOfStockProducts > 0 && (
-                  <li>• {stats.outOfStockProducts} product(s) are out of stock</li>
+                  <li>
+                    • {stats.outOfStockProducts} product(s) are out of stock
+                  </li>
                 )}
                 {stats.lowStockProducts > 0 && (
-                  <li>• {stats.lowStockProducts} product(s) have low stock (&lt;10 units)</li>
+                  <li>
+                    • {stats.lowStockProducts} product(s) have low stock (&lt;10
+                    units)
+                  </li>
                 )}
               </ul>
               <Link

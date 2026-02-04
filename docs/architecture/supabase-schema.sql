@@ -13,7 +13,7 @@ CREATE TABLE public.profiles (
   full_name TEXT,
   avatar_url TEXT,
   phone TEXT,
-  role TEXT DEFAULT 'customer' CHECK (role IN ('customer', 'admin', 'installer')),
+  role TEXT DEFAULT 'customer' CHECK (role IN ('customer', 'employee', 'co_admin', 'admin')),
   company_name TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -74,9 +74,52 @@ CREATE TABLE public.products (
 
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 
+-- NOTE: Staff/product policies are defined in docs/deployment/ACCESS_CONTROL_SETUP.sql
 CREATE POLICY "Active products viewable by everyone"
   ON public.products FOR SELECT
   USING (is_active = true);
+
+-- ============================================
+-- 4. USER PERMISSIONS TABLE
+-- ============================================
+
+CREATE TABLE public.user_permissions (
+  user_id UUID PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE,
+  can_manage_products BOOLEAN DEFAULT false,
+  can_manage_tickets BOOLEAN DEFAULT false,
+  can_promote_to_co_admin BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ============================================
+-- 5. AUDIT LOGS TABLE
+-- ============================================
+
+CREATE TABLE public.audit_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  actor_user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  target_user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  action TEXT NOT NULL,
+  metadata JSONB,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ============================================
+-- 6. TICKETS TABLE
+-- ============================================
+
+CREATE TABLE public.tickets (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_by UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  assigned_to UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  status TEXT DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved')),
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  response TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 
 CREATE POLICY "Admins can manage products"
   ON public.products FOR ALL
@@ -167,7 +210,7 @@ CREATE POLICY "Users can insert own order items"
   );
 
 -- ============================================
--- 6. INSTALLATION REQUESTS TABLE
+-- 6. INSTALLATION REQUESTS TABLE (Planned/Future)
 -- ============================================
 
 CREATE TABLE public.installation_requests (
@@ -179,7 +222,7 @@ CREATE TABLE public.installation_requests (
   preferred_date DATE,
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'scheduled', 'in_progress', 'completed', 'cancelled')),
   notes TEXT,
-  assigned_installer_id UUID REFERENCES public.profiles(id),
+  assigned_employee_id UUID REFERENCES public.profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -194,17 +237,17 @@ CREATE POLICY "Users can create requests"
   ON public.installation_requests FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Admins and installers can view requests"
+CREATE POLICY "Admins and employees can view requests"
   ON public.installation_requests FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role IN ('admin', 'installer')
+      WHERE id = auth.uid() AND role IN ('admin', 'co_admin', 'employee')
     )
   );
 
 -- ============================================
--- 7. SUPPORT TICKETS TABLE
+-- 7. SUPPORT TICKETS TABLE (Deprecated - use public.tickets)
 -- ============================================
 
 CREATE TABLE public.support_tickets (

@@ -1,23 +1,40 @@
 import { useState, useEffect } from 'react';
 import {
-  getProducts,
+  getAllProducts,
   createProduct,
   updateProduct,
   deleteProduct,
   type Product,
 } from '@/services/products.service';
-import { ProductForm, type ProductFormData } from '@/app/components/admin/ProductForm';
-import { Loader2, Plus, Edit, Trash2, AlertCircle, Search, Eye, EyeOff } from 'lucide-react';
+import {
+  ProductForm,
+  type ProductFormData,
+} from '@/app/components/admin/ProductForm';
+import {
+  Loader2,
+  Plus,
+  Edit,
+  Trash2,
+  AlertCircle,
+  Search,
+  Eye,
+  EyeOff,
+} from 'lucide-react';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
+import { createAuditLog } from '@/services/audit.service';
 
 export function AdminProducts() {
+  const { user, profile, permissions } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
-  
+  const [statusFilter, setStatusFilter] = useState<
+    'all' | 'active' | 'inactive'
+  >('all');
+
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -34,7 +51,7 @@ export function AdminProducts() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const data = await getProducts();
+      const data = await getAllProducts();
       setProducts(data);
     } catch (error: any) {
       console.error('Error fetching products:', error);
@@ -59,7 +76,9 @@ export function AdminProducts() {
 
     // Category filter
     if (categoryFilter !== 'all') {
-      filtered = filtered.filter((product) => product.category === categoryFilter);
+      filtered = filtered.filter(
+        (product) => product.category === categoryFilter
+      );
     }
 
     // Status filter
@@ -91,6 +110,14 @@ export function AdminProducts() {
       setProducts((prev) => [newProduct, ...prev]);
       setShowForm(false);
       toast.success('Product created successfully');
+
+      if (user?.id) {
+        await createAuditLog({
+          actor_user_id: user.id,
+          action: 'product.create',
+          metadata: { product_id: newProduct.id, name: newProduct.name },
+        });
+      }
     } catch (error: any) {
       console.error('Error creating product:', error);
       toast.error('Failed to create product');
@@ -123,6 +150,14 @@ export function AdminProducts() {
       setShowForm(false);
       setEditingProduct(null);
       toast.success('Product updated successfully');
+
+      if (user?.id) {
+        await createAuditLog({
+          actor_user_id: user.id,
+          action: 'product.update',
+          metadata: { product_id: updated.id, name: updated.name },
+        });
+      }
     } catch (error: any) {
       console.error('Error updating product:', error);
       toast.error('Failed to update product');
@@ -139,6 +174,14 @@ export function AdminProducts() {
       setShowDeleteModal(false);
       setDeletingId(null);
       toast.success('Product deleted successfully');
+
+      if (user?.id) {
+        await createAuditLog({
+          actor_user_id: user.id,
+          action: 'product.delete',
+          metadata: { product_id: deletingId },
+        });
+      }
     } catch (error: any) {
       console.error('Error deleting product:', error);
       toast.error('Failed to delete product');
@@ -175,6 +218,25 @@ export function AdminProducts() {
     }
   };
 
+  const canManageProducts =
+    profile?.role === 'admin' ||
+    profile?.role === 'co_admin' ||
+    (profile?.role === 'employee' && permissions?.can_manage_products);
+
+  if (!canManageProducts) {
+    return (
+      <div className="bg-white rounded-lg shadow p-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          Product Management
+        </h1>
+        <p className="text-gray-600">
+          You do not have permission to manage products. Contact an admin to
+          request access.
+        </p>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -188,7 +250,9 @@ export function AdminProducts() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Product Management</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Product Management
+          </h1>
           <p className="mt-1 text-sm text-gray-600">
             Add, edit, and manage your products
           </p>
@@ -206,7 +270,9 @@ export function AdminProducts() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="text-sm text-gray-600">Total Products</div>
-          <div className="text-2xl font-bold text-gray-900">{products.length}</div>
+          <div className="text-2xl font-bold text-gray-900">
+            {products.length}
+          </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="text-sm text-gray-600">Active</div>
@@ -223,7 +289,11 @@ export function AdminProducts() {
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="text-sm text-gray-600">Low Stock (&lt;10)</div>
           <div className="text-2xl font-bold text-orange-600">
-            {products.filter((p) => p.stock_quantity > 0 && p.stock_quantity < 10).length}
+            {
+              products.filter(
+                (p) => p.stock_quantity > 0 && p.stock_quantity < 10
+              ).length
+            }
           </div>
         </div>
       </div>
@@ -302,11 +372,15 @@ export function AdminProducts() {
                     <div className="flex items-center">
                       <div className="h-12 w-12 flex-shrink-0">
                         <img
-                          src={product.images?.[0] || 'https://via.placeholder.com/100'}
+                          src={
+                            product.images?.[0] ||
+                            'https://via.placeholder.com/100'
+                          }
                           alt={product.name}
                           className="h-12 w-12 rounded-lg object-cover"
                           onError={(e) => {
-                            e.currentTarget.src = 'https://via.placeholder.com/100?text=No+Image';
+                            e.currentTarget.src =
+                              'https://via.placeholder.com/100?text=No+Image';
                           }}
                         />
                       </div>
@@ -315,7 +389,9 @@ export function AdminProducts() {
                           {product.name}
                         </div>
                         <div className="text-sm text-gray-500 truncate max-w-xs">
-                          {product.description?.substring(0, 50) || 'No description'}...
+                          {product.description?.substring(0, 50) ||
+                            'No description'}
+                          ...
                         </div>
                       </div>
                     </div>
@@ -338,8 +414,8 @@ export function AdminProducts() {
                         product.stock_quantity === 0
                           ? 'text-red-600'
                           : product.stock_quantity < 10
-                          ? 'text-orange-600'
-                          : 'text-green-600'
+                            ? 'text-orange-600'
+                            : 'text-green-600'
                       }`}
                     >
                       {product.stock_quantity}
@@ -411,7 +487,8 @@ export function AdminProducts() {
               Delete Product
             </h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this product? This action cannot be undone.
+              Are you sure you want to delete this product? This action cannot
+              be undone.
             </p>
             <div className="flex gap-3">
               <button

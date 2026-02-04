@@ -1,5 +1,15 @@
 # Netlify Deployment Setup for Feraj Energy Limited
 
+## Status Update (February 4, 2026)
+- Roles now supported: admin, co_admin, employee, customer (installer replaced by employee).
+- Staff access: admin/co_admin/employee can access /admin; user management limited to admin/co_admin.
+- Co-admins cannot change admin/co_admin roles; they can manage employee/customer roles.
+- Per-user permissions added: can_manage_products, can_manage_tickets, can_promote_to_co_admin (admin-only).
+- Audit & monitoring: /admin/audit shows activity feed + ticket queue; profile sensitive edits, role/permission changes, and product CRUD are logged.
+- Product images: URL or device upload, max 4 images, 2MB per image, primary image = first.
+- Environment files (.env, .env.local, etc.) must never be committed; use host env vars.
+- Linting: Prettier applied; ESLint passes with warnings only (mostly any/fast-refresh).
+
 ## 🎯 Quick Setup Guide
 
 Your repository: **https://github.com/onyangojerry/Feraj-Energy-Limited.git**
@@ -32,7 +42,7 @@ Netlify should auto-detect these settings from your `netlify.toml`, but verify:
 
 If you need environment variables:
 1. Go to **Site settings → Environment variables**
-2. Add variables from `.env.example`:
+2. Add variables from `.env.example` (do not commit any `.env` files):
    ```
    NODE_VERSION = 20
    VITE_COMPANY_NAME = Feraj Solar Limited

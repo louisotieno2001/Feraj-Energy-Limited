@@ -140,10 +140,7 @@ export async function deleteProduct(id: string) {
  * Hard delete a product - Admin only (use with caution)
  */
 export async function hardDeleteProduct(id: string) {
-  const { error } = await supabase
-    .from('products')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from('products').delete().eq('id', id);
 
   if (error) throw error;
 }
@@ -169,9 +166,9 @@ export async function searchProducts(query: string) {
 export async function updateProductStock(id: string, quantity: number) {
   const { data, error } = await supabase
     .from('products')
-    .update({ 
+    .update({
       stock_quantity: quantity,
-      updated_at: new Date().toISOString() 
+      updated_at: new Date().toISOString(),
     })
     .eq('id', id)
     .select()

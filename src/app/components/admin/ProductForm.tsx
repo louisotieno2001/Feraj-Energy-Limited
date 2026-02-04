@@ -22,6 +22,7 @@ export interface ProductFormData {
 
 export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
   const [loading, setLoading] = useState(false);
+  const maxImages = 4;
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
@@ -45,7 +46,11 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
       setFormData({
         name: product.name,
         description: product.description || '',
-        category: product.category as 'panels' | 'inverters' | 'batteries' | 'accessories',
+        category: product.category as
+          | 'panels'
+          | 'inverters'
+          | 'batteries'
+          | 'accessories',
         price: product.price,
         stock_quantity: product.stock_quantity,
         specifications: product.specifications || {},
@@ -124,6 +129,11 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
       return;
     }
 
+    if (formData.images.length >= maxImages) {
+      toast.error(`You can upload up to ${maxImages} images`);
+      return;
+    }
+
     // Basic URL validation
     try {
       new URL(imageUrl);
@@ -138,6 +148,59 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
     }));
 
     setImageUrl('');
+  };
+
+  const handleFileUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+
+    const maxSizeBytes = 2 * 1024 * 1024;
+    const fileArray = Array.from(files);
+    const remainingSlots = Math.max(0, maxImages - formData.images.length);
+
+    if (remainingSlots === 0) {
+      toast.error(`You can upload up to ${maxImages} images`);
+      return;
+    }
+
+    const limitedFiles = fileArray.slice(0, remainingSlots);
+    if (fileArray.length > remainingSlots) {
+      toast.error(`Only ${remainingSlots} more image(s) can be added`);
+    }
+
+    const readFile = (file: File) =>
+      new Promise<string>((resolve, reject) => {
+        if (!file.type.startsWith('image/')) {
+          reject(new Error('Only image files are allowed'));
+          return;
+        }
+        if (file.size > maxSizeBytes) {
+          reject(new Error('Image must be 2MB or smaller'));
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(new Error('Failed to read image'));
+        reader.readAsDataURL(file);
+      });
+
+    try {
+      const dataUrls = await Promise.all(limitedFiles.map(readFile));
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, ...dataUrls],
+      }));
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to upload image');
+    }
+  };
+
+  const setPrimaryImage = (index: number) => {
+    setFormData((prev) => {
+      const nextImages = [...prev.images];
+      const [selected] = nextImages.splice(index, 1);
+      return { ...prev, images: [selected, ...nextImages] };
+    });
   };
 
   const removeImage = (index: number) => {
@@ -189,7 +252,10 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
             <textarea
               value={formData.description}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, description: e.target.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
               }
               rows={4}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -206,7 +272,10 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
               <select
                 value={formData.category}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, category: e.target.value as ProductFormData['category'] }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    category: e.target.value as ProductFormData['category'],
+                  }))
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
@@ -225,7 +294,10 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                 type="number"
                 value={formData.price}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, price: parseFloat(e.target.value) || 0 }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    price: parseFloat(e.target.value) || 0,
+                  }))
                 }
                 min="0"
                 step="0.01"
@@ -265,11 +337,16 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                   type="checkbox"
                   checked={formData.is_active}
                   onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, is_active: e.target.checked }))
+                    setFormData((prev) => ({
+                      ...prev,
+                      is_active: e.target.checked,
+                    }))
                   }
                   className="w-4 h-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                 />
-                <span className="text-sm text-gray-700">Active (visible to customers)</span>
+                <span className="text-sm text-gray-700">
+                  Active (visible to customers)
+                </span>
               </label>
             </div>
           </div>
@@ -279,7 +356,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Specifications
             </label>
-            
+
             {/* Add specification */}
             <div className="flex gap-2 mb-3">
               <input
@@ -314,7 +391,8 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                     className="flex items-center justify-between px-3 py-2 bg-gray-50 rounded-md"
                   >
                     <span className="text-sm">
-                      <span className="font-medium">{key}:</span> {String(value)}
+                      <span className="font-medium">{key}:</span>{' '}
+                      {String(value)}
                     </span>
                     <button
                       type="button"
@@ -332,9 +410,9 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
           {/* Images */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Images * (URLs)
+              Images * (URL or Upload)
             </label>
-            
+
             {/* Add image */}
             <div className="flex gap-2 mb-3">
               <input
@@ -353,6 +431,26 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
               </button>
             </div>
 
+            {/* Upload images */}
+            <label className="flex items-center gap-3 mb-3 text-sm text-gray-700 cursor-pointer">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => handleFileUpload(e.target.files)}
+                className="hidden"
+              />
+              <span className="inline-flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                <Upload className="h-4 w-4" />
+                Upload from device
+              </span>
+              <span className="text-xs text-gray-500">Max 2MB per image</span>
+            </label>
+            <p className="text-xs text-gray-500 mb-3">
+              {formData.images.length}/{maxImages} images added. First image is
+              used as the primary thumbnail.
+            </p>
+
             {/* Images list */}
             {formData.images.length > 0 && (
               <div className="grid grid-cols-2 gap-3">
@@ -366,9 +464,23 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                       alt={`Product ${index + 1}`}
                       className="w-full h-32 object-cover"
                       onError={(e) => {
-                        e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Invalid+Image';
+                        e.currentTarget.src =
+                          'https://via.placeholder.com/400x300?text=Invalid+Image';
                       }}
                     />
+                    {index === 0 ? (
+                      <span className="absolute bottom-2 left-2 text-xs bg-green-600 text-white px-2 py-1 rounded">
+                        Primary
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setPrimaryImage(index)}
+                        className="absolute bottom-2 left-2 text-xs bg-white/90 text-gray-700 px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                      >
+                        Set primary
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => removeImage(index)}
@@ -397,7 +509,11 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
               disabled={loading}
               className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Saving...' : product ? 'Update Product' : 'Create Product'}
+              {loading
+                ? 'Saving...'
+                : product
+                  ? 'Update Product'
+                  : 'Create Product'}
             </button>
           </div>
         </form>

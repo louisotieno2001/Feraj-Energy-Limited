@@ -1,5 +1,15 @@
 # Admin Features Implementation Summary (v1.3.0)
 
+## Status Update (February 4, 2026)
+- Roles now supported: admin, co_admin, employee, customer (installer replaced by employee).
+- Staff access: admin/co_admin/employee can access /admin; user management limited to admin/co_admin.
+- Co-admins cannot change admin/co_admin roles; they can manage employee/customer roles.
+- Per-user permissions added: can_manage_products, can_manage_tickets, can_promote_to_co_admin (admin-only).
+- Audit & monitoring: /admin/audit shows activity feed + ticket queue; profile sensitive edits, role/permission changes, and product CRUD are logged.
+- Product images: URL or device upload, max 4 images, 2MB per image, primary image = first.
+- Environment files (.env, .env.local, etc.) must never be committed; use host env vars.
+- Linting: Prettier applied; ESLint passes with warnings only (mostly any/fast-refresh).
+
 **Completed**: January 23, 2026  
 **Status**: ✅ Complete - Ready for deployment  
 **Build Status**: ✅ Successful (0 TypeScript errors)  
@@ -9,10 +19,12 @@
 
 ## 🎉 What We Built
 
+**Current implementation note**: Admin access is now staff-based (admin/co_admin/employee) with per-user permissions and an audit/ticket panel at `/admin/audit`. The bullets below have been updated to reflect current behavior.
+
 ### 1. Admin Route Protection
 **File**: `src/app/components/AdminRoute.tsx`
 
-- Role-based access control checking for `role === 'admin'`
+- Role-based access control checking for staff roles (admin/co_admin/employee)
 - Automatic redirect to login for unauthenticated users
 - Toast notification for unauthorized access attempts
 - Loading state while checking authentication
@@ -27,6 +39,7 @@
   - 👥 Users
   - 📦 Products
   - 🛒 Orders
+  - 🧾 Audit
 - User info display with email
 - Sign out functionality
 - Breadcrumb navigation
@@ -56,19 +69,20 @@
 - View all users in a table with:
   - User avatar (initials)
   - Full name and email
-  - Role badge (color-coded: purple=admin, blue=installer, green=customer)
+- Role badge (color-coded: purple=admin, indigo=co_admin, blue=employee, green=customer)
   - Join date
 - Statistics dashboard:
   - Total users
   - Admin count
   - Customer count
-  - Installer count
+  - Employee count
 - Search by name or email
-- Filter by role (all, customer, admin, installer)
+- Filter by role (all, customer, admin, co_admin, employee)
 - Role elevation with confirmation modal:
   - Change user to Customer
   - Change user to Admin
-  - Change user to Installer
+  - Change user to Co-admin
+  - Change user to Employee
 - Security: Users cannot change their own role
 
 **Service Functions**:
@@ -143,7 +157,7 @@ New admin routes structure:
 ```
 
 All admin routes protected by:
-1. `AdminRoute` component (checks role === 'admin')
+1. `AdminRoute` component (checks staff roles)
 2. `AdminLayout` wrapper (provides navigation)
 
 ### 7. Documentation
@@ -293,7 +307,7 @@ git push origin main
 
 ### After v1.3.0
 - ✅ Complete admin dashboard with statistics
-- ✅ User role management (customer, admin, installer)
+- ✅ User role management (customer, admin, employee)
 - ✅ Full product CRUD without code changes
 - ✅ Real-time product updates visible to customers
 - ✅ Stock management with warnings
@@ -304,7 +318,7 @@ git push origin main
 1. **No developer needed** to add/edit products
 2. **Instant updates** - new products appear immediately
 3. **Better inventory control** - stock warnings prevent overselling
-4. **User management** - elevate installers/admins as business grows
+4. **User management** - elevate employees/admins as business grows
 5. **Scalable** - can manage 1000s of products and users
 
 ---

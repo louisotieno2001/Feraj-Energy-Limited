@@ -29,12 +29,15 @@ export function AdminRoute({ children }: AdminRouteProps) {
     return <Navigate to="/login" replace />;
   }
 
-  // Check if user has admin role
-  if (profile?.role !== 'admin') {
-    toast.error('Access denied. Admin privileges required.');
+  const allowedRoles = ['admin', 'co_admin', 'employee'] as const;
+  const hasAccess = profile && allowedRoles.includes(profile.role);
+
+  // Check if user has staff role
+  if (!hasAccess) {
+    toast.error('Access denied. Staff privileges required.');
     return <Navigate to="/" replace />;
   }
 
-  // User is authenticated and is an admin
+  // User is authenticated and is staff
   return <>{children}</>;
 }

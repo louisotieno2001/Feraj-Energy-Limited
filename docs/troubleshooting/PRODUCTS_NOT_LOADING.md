@@ -1,5 +1,15 @@
 # Products Not Loading - Troubleshooting Guide
 
+## Status Update (February 4, 2026)
+- Roles now supported: admin, co_admin, employee, customer (installer replaced by employee).
+- Staff access: admin/co_admin/employee can access /admin; user management limited to admin/co_admin.
+- Co-admins cannot change admin/co_admin roles; they can manage employee/customer roles.
+- Per-user permissions added: can_manage_products, can_manage_tickets, can_promote_to_co_admin (admin-only).
+- Audit & monitoring: /admin/audit shows activity feed + ticket queue; profile sensitive edits, role/permission changes, and product CRUD are logged.
+- Product images: URL or device upload, max 4 images, 2MB per image, primary image = first.
+- Environment files (.env, .env.local, etc.) must never be committed; use host env vars.
+- Linting: Prettier applied; ESLint passes with warnings only (mostly any/fast-refresh).
+
 **Issue**: Products page shows loading spinner forever or shows "Failed to load products"
 
 ---
@@ -51,11 +61,11 @@ AND tablename = 'products';
 
 **Expected Results**:
 - RLS enabled: ✅ `rowsecurity` should be `true`
-- Policies count: ✅ Should have 5 policies:
-  - "Admins can view all products"
-  - "Admins can insert products"
-  - "Admins can update products"
-  - "Admins can delete products"
+- Policies count: ✅ Should include:
+  - "Staff can view all products" (admin/co_admin/employee with permission)
+  - "Staff can insert products"
+  - "Staff can update products"
+  - "Staff can delete products"
   - "Anyone can view active products"
 
 **If RLS not enabled or policies missing** → Go to Fix #2
@@ -209,8 +219,8 @@ DROP POLICY IF EXISTS "Admins can update products" ON products;
 DROP POLICY IF EXISTS "Admins can delete products" ON products;
 DROP POLICY IF EXISTS "Anyone can view active products" ON products;
 
--- Admins can view all products (including inactive)
-CREATE POLICY "Admins can view all products"
+-- Staff can view all products (including inactive)
+CREATE POLICY "Staff can view all products"
 ON products
 FOR SELECT
 TO authenticated
@@ -220,8 +230,8 @@ USING (
   )
 );
 
--- Admins can insert products
-CREATE POLICY "Admins can insert products"
+-- Staff can insert products
+CREATE POLICY "Staff can insert products"
 ON products
 FOR INSERT
 TO authenticated
@@ -231,8 +241,8 @@ WITH CHECK (
   )
 );
 
--- Admins can update products
-CREATE POLICY "Admins can update products"
+-- Staff can update products
+CREATE POLICY "Staff can update products"
 ON products
 FOR UPDATE
 TO authenticated
@@ -247,8 +257,8 @@ WITH CHECK (
   )
 );
 
--- Admins can delete products
-CREATE POLICY "Admins can delete products"
+-- Staff can delete products
+CREATE POLICY "Staff can delete products"
 ON products
 FOR DELETE
 TO authenticated

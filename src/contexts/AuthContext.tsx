@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 
@@ -7,9 +13,18 @@ interface Profile {
   email: string;
   full_name: string | null;
   avatar_url: string | null;
-  role: 'customer' | 'admin' | 'installer';
+  role: 'customer' | 'employee' | 'co_admin' | 'admin';
   phone: string | null;
   company_name: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface UserPermissions {
+  user_id: string;
+  can_manage_products: boolean;
+  can_manage_tickets: boolean;
+  can_promote_to_co_admin: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -18,9 +33,11 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: Profile | null;
+  permissions: UserPermissions | null;
   loading: boolean;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  refreshPermissions: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,6 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [permissions, setPermissions] = useState<UserPermissions | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
@@ -47,9 +65,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const fetchPermissions = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('user_permissions')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        throw error;
+      }
+
+      if (data) {
+        setPermissions(data);
+      } else {
+        setPermissions(null);
+      }
+    } catch (error) {
+      console.error('Error fetching permissions:', error);
+      setPermissions(null);
+    }
+  };
+
   const refreshProfile = async () => {
     if (user) {
       await fetchProfile(user.id);
+    }
+  };
+
+  const refreshPermissions = async () => {
+    if (user) {
+      await fetchPermissions(user.id);
     }
   };
 
@@ -58,11 +105,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
         fetchProfile(session.user.id);
+        fetchPermissions(session.user.id);
       }
-      
+
       setLoading(false);
     });
 
@@ -72,13 +120,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
         await fetchProfile(session.user.id);
+        await fetchPermissions(session.user.id);
       } else {
         setProfile(null);
+        setPermissions(null);
       }
-      
+
       setLoading(false);
     });
 
@@ -89,11 +139,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      
+
       // Clear all state
       setUser(null);
       setSession(null);
       setProfile(null);
+      setPermissions(null);
     } catch (error) {
       console.error('Error signing out:', error);
       throw error;
@@ -101,7 +152,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, profile, loading, signOut, refreshProfile }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        session,
+        profile,
+        permissions,
+        loading,
+        signOut,
+        refreshProfile,
+        refreshPermissions,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

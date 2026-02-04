@@ -1,4 +1,14 @@
 # Supabase Setup Guide
+
+## Status Update (February 4, 2026)
+- Roles now supported: admin, co_admin, employee, customer (installer replaced by employee).
+- Staff access: admin/co_admin/employee can access /admin; user management limited to admin/co_admin.
+- Co-admins cannot change admin/co_admin roles; they can manage employee/customer roles.
+- Per-user permissions added: can_manage_products, can_manage_tickets, can_promote_to_co_admin (admin-only).
+- Audit & monitoring: /admin/audit shows activity feed + ticket queue; profile sensitive edits, role/permission changes, and product CRUD are logged.
+- Product images: URL or device upload, max 4 images, 2MB per image, primary image = first.
+- Environment files (.env, .env.local, etc.) must never be committed; use host env vars.
+- Linting: Prettier applied; ESLint passes with warnings only (mostly any/fast-refresh).
 **Project**: Feraj Solar Limited Website  
 **Date**: January 22, 2026
 
@@ -36,7 +46,7 @@ VITE_SUPABASE_URL=https://your-project-id.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-**Important**: Never commit `.env.local` to Git (it's already in `.gitignore`)
+**Important**: Never commit `.env`, `.env.local`, or any environment files to Git (they are in `.gitignore`).
 
 ### 4. Run Database Migrations
 
@@ -68,7 +78,7 @@ CREATE TABLE public.profiles (
   full_name TEXT,
   avatar_url TEXT,
   phone TEXT,
-  role TEXT DEFAULT 'customer' CHECK (role IN ('customer', 'admin', 'installer')),
+  role TEXT DEFAULT 'customer' CHECK (role IN ('customer', 'employee', 'co_admin', 'admin')),
   company_name TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -137,15 +147,8 @@ CREATE POLICY "Active products are viewable by everyone"
   ON public.products FOR SELECT
   USING (is_active = true);
 
--- Only admins can manage products
-CREATE POLICY "Admins can manage products"
-  ON public.products FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+-- Staff permissions and RLS are configured in:
+-- docs/deployment/ACCESS_CONTROL_SETUP.sql
 
 -- ============================================
 -- ORDERS TABLE
@@ -245,7 +248,7 @@ CREATE TABLE public.installation_requests (
   preferred_date DATE,
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'scheduled', 'in_progress', 'completed', 'cancelled')),
   notes TEXT,
-  assigned_installer_id UUID REFERENCES public.profiles(id),
+  assigned_employee_id UUID REFERENCES public.profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -260,12 +263,12 @@ CREATE POLICY "Users can create requests"
   ON public.installation_requests FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Admins and installers can view requests"
+CREATE POLICY "Admins and employees can view requests"
   ON public.installation_requests FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role IN ('admin', 'installer')
+      WHERE id = auth.uid() AND role IN ('admin', 'co_admin', 'employee')
     )
   );
 
