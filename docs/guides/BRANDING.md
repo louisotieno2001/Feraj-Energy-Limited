@@ -1027,7 +1027,7 @@ Feraj Solar Limited
 ### Contact
 
 **Brand Questions:**
-- Email: brand@ferajsolar.com
+- Email: ferajsolarlimited@gmail.com
 - Marketing Director: [Name]
 
 ---

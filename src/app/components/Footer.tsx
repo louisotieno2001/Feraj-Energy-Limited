@@ -114,10 +114,10 @@ export function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-sm">
-              <li>Email: info@ferajsolar.com</li>
-              <li>Phone: +1 (555) 123-4567</li>
-              <li>Address: 123 Solar Avenue</li>
-              <li>San Francisco, CA 94102</li>
+              <li>Email: ferajsolarlimited@gmail.com</li>
+              <li>Phone: +254720944707 (Exec)</li>
+              <li>Address: Timshack 5th Floor, Ngong Road,</li>
+              <li>002 Nairobi, Kenya</li>
             </ul>
           </div>
         </div>
