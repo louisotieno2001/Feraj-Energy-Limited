@@ -31,7 +31,7 @@ export function EnergyStats() {
       case 'increasing':
         return <TrendingUp className="h-5 w-5 text-red-500" />;
       case 'decreasing':
-        return <TrendingDown className="h-5 w-5 text-green-500" />;
+        return <TrendingDown className="h-5 w-5 text-primary" />;
       default:
         return <Minus className="h-5 w-5 text-blue-500" />;
     }
@@ -56,7 +56,7 @@ export function EnergyStats() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="bg-gray-700 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
-                <Activity className="h-5 w-5 text-green-400" />
+                <Activity className="h-5 w-5 text-accent" />
                 <span className="text-sm text-gray-300">
                   Total Global Demand
                 </span>
@@ -96,7 +96,7 @@ export function EnergyStats() {
 
             <div className="bg-gray-700 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
-                <TrendingDown className="h-5 w-5 text-green-400" />
+                <TrendingDown className="h-5 w-5 text-accent" />
                 <span className="text-sm text-gray-300">Decreasing Demand</span>
               </div>
               <div className="text-2xl font-bold">
@@ -142,7 +142,7 @@ export function EnergyStats() {
               <h3 className="font-semibold mb-3">Legend</h3>
               <div className="grid grid-cols-3 gap-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-green-500"></div>
+                  <div className="w-4 h-4 rounded-full bg-secondary0"></div>
                   <span className="text-sm">High Renewable (&gt;50%)</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -168,16 +168,16 @@ export function EnergyStats() {
 
                   <div className="space-y-4">
                     <div>
-                      <div className="text-sm text-gray-400 mb-1">
+                      <div className="text-sm text-muted-foreground mb-1">
                         Energy Demand
                       </div>
-                      <div className="text-3xl font-bold text-green-400">
+                      <div className="text-3xl font-bold text-accent">
                         {(selectedCountry || hoveredCountry).demand} GW
                       </div>
                     </div>
 
                     <div>
-                      <div className="text-sm text-gray-400 mb-1">
+                      <div className="text-sm text-muted-foreground mb-1">
                         Renewable Energy
                       </div>
                       <div className="flex items-center gap-3">
@@ -186,7 +186,7 @@ export function EnergyStats() {
                         </div>
                         <div className="flex-1 bg-gray-700 rounded-full h-3">
                           <div
-                            className="bg-green-500 h-3 rounded-full transition-all"
+                            className="bg-secondary0 h-3 rounded-full transition-all"
                             style={{
                               width: `${(selectedCountry || hoveredCountry).renewable}%`,
                             }}
@@ -196,7 +196,7 @@ export function EnergyStats() {
                     </div>
 
                     <div>
-                      <div className="text-sm text-gray-400 mb-2">
+                      <div className="text-sm text-muted-foreground mb-2">
                         Demand Trend
                       </div>
                       <div className="flex items-center gap-2 px-3 py-2 bg-gray-700 rounded-md">
@@ -210,7 +210,7 @@ export function EnergyStats() {
                     </div>
 
                     <div>
-                      <div className="text-sm text-gray-400 mb-2">
+                      <div className="text-sm text-muted-foreground mb-2">
                         Key Factors
                       </div>
                       <ul className="space-y-2">
@@ -220,7 +220,7 @@ export function EnergyStats() {
                               key={idx}
                               className="flex items-start gap-2 text-sm"
                             >
-                              <span className="text-green-400">•</span>
+                              <span className="text-accent">•</span>
                               <span>{factor}</span>
                             </li>
                           )
@@ -231,11 +231,11 @@ export function EnergyStats() {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <Activity className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+                  <Activity className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-semibold mb-2">
                     Select a Country
                   </h3>
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-muted-foreground text-sm">
                     Click or hover over any point on the globe to view detailed
                     energy statistics
                   </p>
@@ -277,7 +277,7 @@ export function EnergyStats() {
                           <span
                             className={`px-2 py-1 rounded text-sm ${
                               country.renewable > 50
-                                ? 'bg-green-900 text-green-300'
+                                ? 'bg-accent/20 text-accent'
                                 : country.renewable > 25
                                   ? 'bg-yellow-900 text-yellow-300'
                                   : 'bg-red-900 text-red-300'

@@ -94,39 +94,35 @@ export function Profile() {
       case 'employee':
         return 'bg-blue-100 text-blue-800';
       default:
-        return 'bg-green-100 text-green-800';
+        return 'bg-secondary text-primary';
     }
   };
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-background/90 py-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Loading / Missing Profile State */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              Profile Loading
-            </h1>
-            <p className="text-gray-600 mb-4">
-              We could not load your profile yet. This can happen if your
-              profile row was not created in the database.
-            </p>
-            <div className="flex gap-3">
+            <div className="animate-pulse space-y-4">
+              <div className="h-6 w-48 bg-secondary/60 rounded" />
+              <div className="h-4 w-80 bg-secondary/60 rounded" />
+              <div className="h-24 w-full bg-secondary/60 rounded-lg" />
+              <div className="h-4 w-64 bg-secondary/60 rounded" />
+            </div>
+            <div className="mt-6 flex gap-3">
               <button
                 onClick={() => refreshProfile()}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition"
                 disabled={!user}
               >
                 Retry
               </button>
-              <a
-                href="/"
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition"
-              >
+              <a href="/" className="px-4 py-2 rounded-md btn-secondary">
                 Back to Home
               </a>
             </div>
-            <p className="text-xs text-gray-500 mt-4">
+            <p className="text-xs text-muted-foreground mt-4">
               If this persists, ensure the Supabase profile trigger exists or
               backfill the profile record for your user.
             </p>
@@ -137,12 +133,12 @@ export function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-background/90 py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-          <p className="mt-2 text-gray-600">
+          <h1 className="text-3xl font-bold text-foreground">My Profile</h1>
+          <p className="mt-2 text-muted-foreground">
             Manage your account information and preferences
           </p>
         </div>
@@ -150,16 +146,16 @@ export function Profile() {
         {/* Profile Card */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {/* Profile Header */}
-          <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-8">
+          <div className="bg-gradient-to-r from-primary to-accent px-6 py-8">
             <div className="flex items-center gap-6">
               <div className="h-24 w-24 rounded-full bg-white flex items-center justify-center">
-                <User className="h-12 w-12 text-green-600" />
+                <User className="h-12 w-12 text-primary" />
               </div>
               <div className="flex-1">
                 <h2 className="text-2xl font-bold text-white">
                   {profile.full_name || 'User'}
                 </h2>
-                <p className="text-green-100">{profile.email}</p>
+                <p className="text-white/80">{profile.email}</p>
                 <div className="mt-2">
                   <span
                     className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${getRoleBadgeColor(
@@ -181,11 +177,11 @@ export function Profile() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Full Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-foreground/80 mb-2">
                   Full Name
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <input
                     type="text"
                     value={formData.full_name}
@@ -193,7 +189,7 @@ export function Profile() {
                       setFormData({ ...formData, full_name: e.target.value })
                     }
                     disabled={!editing || loading}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent disabled:bg-gray-100"
+                    className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100"
                     placeholder="John Doe"
                   />
                 </div>
@@ -201,30 +197,30 @@ export function Profile() {
 
               {/* Email (Read-only) */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-foreground/80 mb-2">
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <input
                     type="email"
                     value={profile.email}
                     disabled
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600"
+                    className="w-full pl-10 pr-4 py-2 border border-border rounded-md bg-gray-100 text-muted-foreground"
                   />
                 </div>
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Email cannot be changed. Contact support if needed.
                 </p>
               </div>
 
               {/* Phone */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-foreground/80 mb-2">
                   Phone Number
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <input
                     type="tel"
                     value={formData.phone}
@@ -232,7 +228,7 @@ export function Profile() {
                       setFormData({ ...formData, phone: e.target.value })
                     }
                     disabled={!editing || loading}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent disabled:bg-gray-100"
+                    className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100"
                     placeholder="+254 XXX XXXXXX"
                   />
                 </div>
@@ -240,11 +236,11 @@ export function Profile() {
 
               {/* Company Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-foreground/80 mb-2">
                   Company Name (Optional)
                 </label>
                 <div className="relative">
-                  <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <input
                     type="text"
                     value={formData.company_name}
@@ -252,7 +248,7 @@ export function Profile() {
                       setFormData({ ...formData, company_name: e.target.value })
                     }
                     disabled={!editing || loading}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent disabled:bg-gray-100"
+                    className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100"
                     placeholder="Your Company Ltd"
                   />
                 </div>
@@ -260,11 +256,11 @@ export function Profile() {
 
               {/* Account Info */}
               <div className="border-t pt-6">
-                <h3 className="text-sm font-medium text-gray-700 mb-4">
+                <h3 className="text-sm font-medium text-foreground/80 mb-4">
                   Account Information
                 </h3>
                 <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-muted-foreground">
                     <Calendar className="h-4 w-4" />
                     <span>
                       Member since{' '}
@@ -280,7 +276,7 @@ export function Profile() {
                   <button
                     type="button"
                     onClick={() => setEditing(true)}
-                    className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+                    className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition"
                   >
                     Edit Profile
                   </button>
@@ -289,7 +285,7 @@ export function Profile() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition disabled:opacity-50"
+                      className="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition disabled:opacity-50"
                     >
                       <Save className="h-4 w-4" />
                       {loading ? 'Saving...' : 'Save Changes'}
@@ -305,7 +301,7 @@ export function Profile() {
                         });
                       }}
                       disabled={loading}
-                      className="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition disabled:opacity-50"
+                      className="px-6 py-2 rounded-md btn-secondary disabled:opacity-50"
                     >
                       Cancel
                     </button>

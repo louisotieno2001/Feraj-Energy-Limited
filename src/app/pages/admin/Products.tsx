@@ -212,9 +212,9 @@ export function AdminProducts() {
       case 'batteries':
         return 'bg-orange-100 text-orange-800';
       case 'accessories':
-        return 'bg-green-100 text-green-800';
+        return 'bg-secondary text-primary';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-foreground';
     }
   };
 
@@ -226,10 +226,10 @@ export function AdminProducts() {
   if (!canManageProducts) {
     return (
       <div className="bg-white rounded-lg shadow p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-foreground mb-2">
           Product Management
         </h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           You do not have permission to manage products. Contact an admin to
           request access.
         </p>
@@ -240,7 +240,7 @@ export function AdminProducts() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -250,16 +250,16 @@ export function AdminProducts() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-foreground">
             Product Management
           </h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <p className="mt-1 text-sm text-muted-foreground">
             Add, edit, and manage your products
           </p>
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition"
         >
           <Plus className="h-5 w-5" />
           Add Product
@@ -269,25 +269,25 @@ export function AdminProducts() {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600">Total Products</div>
-          <div className="text-2xl font-bold text-gray-900">
+          <div className="text-sm text-muted-foreground">Total Products</div>
+          <div className="text-2xl font-bold text-foreground">
             {products.length}
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600">Active</div>
-          <div className="text-2xl font-bold text-green-600">
+          <div className="text-sm text-muted-foreground">Active</div>
+          <div className="text-2xl font-bold text-primary">
             {products.filter((p) => p.is_active).length}
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600">Out of Stock</div>
+          <div className="text-sm text-muted-foreground">Out of Stock</div>
           <div className="text-2xl font-bold text-red-600">
             {products.filter((p) => p.stock_quantity === 0).length}
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600">Low Stock (&lt;10)</div>
+          <div className="text-sm text-muted-foreground">Low Stock (&lt;10)</div>
           <div className="text-2xl font-bold text-orange-600">
             {
               products.filter(
@@ -303,13 +303,13 @@ export function AdminProducts() {
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search */}
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
 
@@ -317,7 +317,7 @@ export function AdminProducts() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
           >
             <option value="all">All Categories</option>
             <option value="panels">Solar Panels</option>
@@ -330,7 +330,7 @@ export function AdminProducts() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as any)}
-            className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -342,32 +342,32 @@ export function AdminProducts() {
       {/* Products Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-border">
+            <thead className="bg-background/90">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Product
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Category
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Price
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Stock
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-border">
               {filteredProducts.map((product) => (
-                <tr key={product.id} className="hover:bg-gray-50">
+                <tr key={product.id} className="hover:bg-secondary/70">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="h-12 w-12 flex-shrink-0">
@@ -385,10 +385,10 @@ export function AdminProducts() {
                         />
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-foreground">
                           {product.name}
                         </div>
-                        <div className="text-sm text-gray-500 truncate max-w-xs">
+                        <div className="text-sm text-muted-foreground truncate max-w-xs">
                           {product.description?.substring(0, 50) ||
                             'No description'}
                           ...
@@ -405,7 +405,7 @@ export function AdminProducts() {
                       {product.category.replace('-', ' ').toUpperCase()}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                     KES {product.price.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -415,7 +415,7 @@ export function AdminProducts() {
                           ? 'text-red-600'
                           : product.stock_quantity < 10
                             ? 'text-orange-600'
-                            : 'text-green-600'
+                            : 'text-primary'
                       }`}
                     >
                       {product.stock_quantity}
@@ -425,8 +425,8 @@ export function AdminProducts() {
                     <span
                       className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
                         product.is_active
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-secondary text-primary'
+                          : 'bg-gray-100 text-foreground'
                       }`}
                     >
                       {product.is_active ? (
@@ -464,8 +464,8 @@ export function AdminProducts() {
 
         {filteredProducts.length === 0 && (
           <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-500">No products found</p>
+            <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+            <p className="text-muted-foreground">No products found</p>
           </div>
         )}
       </div>
@@ -483,10 +483,10 @@ export function AdminProducts() {
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
               Delete Product
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               Are you sure you want to delete this product? This action cannot
               be undone.
             </p>
@@ -496,7 +496,7 @@ export function AdminProducts() {
                   setShowDeleteModal(false);
                   setDeletingId(null);
                 }}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition"
+                className="flex-1 px-4 py-2 rounded-md btn-secondary"
               >
                 Cancel
               </button>

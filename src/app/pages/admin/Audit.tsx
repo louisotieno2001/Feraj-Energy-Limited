@@ -88,7 +88,7 @@ export function AdminAudit() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -96,8 +96,8 @@ export function AdminAudit() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Audit & Monitoring</h1>
-        <p className="mt-1 text-sm text-gray-600">
+        <h1 className="text-2xl font-bold text-foreground">Audit & Monitoring</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Activity feed and ticket queue for staff oversight.
         </p>
       </div>
@@ -105,13 +105,13 @@ export function AdminAudit() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b">
-            <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            <h2 className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
               Activity Feed
             </h2>
           </div>
           <div className="divide-y">
             {logs.length === 0 && (
-              <div className="p-6 text-center text-gray-500">
+              <div className="p-6 text-center text-muted-foreground">
                 <AlertCircle className="h-10 w-10 text-gray-300 mx-auto mb-2" />
                 No audit entries yet.
               </div>
@@ -119,15 +119,15 @@ export function AdminAudit() {
             {logs.map((log) => (
               <div key={log.id} className="p-4">
                 <div className="flex items-center justify-between">
-                  <div className="text-sm font-medium text-gray-900">
+                  <div className="text-sm font-medium text-foreground">
                     {log.action}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-foreground">
                     {new Date(log.created_at).toLocaleString()}
                   </div>
                 </div>
                 {log.metadata && (
-                  <pre className="mt-2 text-xs bg-gray-50 p-2 rounded text-gray-600 overflow-x-auto">
+                  <pre className="mt-2 text-xs bg-background/90 p-2 rounded text-muted-foreground overflow-x-auto">
                     {JSON.stringify(log.metadata, null, 2)}
                   </pre>
                 )}
@@ -138,16 +138,16 @@ export function AdminAudit() {
 
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            <h2 className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
               Tickets
             </h2>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-muted-foreground">
               {tickets.filter((t) => t.status !== 'resolved').length} open
             </span>
           </div>
           <div className="divide-y">
             {tickets.length === 0 && (
-              <div className="p-6 text-center text-gray-500">
+              <div className="p-6 text-center text-muted-foreground">
                 <MessageSquare className="h-10 w-10 text-gray-300 mx-auto mb-2" />
                 No tickets yet.
               </div>
@@ -156,29 +156,29 @@ export function AdminAudit() {
               <div key={ticket.id} className="p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-sm font-semibold text-foreground">
                       {ticket.subject}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       {new Date(ticket.created_at).toLocaleString()}
                     </p>
                   </div>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-700">
+                  <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-foreground/80">
                     {ticket.status === 'resolved' ? (
-                      <CheckCircle2 className="h-3 w-3 text-green-600" />
+                      <CheckCircle2 className="h-3 w-3 text-primary" />
                     ) : (
                       <Clock className="h-3 w-3 text-orange-500" />
                     )}
                     {ticket.status}
                   </span>
                 </div>
-                <p className="text-sm text-gray-700">{ticket.message}</p>
+                <p className="text-sm text-foreground/80">{ticket.message}</p>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">
+                  <label className="block text-xs text-muted-foreground mb-1">
                     Response
                   </label>
                   <textarea
-                    className="w-full text-sm border border-gray-200 rounded-md p-2"
+                    className="w-full text-sm border border-border rounded-md p-2"
                     rows={2}
                     value={responses[ticket.id] ?? ticket.response ?? ''}
                     onChange={(e) =>
@@ -201,7 +201,7 @@ export function AdminAudit() {
                     disabled={
                       !canManageTickets || updatingTicketId === ticket.id
                     }
-                    className="px-3 py-2 text-xs font-medium bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+                    className="px-3 py-2 text-xs font-medium bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50"
                   >
                     {updatingTicketId === ticket.id
                       ? 'Saving...'
@@ -212,7 +212,7 @@ export function AdminAudit() {
             ))}
           </div>
           {!canManageTickets && (
-            <div className="px-6 py-3 text-xs text-gray-500 border-t">
+            <div className="px-6 py-3 text-xs text-muted-foreground border-t">
               You can view tickets, but you need permission to respond or
               resolve them.
             </div>

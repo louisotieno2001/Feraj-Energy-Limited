@@ -46,7 +46,7 @@ export function Partnerships() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">Why Partner With Us</h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-muted-foreground">
               Building the future of energy together
             </p>
           </div>
@@ -57,17 +57,17 @@ export function Partnerships() {
                 <Globe2 className="h-8 w-8 text-blue-600" />
               </div>
               <h3 className="font-semibold mb-2">Global Reach</h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-muted-foreground text-sm">
                 Operations in 60+ countries across 6 continents
               </p>
             </div>
 
             <div className="text-center">
-              <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="h-8 w-8 text-green-600" />
+              <div className="h-16 w-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="h-8 w-8 text-primary" />
               </div>
               <h3 className="font-semibold mb-2">Industry Leader</h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-muted-foreground text-sm">
                 25+ years of solar innovation excellence
               </p>
             </div>
@@ -77,7 +77,7 @@ export function Partnerships() {
                 <Building2 className="h-8 w-8 text-purple-600" />
               </div>
               <h3 className="font-semibold mb-2">Enterprise Scale</h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-muted-foreground text-sm">
                 500K+ installations generating 2.5GW capacity
               </p>
             </div>
@@ -87,7 +87,7 @@ export function Partnerships() {
                 <Handshake className="h-8 w-8 text-orange-600" />
               </div>
               <h3 className="font-semibold mb-2">Trusted Partner</h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-muted-foreground text-sm">
                 98% customer satisfaction and retention
               </p>
             </div>
@@ -97,23 +97,23 @@ export function Partnerships() {
             {partners.map((partner, idx) => (
               <div
                 key={idx}
-                className="bg-gray-50 p-6 rounded-lg hover:shadow-lg transition"
+                className="bg-background/90 p-6 rounded-lg hover:shadow-lg transition"
               >
                 <div className="text-blue-600 font-semibold mb-1">
                   {partner.type}
                 </div>
                 <h3 className="text-xl font-bold mb-2">{partner.name}</h3>
-                <p className="text-gray-600">{partner.description}</p>
+                <p className="text-muted-foreground">{partner.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-background/90">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-6">Become a Partner</h2>
-          <p className="text-gray-600 mb-8">
+          <p className="text-muted-foreground mb-8">
             Join our network of innovators, manufacturers, and distributors
             shaping the future of renewable energy
           </p>

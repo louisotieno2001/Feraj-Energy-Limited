@@ -48,7 +48,7 @@ export function Navbar() {
                 alt="Feraj Solar Limited Logo"
                 className="h-12 w-12 object-contain"
               />
-              <span className="text-xl font-bold text-gray-900">
+              <span className="text-xl font-bold text-foreground">
                 Feraj Solar Limited
               </span>
             </Link>
@@ -58,32 +58,32 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             <Link
               to="/"
-              className="text-gray-700 hover:text-green-600 transition"
+              className="text-foreground/80 hover:text-primary transition"
             >
               Home
             </Link>
             <Link
               to="/products"
-              className="text-gray-700 hover:text-green-600 transition"
+              className="text-foreground/80 hover:text-primary transition"
             >
               Products
             </Link>
             <Link
               to="/about"
-              className="text-gray-700 hover:text-green-600 transition"
+              className="text-foreground/80 hover:text-primary transition"
             >
               About
             </Link>
             <Link
               to="/team"
-              className="text-gray-700 hover:text-green-600 transition"
+              className="text-foreground/80 hover:text-primary transition"
             >
               Our Team
             </Link>
             {isStaff && (
               <Link
                 to="/admin"
-                className="text-gray-700 hover:text-green-600 transition font-medium"
+                className="text-foreground/80 hover:text-primary transition font-medium"
               >
                 Admin Panel
               </Link>
@@ -91,19 +91,19 @@ export function Navbar() {
 
             {/* Resources Dropdown */}
             <DropdownMenu.Root>
-              <DropdownMenu.Trigger className="flex items-center gap-1 text-gray-700 hover:text-green-600 transition focus:outline-none">
+              <DropdownMenu.Trigger className="flex items-center gap-1 text-foreground/80 hover:text-primary transition focus:outline-none">
                 Resources
                 <ChevronDown className="h-4 w-4" />
               </DropdownMenu.Trigger>
               <DropdownMenu.Portal>
                 <DropdownMenu.Content
-                  className="min-w-[220px] bg-white rounded-md shadow-lg border border-gray-200 p-1 z-50"
+                  className="min-w-[220px] bg-white rounded-md shadow-lg border border-border p-1 z-50"
                   sideOffset={5}
                 >
                   <DropdownMenu.Item asChild>
                     <Link
                       to="/partnerships"
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 rounded cursor-pointer outline-none"
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground/80 hover:bg-secondary hover:text-primary rounded cursor-pointer outline-none"
                     >
                       <Users className="h-4 w-4" />
                       Partnerships
@@ -112,7 +112,7 @@ export function Navbar() {
                   <DropdownMenu.Item asChild>
                     <Link
                       to="/why-green"
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 rounded cursor-pointer outline-none"
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground/80 hover:bg-secondary hover:text-primary rounded cursor-pointer outline-none"
                     >
                       <Lightbulb className="h-4 w-4" />
                       Why Green Energy
@@ -121,7 +121,7 @@ export function Navbar() {
                   <DropdownMenu.Item asChild>
                     <Link
                       to="/energy-stats"
-                      className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 rounded cursor-pointer outline-none"
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-foreground/80 hover:bg-secondary hover:text-primary rounded cursor-pointer outline-none"
                     >
                       <TrendingUp className="h-4 w-4" />
                       Energy Stats
@@ -134,9 +134,9 @@ export function Navbar() {
 
           <div className="hidden md:flex items-center gap-4">
             <Link to="/cart" className="relative">
-              <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-green-600 transition" />
+              <ShoppingCart className="h-6 w-6 text-foreground/80 hover:text-primary transition" />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-green-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -145,35 +145,35 @@ export function Navbar() {
               <>
                 <Link
                   to="/orders"
-                  className="text-gray-700 hover:text-green-600 transition text-sm font-medium"
+                  className="text-foreground/80 hover:text-primary transition text-sm font-medium"
                 >
                   Orders
                 </Link>
 
                 {/* User Account Dropdown */}
                 <DropdownMenu.Root>
-                  <DropdownMenu.Trigger className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition focus:outline-none">
+                  <DropdownMenu.Trigger className="flex items-center gap-2 px-3 py-2 text-foreground/80 hover:bg-gray-100 rounded-md transition focus:outline-none">
                     <User className="h-5 w-5" />
                     <ChevronDown className="h-4 w-4" />
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Portal>
                     <DropdownMenu.Content
-                      className="min-w-[200px] bg-white rounded-md shadow-lg border border-gray-200 p-1 z-50"
+                      className="min-w-[200px] bg-white rounded-md shadow-lg border border-border p-1 z-50"
                       sideOffset={5}
                       align="end"
                     >
-                      <div className="px-3 py-2 border-b border-gray-200">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                      <div className="px-3 py-2 border-b border-border">
+                        <p className="text-sm font-medium text-foreground truncate">
                           {profile?.full_name || 'User'}
                         </p>
-                        <p className="text-xs text-gray-500 truncate">
+                        <p className="text-xs text-muted-foreground truncate">
                           {user.email}
                         </p>
                       </div>
                       <DropdownMenu.Item asChild>
                         <Link
                           to="/profile"
-                          className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 rounded cursor-pointer outline-none mt-1"
+                          className="flex items-center gap-3 px-3 py-2 text-sm text-foreground/80 hover:bg-secondary hover:text-primary rounded cursor-pointer outline-none mt-1"
                         >
                           <User className="h-4 w-4" />
                           My Profile
@@ -183,7 +183,7 @@ export function Navbar() {
                         <DropdownMenu.Item asChild>
                           <Link
                             to="/admin"
-                            className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 rounded cursor-pointer outline-none"
+                            className="flex items-center gap-3 px-3 py-2 text-sm text-foreground/80 hover:bg-secondary hover:text-primary rounded cursor-pointer outline-none"
                           >
                             <Users className="h-4 w-4" />
                             Admin Panel
@@ -212,7 +212,7 @@ export function Navbar() {
             ) : (
               <Link
                 to="/login"
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition"
               >
                 Login
               </Link>
@@ -222,16 +222,16 @@ export function Navbar() {
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center gap-4">
             <Link to="/cart" className="relative">
-              <ShoppingCart className="h-6 w-6 text-gray-700" />
+              <ShoppingCart className="h-6 w-6 text-foreground/80" />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-green-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700"
+              className="text-foreground/80"
             >
               {isOpen ? (
                 <X className="h-6 w-6" />
@@ -249,28 +249,28 @@ export function Navbar() {
           <div className="px-4 py-2 space-y-1">
             <Link
               to="/"
-              className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md"
+              className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md"
               onClick={() => setIsOpen(false)}
             >
               Home
             </Link>
             <Link
               to="/products"
-              className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md"
+              className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md"
               onClick={() => setIsOpen(false)}
             >
               Products
             </Link>
             <Link
               to="/about"
-              className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md"
+              className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md"
               onClick={() => setIsOpen(false)}
             >
               About
             </Link>
             <Link
               to="/team"
-              className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md"
+              className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md"
               onClick={() => setIsOpen(false)}
             >
               Our Team
@@ -278,27 +278,27 @@ export function Navbar() {
 
             {/* Resources Section */}
             <div className="pt-2 pb-1">
-              <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Resources
               </p>
             </div>
             <Link
               to="/partnerships"
-              className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md pl-6"
+              className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md pl-6"
               onClick={() => setIsOpen(false)}
             >
               Partnerships
             </Link>
             <Link
               to="/why-green"
-              className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md pl-6"
+              className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md pl-6"
               onClick={() => setIsOpen(false)}
             >
               Why Green Energy
             </Link>
             <Link
               to="/energy-stats"
-              className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md pl-6"
+              className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md pl-6"
               onClick={() => setIsOpen(false)}
             >
               Energy Stats
@@ -307,20 +307,20 @@ export function Navbar() {
             {user ? (
               <>
                 <div className="pt-2 pb-1">
-                  <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     Account
                   </p>
                 </div>
                 <Link
                   to="/orders"
-                  className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md font-medium pl-6"
+                  className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md font-medium pl-6"
                   onClick={() => setIsOpen(false)}
                 >
                   Orders
                 </Link>
                 <Link
                   to="/profile"
-                  className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md font-medium pl-6"
+                  className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md font-medium pl-6"
                   onClick={() => setIsOpen(false)}
                 >
                   My Profile
@@ -328,7 +328,7 @@ export function Navbar() {
                 {isStaff && (
                   <Link
                     to="/admin"
-                    className="block px-3 py-2 text-gray-700 hover:bg-green-50 rounded-md font-medium pl-6"
+                    className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md font-medium pl-6"
                     onClick={() => setIsOpen(false)}
                   >
                     Admin Panel
@@ -344,7 +344,7 @@ export function Navbar() {
             ) : (
               <Link
                 to="/login"
-                className="block px-3 py-2 bg-green-600 text-white rounded-md text-center"
+                className="block px-3 py-2 bg-primary text-white rounded-md text-center"
                 onClick={() => setIsOpen(false)}
               >
                 Login

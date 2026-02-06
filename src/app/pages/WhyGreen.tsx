@@ -23,10 +23,10 @@ export function WhyGreen() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-lg">
-              <Leaf className="h-12 w-12 text-green-600 mb-4" />
+            <div className="bg-gradient-to-br from-secondary to-accent/10 p-8 rounded-lg">
+              <Leaf className="h-12 w-12 text-primary mb-4" />
               <h3 className="text-2xl font-bold mb-4">Environmental Impact</h3>
-              <ul className="space-y-3 text-gray-700">
+              <ul className="space-y-3 text-foreground/80">
                 <li>• Zero greenhouse gas emissions during operation</li>
                 <li>• Reduces air and water pollution</li>
                 <li>• Conserves finite natural resources</li>
@@ -38,7 +38,7 @@ export function WhyGreen() {
             <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-8 rounded-lg">
               <DollarSign className="h-12 w-12 text-blue-600 mb-4" />
               <h3 className="text-2xl font-bold mb-4">Economic Benefits</h3>
-              <ul className="space-y-3 text-gray-700">
+              <ul className="space-y-3 text-foreground/80">
                 <li>• Lower electricity bills long-term</li>
                 <li>• Hedge against rising energy costs</li>
                 <li>• Increases property value 3-4%</li>
@@ -50,7 +50,7 @@ export function WhyGreen() {
             <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-lg">
               <Shield className="h-12 w-12 text-purple-600 mb-4" />
               <h3 className="text-2xl font-bold mb-4">Energy Independence</h3>
-              <ul className="space-y-3 text-gray-700">
+              <ul className="space-y-3 text-foreground/80">
                 <li>• Reduces fossil fuel dependence</li>
                 <li>• Protects from grid outages</li>
                 <li>• Energy security for nations</li>
@@ -62,7 +62,7 @@ export function WhyGreen() {
         </div>
       </section>
 
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-background/90">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-center mb-12">
             The Climate Crisis
@@ -71,7 +71,7 @@ export function WhyGreen() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
               <div className="text-4xl font-bold text-red-600 mb-2">+1.1°C</div>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Global temperature rise since pre-industrial times
               </p>
             </div>
@@ -79,7 +79,7 @@ export function WhyGreen() {
               <div className="text-4xl font-bold text-orange-600 mb-2">
                 37Gt
               </div>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 CO₂ emissions annually from fossil fuels
               </p>
             </div>
@@ -87,7 +87,7 @@ export function WhyGreen() {
               <div className="text-4xl font-bold text-blue-600 mb-2">
                 419ppm
               </div>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Current atmospheric CO₂ concentration
               </p>
             </div>
@@ -99,10 +99,10 @@ export function WhyGreen() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <h4 className="font-semibold text-lg mb-3 text-green-600">
+                <h4 className="font-semibold text-lg mb-3 text-primary">
                   Environmental Savings Per Household
                 </h4>
-                <ul className="space-y-2 text-gray-700">
+                <ul className="space-y-2 text-foreground/80">
                   <li>• Offsets 3-4 tons of CO₂ annually</li>
                   <li>• Equivalent to planting 100 trees/year</li>
                   <li>• Saves 200,000+ liters of water</li>
@@ -113,7 +113,7 @@ export function WhyGreen() {
                 <h4 className="font-semibold text-lg mb-3 text-blue-600">
                   Global Impact
                 </h4>
-                <ul className="space-y-2 text-gray-700">
+                <ul className="space-y-2 text-foreground/80">
                   <li>• Solar capacity grew 22% in 2023</li>
                   <li>• Costs dropped 90% since 2010</li>
                   <li>• 12+ million jobs in renewables</li>
@@ -134,10 +134,10 @@ export function WhyGreen() {
               </h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <Home className="h-8 w-8 text-green-600 flex-shrink-0" />
+                  <Home className="h-8 w-8 text-primary flex-shrink-0" />
                   <div>
                     <h4 className="font-semibold text-lg mb-1">Residential</h4>
-                    <p className="text-gray-600">
+                    <p className="text-muted-foreground">
                       Rooftop systems for homes, apartments, and communities
                       providing clean power
                     </p>
@@ -149,7 +149,7 @@ export function WhyGreen() {
                     <h4 className="font-semibold text-lg mb-1">
                       Commercial & Industrial
                     </h4>
-                    <p className="text-gray-600">
+                    <p className="text-muted-foreground">
                       Large-scale installations reducing operational costs and
                       carbon footprint
                     </p>
@@ -161,7 +161,7 @@ export function WhyGreen() {
                     <h4 className="font-semibold text-lg mb-1">
                       Utility-Scale
                     </h4>
-                    <p className="text-gray-600">
+                    <p className="text-muted-foreground">
                       Solar farms generating megawatts of clean energy for the
                       grid
                     </p>

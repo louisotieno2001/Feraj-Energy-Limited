@@ -66,18 +66,18 @@ export function Cart() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-background/90 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
               Your Cart is Empty
             </h2>
-            <p className="text-gray-600 mb-8">
+            <p className="text-muted-foreground mb-8">
               Add some products to get started!
             </p>
             <Link
               to="/products"
-              className="inline-block px-8 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+              className="inline-block px-8 py-3 bg-primary text-white rounded-md hover:bg-primary/90 transition"
             >
               Browse Products
             </Link>
@@ -88,9 +88,9 @@ export function Cart() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-background/90 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-8">Shopping Cart</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
@@ -107,10 +107,10 @@ export function Cart() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">
+                        <h3 className="text-lg font-semibold text-foreground">
                           {item!.name}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           {item!.category}
                         </p>
                       </div>
@@ -122,7 +122,7 @@ export function Cart() {
                       </button>
                     </div>
 
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
                       {item!.description}
                     </p>
 
@@ -146,10 +146,10 @@ export function Cart() {
                       </div>
 
                       <div className="text-right">
-                        <div className="text-lg font-bold text-gray-900">
+                        <div className="text-lg font-bold text-foreground">
                           ${(item!.price * item!.quantity).toFixed(2)}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-muted-foreground">
                           ${item!.price} each
                         </div>
                       </div>
@@ -163,32 +163,32 @@ export function Cart() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">
+              <h2 className="text-xl font-bold text-foreground mb-6">
                 Order Summary
               </h2>
 
               <div className="space-y-4 mb-6">
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-muted-foreground">
                   <span>Subtotal</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-muted-foreground">
                   <span>Tax (8%)</span>
                   <span>${tax.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-muted-foreground">
                   <span>Shipping</span>
                   <span>
                     {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
                   </span>
                 </div>
                 {subtotal > 1000 && (
-                  <div className="text-sm text-green-600">
+                  <div className="text-sm text-primary">
                     Free shipping on orders over $1,000!
                   </div>
                 )}
                 <div className="border-t pt-4">
-                  <div className="flex justify-between font-bold text-lg text-gray-900">
+                  <div className="flex justify-between font-bold text-lg text-foreground">
                     <span>Total</span>
                     <span>${total.toFixed(2)}</span>
                   </div>
@@ -197,13 +197,13 @@ export function Cart() {
 
               <button
                 onClick={handleCheckout}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition font-semibold"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-md hover:bg-primary/90 transition font-semibold"
               >
                 <CreditCard className="h-5 w-5" />
                 Proceed to Checkout
               </button>
 
-              <p className="text-xs text-gray-500 text-center mt-4">
+              <p className="text-xs text-muted-foreground text-center mt-4">
                 Secure payment processing • SSL encrypted
               </p>
             </div>

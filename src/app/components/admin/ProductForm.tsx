@@ -215,12 +215,12 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
       <div className="bg-white rounded-lg max-w-3xl w-full my-8">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-foreground">
             {product ? 'Edit Product' : 'Add New Product'}
           </h2>
           <button
             onClick={onCancel}
-            className="text-gray-400 hover:text-gray-600 transition"
+            className="text-muted-foreground hover:text-muted-foreground transition"
           >
             <X className="h-6 w-6" />
           </button>
@@ -230,7 +230,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-foreground/80 mb-2">
               Product Name *
             </label>
             <input
@@ -239,14 +239,14 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, name: e.target.value }))
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="e.g., 550W Solar Panel"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-foreground/80 mb-2">
               Description *
             </label>
             <textarea
@@ -258,7 +258,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                 }))
               }
               rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="Detailed product description..."
             />
           </div>
@@ -266,7 +266,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
           {/* Category & Price */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground/80 mb-2">
                 Category *
               </label>
               <select
@@ -277,7 +277,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                     category: e.target.value as ProductFormData['category'],
                   }))
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="panels">Solar Panels</option>
                 <option value="inverters">Inverters</option>
@@ -287,7 +287,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground/80 mb-2">
                 Price (KES) *
               </label>
               <input
@@ -301,7 +301,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                 }
                 min="0"
                 step="0.01"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="0.00"
               />
             </div>
@@ -310,7 +310,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
           {/* Stock & Status */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground/80 mb-2">
                 Stock Quantity *
               </label>
               <input
@@ -323,16 +323,16 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                   }))
                 }
                 min="0"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="0"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-foreground/80 mb-2">
                 Status
               </label>
-              <label className="flex items-center gap-3 px-4 py-2 border border-gray-300 rounded-md cursor-pointer">
+              <label className="flex items-center gap-3 px-4 py-2 border border-border rounded-md cursor-pointer">
                 <input
                   type="checkbox"
                   checked={formData.is_active}
@@ -342,9 +342,9 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                       is_active: e.target.checked,
                     }))
                   }
-                  className="w-4 h-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                  className="w-4 h-4 text-primary focus:ring-primary border-border rounded"
                 />
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-foreground/80">
                   Active (visible to customers)
                 </span>
               </label>
@@ -353,7 +353,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
 
           {/* Specifications */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-foreground/80 mb-2">
               Specifications
             </label>
 
@@ -364,19 +364,19 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                 value={specKey}
                 onChange={(e) => setSpecKey(e.target.value)}
                 placeholder="Key (e.g., Wattage)"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                className="flex-1 px-3 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               />
               <input
                 type="text"
                 value={specValue}
                 onChange={(e) => setSpecValue(e.target.value)}
                 placeholder="Value (e.g., 550W)"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                className="flex-1 px-3 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               />
               <button
                 type="button"
                 onClick={addSpecification}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -388,7 +388,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                 {Object.entries(formData.specifications).map(([key, value]) => (
                   <div
                     key={key}
-                    className="flex items-center justify-between px-3 py-2 bg-gray-50 rounded-md"
+                    className="flex items-center justify-between px-3 py-2 bg-secondary/60 rounded-md"
                   >
                     <span className="text-sm">
                       <span className="font-medium">{key}:</span>{' '}
@@ -409,7 +409,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
 
           {/* Images */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-foreground/80 mb-2">
               Images * (URL or Upload)
             </label>
 
@@ -420,19 +420,19 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="https://example.com/image.jpg"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                className="flex-1 px-3 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
               />
               <button
                 type="button"
                 onClick={addImage}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition"
               >
                 <Plus className="h-4 w-4" />
               </button>
             </div>
 
             {/* Upload images */}
-            <label className="flex items-center gap-3 mb-3 text-sm text-gray-700 cursor-pointer">
+            <label className="flex items-center gap-3 mb-3 text-sm text-foreground/80 cursor-pointer">
               <input
                 type="file"
                 accept="image/*"
@@ -440,13 +440,13 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                 onChange={(e) => handleFileUpload(e.target.files)}
                 className="hidden"
               />
-              <span className="inline-flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+              <span className="inline-flex items-center gap-2 px-3 py-2 border border-border rounded-md hover:bg-secondary/70">
                 <Upload className="h-4 w-4" />
                 Upload from device
               </span>
-              <span className="text-xs text-gray-500">Max 2MB per image</span>
+              <span className="text-xs text-muted-foreground">Max 2MB per image</span>
             </label>
-            <p className="text-xs text-gray-500 mb-3">
+            <p className="text-xs text-muted-foreground mb-3">
               {formData.images.length}/{maxImages} images added. First image is
               used as the primary thumbnail.
             </p>
@@ -457,7 +457,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                 {formData.images.map((img, index) => (
                   <div
                     key={index}
-                    className="relative group border border-gray-200 rounded-md overflow-hidden"
+                    className="relative group border border-border rounded-md overflow-hidden"
                   >
                     <img
                       src={img}
@@ -469,14 +469,14 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                       }}
                     />
                     {index === 0 ? (
-                      <span className="absolute bottom-2 left-2 text-xs bg-green-600 text-white px-2 py-1 rounded">
+                      <span className="absolute bottom-2 left-2 text-xs bg-primary text-white px-2 py-1 rounded">
                         Primary
                       </span>
                     ) : (
                       <button
                         type="button"
                         onClick={() => setPrimaryImage(index)}
-                        className="absolute bottom-2 left-2 text-xs bg-white/90 text-gray-700 px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                        className="absolute bottom-2 left-2 text-xs bg-white/90 text-foreground/80 px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
                       >
                         Set primary
                       </button>
@@ -500,14 +500,14 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
               type="button"
               onClick={onCancel}
               disabled={loading}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition disabled:opacity-50"
+              className="flex-1 px-4 py-2 rounded-md btn-secondary disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading
                 ? 'Saving...'

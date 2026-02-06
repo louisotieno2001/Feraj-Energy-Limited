@@ -118,7 +118,7 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background/90 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
         <div className="bg-white rounded-lg shadow-lg p-8">
           {/* Logo */}
@@ -129,7 +129,7 @@ export function Login() {
                 alt="Feraj Solar Limited Logo"
                 className="h-16 w-16 object-contain"
               />
-              <span className="text-2xl font-bold text-gray-900">
+              <span className="text-2xl font-bold text-foreground">
                 Feraj Solar Limited
               </span>
             </div>
@@ -137,10 +137,10 @@ export function Login() {
 
           {/* Email verification notice */}
           {emailSent && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-md flex items-start gap-3">
-              <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+            <div className="mb-6 p-4 bg-secondary border border-primary/20 rounded-md flex items-start gap-3">
+              <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm text-green-800">
+                <p className="text-sm text-primary">
                   Please check your email and click the verification link to
                   activate your account.
                 </p>
@@ -151,27 +151,27 @@ export function Login() {
           {/* Reset Password Form */}
           {showResetPassword ? (
             <>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              <h2 className="text-2xl font-bold text-foreground mb-6 text-center">
                 Reset Password
               </h2>
-              <p className="text-sm text-gray-600 mb-6 text-center">
+              <p className="text-sm text-muted-foreground mb-6 text-center">
                 Enter your email address and we&apos;ll send you a link to reset
                 your password.
               </p>
               <form onSubmit={handleResetPassword} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground/80 mb-2">
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       disabled={loading}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent disabled:bg-gray-100"
+                      className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100"
                       placeholder="you@example.com"
                     />
                   </div>
@@ -180,7 +180,7 @@ export function Login() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 bg-primary text-white rounded-md font-semibold hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Sending...' : 'Send Reset Link'}
                 </button>
@@ -188,7 +188,7 @@ export function Login() {
                 <button
                   type="button"
                   onClick={() => setShowResetPassword(false)}
-                  className="w-full text-sm text-green-600 hover:text-green-700 font-semibold"
+                  className="w-full text-sm text-primary hover:text-primary font-semibold"
                 >
                   Back to Login
                 </button>
@@ -205,8 +205,8 @@ export function Login() {
                   }}
                   className={`flex-1 py-2 text-center font-semibold rounded-md transition ${
                     isLogin
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-primary text-white'
+                      : 'bg-gray-100 text-foreground/80 hover:bg-gray-200'
                   }`}
                 >
                   Login
@@ -218,8 +218,8 @@ export function Login() {
                   }}
                   className={`flex-1 py-2 text-center font-semibold rounded-md transition ${
                     !isLogin
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-primary text-white'
+                      : 'bg-gray-100 text-foreground/80 hover:bg-gray-200'
                   }`}
                 >
                   Sign Up
@@ -230,18 +230,18 @@ export function Login() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {!isLogin && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground/80 mb-2">
                       Full Name
                     </label>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                       <input
                         type="text"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         required={!isLogin}
                         disabled={loading}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent disabled:bg-gray-100"
+                        className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100"
                         placeholder="John Doe"
                       />
                     </div>
@@ -249,41 +249,41 @@ export function Login() {
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground/80 mb-2">
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       disabled={loading}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent disabled:bg-gray-100"
+                      className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100"
                       placeholder="you@example.com"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground/80 mb-2">
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <input
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       disabled={loading}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent disabled:bg-gray-100"
+                      className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100"
                       placeholder="••••••••"
                     />
                   </div>
                   {!isLogin && (
-                    <p className="mt-2 text-xs text-gray-500">
+                    <p className="mt-2 text-xs text-muted-foreground">
                       Must be at least 8 characters with uppercase, lowercase,
                       number, and special character
                     </p>
@@ -295,7 +295,7 @@ export function Login() {
                     <button
                       type="button"
                       onClick={() => setShowResetPassword(true)}
-                      className="text-sm text-green-600 hover:text-green-700"
+                      className="text-sm text-primary hover:text-primary"
                     >
                       Forgot password?
                     </button>
@@ -305,7 +305,7 @@ export function Login() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 bg-primary text-white rounded-md font-semibold hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -320,7 +320,7 @@ export function Login() {
                 </button>
               </form>
 
-              <p className="mt-6 text-center text-sm text-gray-600">
+              <p className="mt-6 text-center text-sm text-muted-foreground">
                 {isLogin
                   ? "Don't have an account? "
                   : 'Already have an account? '}
@@ -330,7 +330,7 @@ export function Login() {
                     setEmailSent(false);
                   }}
                   disabled={loading}
-                  className="text-green-600 hover:text-green-700 font-semibold disabled:opacity-50"
+                  className="text-primary hover:text-primary font-semibold disabled:opacity-50"
                 >
                   {isLogin ? 'Sign up' : 'Sign in'}
                 </button>

@@ -47,7 +47,7 @@ export function Orders() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'delivered':
-        return <CheckCircle className="h-5 w-5 text-green-600" />;
+        return <CheckCircle className="h-5 w-5 text-primary" />;
       case 'cancelled':
         return <XCircle className="h-5 w-5 text-red-600" />;
       case 'shipped':
@@ -60,7 +60,7 @@ export function Orders() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'delivered':
-        return 'bg-green-100 text-green-800';
+        return 'bg-secondary text-primary';
       case 'cancelled':
         return 'bg-red-100 text-red-800';
       case 'shipped':
@@ -74,19 +74,46 @@ export function Orders() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <div className="min-h-screen bg-background/90 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <div className="h-9 w-40 bg-secondary/60 rounded-md animate-pulse" />
+            <div className="h-4 w-64 bg-secondary/60 rounded-md mt-3 animate-pulse" />
+          </div>
+          <div className="space-y-4">
+            {Array.from({ length: 4 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-lg shadow-md p-6 animate-pulse"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="h-10 w-10 bg-secondary/60 rounded-full" />
+                    <div className="space-y-2">
+                      <div className="h-4 w-40 bg-secondary/60 rounded" />
+                      <div className="h-3 w-32 bg-secondary/60 rounded" />
+                    </div>
+                  </div>
+                  <div className="text-right space-y-2">
+                    <div className="h-4 w-24 bg-secondary/60 rounded ml-auto" />
+                    <div className="h-6 w-20 bg-secondary/60 rounded-full ml-auto" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-background/90 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
-          <p className="mt-2 text-gray-600">
+          <h1 className="text-3xl font-bold text-foreground">My Orders</h1>
+          <p className="mt-2 text-muted-foreground">
             Track and manage your solar equipment orders
           </p>
         </div>
@@ -94,17 +121,17 @@ export function Orders() {
         {/* Orders List */}
         {orders.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+            <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <h2 className="text-2xl font-semibold text-foreground mb-2">
               No Orders Yet
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               You haven&apos;t placed any orders yet. Start shopping for solar
               solutions!
             </p>
             <a
               href="/products"
-              className="inline-block px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+              className="inline-block px-6 py-3 bg-primary text-white rounded-md hover:bg-primary/90 transition"
             >
               Browse Products
             </a>
@@ -120,17 +147,17 @@ export function Orders() {
                   <div className="flex items-center gap-4">
                     {getStatusIcon(order.status)}
                     <div>
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-foreground">
                         Order #{order.id.slice(0, 8)}
                       </h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-foreground">
                         Placed on{' '}
                         {new Date(order.created_at).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-gray-900">
+                    <p className="text-lg font-bold text-foreground">
                       KES {order.total_amount.toLocaleString()}
                     </p>
                     <span

@@ -84,7 +84,7 @@ export function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -93,8 +93,8 @@ export function AdminDashboard() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="mt-1 text-sm text-gray-600">
+        <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Overview of your platform&apos;s key metrics
         </p>
       </div>
@@ -108,12 +108,12 @@ export function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total Users</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-sm text-muted-foreground mb-1">Total Users</p>
+              <p className="text-3xl font-bold text-foreground">
                 {stats.totalUsers}
               </p>
               {stats.recentUsers > 0 && (
-                <p className="text-sm text-green-600 mt-2">
+                <p className="text-sm text-primary mt-2">
                   +{stats.recentUsers} this month
                 </p>
               )}
@@ -131,11 +131,11 @@ export function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total Products</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-sm text-muted-foreground mb-1">Total Products</p>
+              <p className="text-3xl font-bold text-foreground">
                 {stats.totalProducts}
               </p>
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-muted-foreground mt-2">
                 {stats.activeProducts} active
               </p>
             </div>
@@ -152,14 +152,14 @@ export function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total Orders</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-sm text-muted-foreground mb-1">Total Orders</p>
+              <p className="text-3xl font-bold text-foreground">
                 {stats.totalOrders}
               </p>
-              <p className="text-sm text-gray-600 mt-2">All time</p>
+              <p className="text-sm text-muted-foreground mt-2">All time</p>
             </div>
-            <div className="h-12 w-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <ShoppingCart className="h-6 w-6 text-green-600" />
+            <div className="h-12 w-12 bg-secondary rounded-lg flex items-center justify-center">
+              <ShoppingCart className="h-6 w-6 text-primary" />
             </div>
           </div>
         </Link>
@@ -168,11 +168,11 @@ export function AdminDashboard() {
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total Revenue</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-sm text-muted-foreground mb-1">Total Revenue</p>
+              <p className="text-3xl font-bold text-foreground">
                 KES {stats.totalRevenue.toLocaleString()}
               </p>
-              <p className="text-sm text-gray-600 mt-2">All time</p>
+              <p className="text-sm text-muted-foreground mt-2">All time</p>
             </div>
             <div className="h-12 w-12 bg-orange-100 rounded-lg flex items-center justify-center">
               <DollarSign className="h-6 w-6 text-orange-600" />
@@ -190,11 +190,11 @@ export function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Out of Stock</p>
+              <p className="text-sm text-muted-foreground mb-1">Out of Stock</p>
               <p className="text-2xl font-bold text-red-600">
                 {stats.outOfStockProducts}
               </p>
-              <p className="text-xs text-gray-500 mt-1">products</p>
+              <p className="text-xs text-muted-foreground mt-1">products</p>
             </div>
             <AlertCircle className="h-8 w-8 text-red-600" />
           </div>
@@ -207,11 +207,11 @@ export function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Low Stock</p>
+              <p className="text-sm text-muted-foreground mb-1">Low Stock</p>
               <p className="text-2xl font-bold text-orange-600">
                 {stats.lowStockProducts}
               </p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 products (&lt;10 units)
               </p>
             </div>
@@ -222,35 +222,35 @@ export function AdminDashboard() {
         {/* Active Products */}
         <Link
           to="/admin/products"
-          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-green-500"
+          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-primary"
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Active Products</p>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-sm text-muted-foreground mb-1">Active Products</p>
+              <p className="text-2xl font-bold text-primary">
                 {stats.activeProducts}
               </p>
-              <p className="text-xs text-gray-500 mt-1">visible to customers</p>
+              <p className="text-xs text-muted-foreground mt-1">visible to customers</p>
             </div>
-            <Package className="h-8 w-8 text-green-600" />
+            <Package className="h-8 w-8 text-primary" />
           </div>
         </Link>
       </div>
 
       {/* Quick Actions */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <h2 className="text-lg font-semibold text-foreground mb-4">
           Quick Actions
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
             to="/admin/products"
-            className="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 transition"
+            className="flex items-center gap-3 p-4 border-2 border-border rounded-lg hover:border-primary transition"
           >
-            <Package className="h-6 w-6 text-green-600" />
+            <Package className="h-6 w-6 text-primary" />
             <div>
-              <p className="font-medium text-gray-900">Add New Product</p>
-              <p className="text-sm text-gray-600">
+              <p className="font-medium text-foreground">Add New Product</p>
+              <p className="text-sm text-muted-foreground">
                 Create a new product listing
               </p>
             </div>
@@ -258,12 +258,12 @@ export function AdminDashboard() {
 
           <Link
             to="/admin/users"
-            className="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 transition"
+            className="flex items-center gap-3 p-4 border-2 border-border rounded-lg hover:border-primary transition"
           >
-            <Users className="h-6 w-6 text-green-600" />
+            <Users className="h-6 w-6 text-primary" />
             <div>
-              <p className="font-medium text-gray-900">Manage Users</p>
-              <p className="text-sm text-gray-600">
+              <p className="font-medium text-foreground">Manage Users</p>
+              <p className="text-sm text-muted-foreground">
                 View and update user roles
               </p>
             </div>
@@ -271,12 +271,12 @@ export function AdminDashboard() {
 
           <Link
             to="/admin/orders"
-            className="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 transition"
+            className="flex items-center gap-3 p-4 border-2 border-border rounded-lg hover:border-primary transition"
           >
-            <ShoppingCart className="h-6 w-6 text-green-600" />
+            <ShoppingCart className="h-6 w-6 text-primary" />
             <div>
-              <p className="font-medium text-gray-900">View Orders</p>
-              <p className="text-sm text-gray-600">Monitor customer orders</p>
+              <p className="font-medium text-foreground">View Orders</p>
+              <p className="text-sm text-muted-foreground">Monitor customer orders</p>
             </div>
           </Link>
         </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ShoppingCart, Check, Loader2, AlertCircle } from 'lucide-react';
+import { ShoppingCart, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { getProducts } from '@/services/products.service';
 import type { Product } from '@/services/products.service';
@@ -73,10 +73,28 @@ export function Products() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-green-600 mx-auto mb-4" />
-          <p className="text-gray-600">Loading products...</p>
+      <div className="min-h-screen bg-background/90 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <div className="h-10 w-56 bg-secondary/60 rounded-md mx-auto mb-4 animate-pulse" />
+            <div className="h-5 w-96 bg-secondary/60 rounded-md mx-auto animate-pulse" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array.from({ length: 6 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse"
+              >
+                <div className="h-64 bg-secondary/60" />
+                <div className="p-6 space-y-4">
+                  <div className="h-5 w-3/5 bg-secondary/60 rounded" />
+                  <div className="h-4 w-full bg-secondary/60 rounded" />
+                  <div className="h-4 w-5/6 bg-secondary/60 rounded" />
+                  <div className="h-10 w-32 bg-secondary/60 rounded" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -84,16 +102,16 @@ export function Products() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background/90 flex items-center justify-center">
         <div className="text-center max-w-md">
           <AlertCircle className="h-12 w-12 text-red-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-foreground mb-2">
             Failed to Load Products
           </h2>
-          <p className="text-gray-600 mb-6">{error}</p>
+          <p className="text-muted-foreground mb-6">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+            className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition"
           >
             Try Again
           </button>
@@ -103,14 +121,14 @@ export function Products() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-background/90 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-foreground mb-4">
             Our Products
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Premium solar energy solutions backed by cutting-edge technology and
             industry-leading warranties
           </p>
@@ -124,8 +142,8 @@ export function Products() {
               onClick={() => setSelectedCategory(category)}
               className={`px-6 py-2 rounded-full transition ${
                 selectedCategory === category
-                  ? 'bg-green-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                  ? 'bg-primary text-white'
+                  : 'bg-white text-foreground/80 hover:bg-secondary/70'
               }`}
             >
               {category}
@@ -145,19 +163,19 @@ export function Products() {
             return (
               <div
                 key={product.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition"
+                className="group bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl animate-fade"
               >
                 <div className="relative h-64 overflow-hidden">
                   <img
                     src={displayImage}
                     alt={product.name}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     onError={(e) => {
                       e.currentTarget.src =
                         'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400';
                     }}
                   />
-                  <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm">
+                  <div className="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-sm">
                     {categoryMap[product.category] || product.category}
                   </div>
                   {product.stock_quantity === 0 && (
@@ -170,25 +188,25 @@ export function Products() {
                 </div>
 
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
                     {product.name}
                   </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-2">
+                  <p className="text-muted-foreground mb-4 line-clamp-2">
                     {product.description || 'Premium solar equipment'}
                   </p>
 
                   {displaySpecs.length > 0 && (
                     <div className="mb-4">
-                      <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                      <h4 className="text-sm font-semibold text-foreground/80 mb-2">
                         Key Features:
                       </h4>
                       <ul className="space-y-1">
                         {displaySpecs.slice(0, 3).map((spec, idx) => (
                           <li
                             key={idx}
-                            className="flex items-center gap-2 text-sm text-gray-600"
+                            className="flex items-center gap-2 text-sm text-muted-foreground"
                           >
-                            <Check className="h-4 w-4 text-green-600 flex-shrink-0" />
+                            <Check className="h-4 w-4 text-primary flex-shrink-0" />
                             <span>{spec}</span>
                           </li>
                         ))}
@@ -198,10 +216,10 @@ export function Products() {
 
                   <div className="flex items-center justify-between pt-4 border-t">
                     <div>
-                      <div className="text-2xl font-bold text-gray-900">
+                      <div className="text-2xl font-bold text-foreground">
                         KES {product.price.toLocaleString()}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-muted-foreground">
                         {product.stock_quantity > 0
                           ? `${product.stock_quantity} in stock`
                           : 'Out of stock'}
@@ -212,8 +230,8 @@ export function Products() {
                       disabled={product.stock_quantity === 0}
                       className={`flex items-center gap-2 px-4 py-2 rounded-md transition ${
                         product.stock_quantity === 0
-                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                          : 'bg-green-600 text-white hover:bg-green-700'
+                          ? 'bg-gray-300 text-muted-foreground cursor-not-allowed'
+                          : 'bg-primary text-white hover:bg-primary/90'
                       }`}
                     >
                       <ShoppingCart className="h-4 w-4" />
@@ -228,7 +246,7 @@ export function Products() {
 
         {filteredProducts.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">
+            <p className="text-muted-foreground text-lg">
               No products found in this category.
             </p>
           </div>

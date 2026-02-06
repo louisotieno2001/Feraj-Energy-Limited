@@ -71,14 +71,14 @@ export function AdminLayout() {
           {/* Logo */}
           <div className="flex items-center justify-between h-16 px-6 border-b">
             <Link to="/admin" className="flex items-center gap-2">
-              <LayoutDashboard className="h-6 w-6 text-green-600" />
-              <span className="text-lg font-bold text-gray-900">
+              <LayoutDashboard className="h-6 w-6 text-primary" />
+              <span className="text-lg font-bold text-foreground">
                 Admin Panel
               </span>
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-gray-500 hover:text-gray-700"
+              className="lg:hidden text-muted-foreground hover:text-foreground/80"
             >
               <X className="h-6 w-6" />
             </button>
@@ -99,8 +99,8 @@ export function AdminLayout() {
                   onClick={() => setSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
                     isActive
-                      ? 'bg-green-50 text-green-600 font-medium'
-                      : 'text-gray-700 hover:bg-gray-50'
+                      ? 'bg-secondary text-primary font-medium'
+                      : 'text-foreground/80 hover:bg-secondary/70'
                   }`}
                 >
                   <item.icon className="h-5 w-5" />
@@ -113,18 +113,18 @@ export function AdminLayout() {
           {/* User info & actions */}
           <div className="border-t px-4 py-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                <span className="text-green-600 font-semibold">
+              <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
+                <span className="text-primary font-semibold">
                   {profile?.full_name?.charAt(0) ||
                     profile?.email?.charAt(0) ||
                     'A'}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">
+                <p className="text-sm font-medium text-foreground truncate">
                   {profile?.full_name || 'Admin'}
                 </p>
-                <p className="text-xs text-gray-500 truncate">
+                <p className="text-xs text-muted-foreground truncate">
                   {profile?.email}
                 </p>
               </div>
@@ -133,7 +133,7 @@ export function AdminLayout() {
             <div className="space-y-2">
               <Link
                 to="/"
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-foreground/80 hover:bg-secondary/70 rounded-md transition"
               >
                 <Home className="h-4 w-4" />
                 <span>Back to Site</span>
@@ -157,18 +157,18 @@ export function AdminLayout() {
           <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden text-gray-500 hover:text-gray-700"
+              className="lg:hidden text-muted-foreground hover:text-foreground/80"
             >
               <Menu className="h-6 w-6" />
             </button>
 
             <div className="flex items-center gap-2 lg:hidden">
-              <LayoutDashboard className="h-6 w-6 text-green-600" />
-              <span className="text-lg font-bold text-gray-900">Admin</span>
+              <LayoutDashboard className="h-6 w-6 text-primary" />
+              <span className="text-lg font-bold text-foreground">Admin</span>
             </div>
 
             <div className="flex items-center gap-4">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-secondary text-primary">
                 {profile?.role ? profile.role.replace('_', ' ') : 'Staff'}
               </span>
             </div>

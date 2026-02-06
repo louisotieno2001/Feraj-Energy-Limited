@@ -20,7 +20,7 @@ export function Team() {
             <h2 className="text-4xl font-bold mb-4">
               Directors & Executive Team
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-muted-foreground">
               Decades of combined experience in renewable energy, technology,
               and business leadership
             </p>
@@ -42,13 +42,13 @@ export function Team() {
                 </div>
 
                 <div className="p-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-1">
+                  <h3 className="text-2xl font-bold text-foreground mb-1">
                     {member.name}
                   </h3>
-                  <div className="text-green-600 font-semibold mb-4">
+                  <div className="text-primary font-semibold mb-4">
                     {member.position}
                   </div>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
                     {member.bio}
                   </p>
 
@@ -64,7 +64,7 @@ export function Team() {
                     )}
                     <a
                       href={`mailto:${member.name.toLowerCase().replace(/ /g, '.')}@ferajsolar.com`}
-                      className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition text-sm"
+                      className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-foreground/80 rounded-md hover:bg-gray-200 transition text-sm"
                     >
                       <Mail className="h-4 w-4" />
                       Email
@@ -77,35 +77,35 @@ export function Team() {
         </div>
       </section>
 
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-background/90">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">Join Our Team</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
               We&apos;re always looking for talented individuals passionate
               about clean energy and sustainability
             </p>
-            <button className="px-8 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition font-semibold">
+            <button className="px-8 py-3 bg-primary text-white rounded-md hover:bg-primary/90 transition font-semibold">
               View Open Positions
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">
+              <div className="text-3xl font-bold text-primary mb-2">
                 2,500+
               </div>
-              <div className="text-gray-600">Employees Worldwide</div>
+              <div className="text-muted-foreground">Employees Worldwide</div>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">45+</div>
-              <div className="text-gray-600">Nationalities Represented</div>
+              <div className="text-3xl font-bold text-primary mb-2">45+</div>
+              <div className="text-muted-foreground">Nationalities Represented</div>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">
+              <div className="text-3xl font-bold text-primary mb-2">
                 4.8/5
               </div>
-              <div className="text-gray-600">Employee Satisfaction Rating</div>
+              <div className="text-muted-foreground">Employee Satisfaction Rating</div>
             </div>
           </div>
         </div>

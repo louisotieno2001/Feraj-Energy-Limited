@@ -181,14 +181,14 @@ export function AdminUsers() {
       case 'employee':
         return 'bg-blue-100 text-blue-800';
       default:
-        return 'bg-green-100 text-green-800';
+        return 'bg-secondary text-primary';
     }
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -196,10 +196,10 @@ export function AdminUsers() {
   if (!canManageUsers) {
     return (
       <div className="bg-white rounded-lg shadow p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-foreground mb-2">
           User Management
         </h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           You do not have permission to manage users. Contact an admin to
           request access.
         </p>
@@ -222,8 +222,8 @@ export function AdminUsers() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-        <p className="mt-1 text-sm text-gray-600">
+        <h1 className="text-2xl font-bold text-foreground">User Management</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Manage user roles and permissions
         </p>
       </div>
@@ -231,23 +231,23 @@ export function AdminUsers() {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600">Total Users</div>
-          <div className="text-2xl font-bold text-gray-900">{users.length}</div>
+          <div className="text-sm text-muted-foreground">Total Users</div>
+          <div className="text-2xl font-bold text-foreground">{users.length}</div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600">Admins</div>
+          <div className="text-sm text-muted-foreground">Admins</div>
           <div className="text-2xl font-bold text-purple-600">
             {users.filter((u) => u.role === 'admin').length}
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600">Co-admins</div>
+          <div className="text-sm text-muted-foreground">Co-admins</div>
           <div className="text-2xl font-bold text-indigo-600">
             {users.filter((u) => u.role === 'co_admin').length}
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-gray-600">Employees</div>
+          <div className="text-sm text-muted-foreground">Employees</div>
           <div className="text-2xl font-bold text-blue-600">
             {users.filter((u) => u.role === 'employee').length}
           </div>
@@ -259,13 +259,13 @@ export function AdminUsers() {
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search */}
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
 
@@ -273,7 +273,7 @@ export function AdminUsers() {
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value as any)}
-            className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
           >
             <option value="all">All Roles</option>
             <option value="admin">Admins</option>
@@ -290,47 +290,47 @@ export function AdminUsers() {
           key={group.role}
           className="bg-white rounded-lg shadow overflow-hidden mb-6"
         >
-          <div className="px-6 py-4 border-b bg-gray-50">
-            <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+          <div className="px-6 py-4 border-b bg-background/90">
+            <h2 className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
               {group.role.replace('_', ' ')}
             </h2>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-border">
               <thead className="bg-white">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Role
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Joined
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-border">
                 {group.users.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
+                  <tr key={user.id} className="hover:bg-secondary/70">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="h-10 w-10 flex-shrink-0">
-                          <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                            <span className="text-green-600 font-semibold">
+                          <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
+                            <span className="text-primary font-semibold">
                               {user.full_name?.charAt(0) ||
                                 user.email.charAt(0).toUpperCase()}
                             </span>
                           </div>
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-foreground">
                             {user.full_name || 'No name'}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-muted-foreground">
                             {user.email}
                           </div>
                         </div>
@@ -346,7 +346,7 @@ export function AdminUsers() {
                         {user.role.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {new Date(user.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -357,7 +357,7 @@ export function AdminUsers() {
                           setShowRoleModal(true);
                           loadPermissionsForUser(user.id);
                         }}
-                        className="text-green-600 hover:text-green-900 disabled:text-gray-300"
+                        className="text-primary hover:text-primary/90 disabled:text-gray-300"
                         disabled={
                           user.id === currentUser?.id ||
                           (isCoAdmin &&
@@ -376,7 +376,7 @@ export function AdminUsers() {
           {group.users.length === 0 && (
             <div className="text-center py-8">
               <AlertCircle className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-              <p className="text-gray-500 text-sm">No users in this group</p>
+              <p className="text-muted-foreground text-sm">No users in this group</p>
             </div>
           )}
         </div>
@@ -384,8 +384,8 @@ export function AdminUsers() {
 
       {filteredUsers.length === 0 && (
         <div className="text-center py-12">
-          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-          <p className="text-gray-500">No users found</p>
+          <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+          <p className="text-muted-foreground">No users found</p>
         </div>
       )}
 
@@ -393,20 +393,20 @@ export function AdminUsers() {
       {showRoleModal && selectedUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
               Manage User
             </h3>
 
             <div className="mb-4">
-              <p className="text-sm text-gray-600 mb-2">User:</p>
+              <p className="text-sm text-muted-foreground mb-2">User:</p>
               <p className="font-medium">
                 {selectedUser.full_name || selectedUser.email}
               </p>
-              <p className="text-sm text-gray-500">{selectedUser.email}</p>
+              <p className="text-sm text-muted-foreground">{selectedUser.email}</p>
             </div>
 
             <div className="mb-6">
-              <p className="text-sm text-gray-600 mb-3">Role:</p>
+              <p className="text-sm text-muted-foreground mb-3">Role:</p>
               <div className="space-y-2">
                 {(isAdmin
                   ? (['customer', 'employee', 'co_admin', 'admin'] as const)
@@ -418,8 +418,8 @@ export function AdminUsers() {
                     disabled={updating}
                     className={`w-full flex items-center gap-3 px-4 py-3 border-2 rounded-lg transition ${
                       selectedRole === role
-                        ? 'border-green-500 bg-green-50'
-                        : 'border-gray-200 hover:border-green-300'
+                        ? 'border-primary bg-secondary'
+                        : 'border-border hover:border-primary/40'
                     } ${updating ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {getRoleIcon(role)}
@@ -427,7 +427,7 @@ export function AdminUsers() {
                       {role.replace('_', ' ')}
                     </span>
                     {selectedRole === role && (
-                      <span className="ml-auto text-sm text-green-600">
+                      <span className="ml-auto text-sm text-primary">
                         (Selected)
                       </span>
                     )}
@@ -437,9 +437,9 @@ export function AdminUsers() {
             </div>
 
             <div className="mb-6">
-              <p className="text-sm text-gray-600 mb-3">Privileges:</p>
+              <p className="text-sm text-muted-foreground mb-3">Privileges:</p>
               {loadingPermissions && (
-                <p className="text-xs text-gray-500 mb-2">
+                <p className="text-xs text-muted-foreground mb-2">
                   Loading permissions...
                 </p>
               )}
@@ -462,7 +462,7 @@ export function AdminUsers() {
                     }
                     disabled={loadingPermissions || updating}
                   />
-                  <span className="text-sm text-gray-700">Handle products</span>
+                  <span className="text-sm text-foreground/80">Handle products</span>
                 </label>
                 <label className="flex items-center gap-3">
                   <input
@@ -482,7 +482,7 @@ export function AdminUsers() {
                     }
                     disabled={loadingPermissions || updating}
                   />
-                  <span className="text-sm text-gray-700">Handle tickets</span>
+                  <span className="text-sm text-foreground/80">Handle tickets</span>
                 </label>
                 <label className="flex items-center gap-3">
                   <input
@@ -499,10 +499,10 @@ export function AdminUsers() {
                     }
                     disabled={!isAdmin || updating}
                   />
-                  <span className="text-sm text-gray-700">Make co-admin</span>
+                  <span className="text-sm text-foreground/80">Make co-admin</span>
                 </label>
                 {!isAdmin && (
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     Only admins can promote a user to co-admin.
                   </p>
                 )}
@@ -518,14 +518,14 @@ export function AdminUsers() {
                   setSelectedPermissions(null);
                 }}
                 disabled={updating}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition disabled:opacity-50"
+                className="flex-1 px-4 py-2 rounded-md btn-secondary disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={applyUserChanges}
                 disabled={updating || loadingPermissions}
-                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition disabled:opacity-50"
               >
                 {updating ? 'Saving...' : 'Save Changes'}
               </button>

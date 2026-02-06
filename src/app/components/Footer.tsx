@@ -23,16 +23,16 @@ export function Footer() {
               solutions for a sustainable and energy-independent future.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-green-500 transition">
+              <a href="#" className="hover:text-primary transition">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-green-500 transition">
+              <a href="#" className="hover:text-primary transition">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-green-500 transition">
+              <a href="#" className="hover:text-primary transition">
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href="#" className="hover:text-green-500 transition">
+              <a href="#" className="hover:text-primary transition">
                 <Instagram className="h-5 w-5" />
               </a>
             </div>
@@ -45,7 +45,7 @@ export function Footer() {
               <li>
                 <Link
                   to="/products"
-                  className="hover:text-green-500 transition"
+                  className="hover:text-primary transition"
                 >
                   Solar Panels
                 </Link>
@@ -53,7 +53,7 @@ export function Footer() {
               <li>
                 <Link
                   to="/products"
-                  className="hover:text-green-500 transition"
+                  className="hover:text-primary transition"
                 >
                   Inverters
                 </Link>
@@ -61,7 +61,7 @@ export function Footer() {
               <li>
                 <Link
                   to="/products"
-                  className="hover:text-green-500 transition"
+                  className="hover:text-primary transition"
                 >
                   Battery Storage
                 </Link>
@@ -69,7 +69,7 @@ export function Footer() {
               <li>
                 <Link
                   to="/products"
-                  className="hover:text-green-500 transition"
+                  className="hover:text-primary transition"
                 >
                   Mounting Systems
                 </Link>
@@ -82,19 +82,19 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/about" className="hover:text-green-500 transition">
+                <Link to="/about" className="hover:text-primary transition">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/team" className="hover:text-green-500 transition">
+                <Link to="/team" className="hover:text-primary transition">
                   Our Team
                 </Link>
               </li>
               <li>
                 <Link
                   to="/partnerships"
-                  className="hover:text-green-500 transition"
+                  className="hover:text-primary transition"
                 >
                   Partnerships
                 </Link>
@@ -102,7 +102,7 @@ export function Footer() {
               <li>
                 <Link
                   to="/energy-stats"
-                  className="hover:text-green-500 transition"
+                  className="hover:text-primary transition"
                 >
                   Energy Statistics
                 </Link>
