@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ShoppingCart, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { getProducts } from '@/services/products.service';
+import { getProducts, searchProducts } from '@/services/products.service';
 import type { Product } from '@/services/products.service';
 
 // Category mapping from database values to display names
@@ -17,14 +17,19 @@ export function Products() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const query = searchQuery.trim();
+    setSearching(!!query);
+
+    const timeout = setTimeout(async () => {
       try {
         console.log('🔄 Fetching products from Supabase...');
         setLoading(true);
         setError(null);
-        const data = await getProducts();
+        const data = query ? await searchProducts(query) : await getProducts();
         console.log('✅ Products fetched:', data.length, 'products');
         console.log('Products data:', data);
         setProducts(data);
@@ -37,10 +42,10 @@ export function Products() {
         setLoading(false);
         console.log('🏁 Loading complete');
       }
-    };
+    }, 350);
 
-    fetchProducts();
-  }, []);
+    return () => clearTimeout(timeout);
+  }, [searchQuery]);
 
   const categories = [
     'All',
@@ -134,21 +139,37 @@ export function Products() {
           </p>
         </div>
 
-        {/* Category Filter */}
-        <div className="mb-8 flex gap-4 flex-wrap justify-center">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-2 rounded-full transition ${
-                selectedCategory === category
-                  ? 'bg-primary text-white'
-                  : 'bg-white text-foreground/80 hover:bg-secondary/70'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
+        {/* Search + Category Filter */}
+        <div className="mb-8 flex flex-col gap-4 items-center">
+          <div className="w-full max-w-2xl">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search products by name or description..."
+              className="w-full px-4 py-3 border border-border rounded-md bg-white text-foreground/80 focus:ring-2 focus:ring-primary focus:border-transparent"
+            />
+            {searching && (
+              <p className="mt-2 text-sm text-muted-foreground">
+                Showing results for &quot;{searchQuery.trim()}&quot;
+              </p>
+            )}
+          </div>
+          <div className="flex gap-4 flex-wrap justify-center">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-6 py-2 rounded-full transition ${
+                  selectedCategory === category
+                    ? 'bg-primary text-white'
+                    : 'bg-white text-foreground/80 hover:bg-secondary/70'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Products Grid */}

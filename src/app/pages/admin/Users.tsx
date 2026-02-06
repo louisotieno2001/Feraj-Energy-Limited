@@ -232,7 +232,9 @@ export function AdminUsers() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="text-sm text-muted-foreground">Total Users</div>
-          <div className="text-2xl font-bold text-foreground">{users.length}</div>
+          <div className="text-2xl font-bold text-foreground">
+            {users.length}
+          </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="text-sm text-muted-foreground">Admins</div>
@@ -376,7 +378,9 @@ export function AdminUsers() {
           {group.users.length === 0 && (
             <div className="text-center py-8">
               <AlertCircle className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-              <p className="text-muted-foreground text-sm">No users in this group</p>
+              <p className="text-muted-foreground text-sm">
+                No users in this group
+              </p>
             </div>
           )}
         </div>
@@ -402,7 +406,9 @@ export function AdminUsers() {
               <p className="font-medium">
                 {selectedUser.full_name || selectedUser.email}
               </p>
-              <p className="text-sm text-muted-foreground">{selectedUser.email}</p>
+              <p className="text-sm text-muted-foreground">
+                {selectedUser.email}
+              </p>
             </div>
 
             <div className="mb-6">
@@ -462,7 +468,9 @@ export function AdminUsers() {
                     }
                     disabled={loadingPermissions || updating}
                   />
-                  <span className="text-sm text-foreground/80">Handle products</span>
+                  <span className="text-sm text-foreground/80">
+                    Handle products
+                  </span>
                 </label>
                 <label className="flex items-center gap-3">
                   <input
@@ -482,7 +490,9 @@ export function AdminUsers() {
                     }
                     disabled={loadingPermissions || updating}
                   />
-                  <span className="text-sm text-foreground/80">Handle tickets</span>
+                  <span className="text-sm text-foreground/80">
+                    Handle tickets
+                  </span>
                 </label>
                 <label className="flex items-center gap-3">
                   <input
@@ -499,7 +509,9 @@ export function AdminUsers() {
                     }
                     disabled={!isAdmin || updating}
                   />
-                  <span className="text-sm text-foreground/80">Make co-admin</span>
+                  <span className="text-sm text-foreground/80">
+                    Make co-admin
+                  </span>
                 </label>
                 {!isAdmin && (
                   <p className="text-xs text-muted-foreground">

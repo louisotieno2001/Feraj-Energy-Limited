@@ -43,34 +43,22 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-4">Products</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link
-                  to="/products"
-                  className="hover:text-primary transition"
-                >
+                <Link to="/products" className="hover:text-primary transition">
                   Solar Panels
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/products"
-                  className="hover:text-primary transition"
-                >
+                <Link to="/products" className="hover:text-primary transition">
                   Inverters
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/products"
-                  className="hover:text-primary transition"
-                >
+                <Link to="/products" className="hover:text-primary transition">
                   Battery Storage
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/products"
-                  className="hover:text-primary transition"
-                >
+                <Link to="/products" className="hover:text-primary transition">
                   Mounting Systems
                 </Link>
               </li>

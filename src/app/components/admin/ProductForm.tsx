@@ -444,7 +444,9 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                 <Upload className="h-4 w-4" />
                 Upload from device
               </span>
-              <span className="text-xs text-muted-foreground">Max 2MB per image</span>
+              <span className="text-xs text-muted-foreground">
+                Max 2MB per image
+              </span>
             </label>
             <p className="text-xs text-muted-foreground mb-3">
               {formData.images.length}/{maxImages} images added. First image is

@@ -131,7 +131,9 @@ export function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Total Products</p>
+              <p className="text-sm text-muted-foreground mb-1">
+                Total Products
+              </p>
               <p className="text-3xl font-bold text-foreground">
                 {stats.totalProducts}
               </p>
@@ -168,7 +170,9 @@ export function AdminDashboard() {
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Total Revenue</p>
+              <p className="text-sm text-muted-foreground mb-1">
+                Total Revenue
+              </p>
               <p className="text-3xl font-bold text-foreground">
                 KES {stats.totalRevenue.toLocaleString()}
               </p>
@@ -226,11 +230,15 @@ export function AdminDashboard() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Active Products</p>
+              <p className="text-sm text-muted-foreground mb-1">
+                Active Products
+              </p>
               <p className="text-2xl font-bold text-primary">
                 {stats.activeProducts}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">visible to customers</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                visible to customers
+              </p>
             </div>
             <Package className="h-8 w-8 text-primary" />
           </div>
@@ -276,7 +284,9 @@ export function AdminDashboard() {
             <ShoppingCart className="h-6 w-6 text-primary" />
             <div>
               <p className="font-medium text-foreground">View Orders</p>
-              <p className="text-sm text-muted-foreground">Monitor customer orders</p>
+              <p className="text-sm text-muted-foreground">
+                Monitor customer orders
+              </p>
             </div>
           </Link>
         </div>

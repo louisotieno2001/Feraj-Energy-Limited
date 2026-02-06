@@ -96,7 +96,9 @@ export function AdminAudit() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Audit & Monitoring</h1>
+        <h1 className="text-2xl font-bold text-foreground">
+          Audit & Monitoring
+        </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Activity feed and ticket queue for staff oversight.
         </p>

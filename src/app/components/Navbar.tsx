@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   ShoppingCart,
   User,
@@ -9,6 +9,7 @@ import {
   Lightbulb,
   TrendingUp,
   Users,
+  Activity,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,17 +21,17 @@ export function Navbar() {
   const cartCount = JSON.parse(localStorage.getItem('cart') || '[]').length;
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const isStaff =
     profile?.role && ['admin', 'co_admin', 'employee'].includes(profile.role);
+  const isHome = location.pathname === '/';
 
   const handleSignOut = async () => {
     try {
-      setIsOpen(false); // Close mobile menu first
+      setIsOpen(false);
       await signOut();
       toast.success('Logged out successfully');
-      navigate('/', { replace: true });
-      // Force reload to clear any cached state
-      window.location.reload();
+      navigate('/login', { replace: true });
     } catch (error: any) {
       console.error('Logout error:', error);
       toast.error('Failed to log out. Please try again.');
@@ -56,12 +57,14 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            <Link
-              to="/"
-              className="text-foreground/80 hover:text-primary transition"
-            >
-              Home
-            </Link>
+            {!isHome && (
+              <Link
+                to="/"
+                className="text-foreground/80 hover:text-primary transition"
+              >
+                Home
+              </Link>
+            )}
             <Link
               to="/products"
               className="text-foreground/80 hover:text-primary transition"
@@ -179,6 +182,15 @@ export function Navbar() {
                           My Profile
                         </Link>
                       </DropdownMenu.Item>
+                      <DropdownMenu.Item asChild>
+                        <Link
+                          to="/devices"
+                          className="flex items-center gap-3 px-3 py-2 text-sm text-foreground/80 hover:bg-secondary hover:text-primary rounded cursor-pointer outline-none"
+                        >
+                          <Activity className="h-4 w-4" />
+                          My Devices
+                        </Link>
+                      </DropdownMenu.Item>
                       {isStaff && (
                         <DropdownMenu.Item asChild>
                           <Link
@@ -247,13 +259,15 @@ export function Navbar() {
       {isOpen && (
         <div className="md:hidden bg-white border-t">
           <div className="px-4 py-2 space-y-1">
-            <Link
-              to="/"
-              className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md"
-              onClick={() => setIsOpen(false)}
-            >
-              Home
-            </Link>
+            {!isHome && (
+              <Link
+                to="/"
+                className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md"
+                onClick={() => setIsOpen(false)}
+              >
+                Home
+              </Link>
+            )}
             <Link
               to="/products"
               className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md"
@@ -324,6 +338,13 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                 >
                   My Profile
+                </Link>
+                <Link
+                  to="/devices"
+                  className="block px-3 py-2 text-foreground/80 hover:bg-secondary rounded-md font-medium pl-6"
+                  onClick={() => setIsOpen(false)}
+                >
+                  My Devices
                 </Link>
                 {isStaff && (
                   <Link

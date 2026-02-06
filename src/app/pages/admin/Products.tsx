@@ -287,7 +287,9 @@ export function AdminProducts() {
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-muted-foreground">Low Stock (&lt;10)</div>
+          <div className="text-sm text-muted-foreground">
+            Low Stock (&lt;10)
+          </div>
           <div className="text-2xl font-bold text-orange-600">
             {
               products.filter(

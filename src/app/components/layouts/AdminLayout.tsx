@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Users,
   Package,
+  Cpu,
   ShoppingBag,
   LogOut,
   Menu,
@@ -38,6 +39,12 @@ export function AdminLayout() {
       href: '/admin/products',
       icon: Package,
       visible: canManageProducts,
+    },
+    {
+      name: 'Devices',
+      href: '/admin/devices',
+      icon: Cpu,
+      visible: isAdmin || isCoAdmin,
     },
     { name: 'Audit', href: '/admin/audit', icon: ShoppingBag, visible: true },
   ].filter((item) => item.visible);
