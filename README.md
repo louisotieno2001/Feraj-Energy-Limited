@@ -1,6 +1,6 @@
 # Feraj Solar Limited Website
 
-Live site: https://feraj.org
+Live site: https://feraj.solar/
 
 ## Overview
 Feraj Solar Limited is a React + TypeScript site built with Vite and Supabase (Auth + Postgres + RLS). It includes public pages, a product catalog, and a staff admin panel with role-based access.

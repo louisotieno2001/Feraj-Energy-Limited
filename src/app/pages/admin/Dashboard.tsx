@@ -1,3 +1,415 @@
+// import { useState, useEffect } from 'react';
+// import { getUserStats } from '@/services/users.service';
+// import { getProducts, type Product } from '@/services/products.service';
+// import {
+//   Users,
+//   Package,
+//   ShoppingCart,
+//   TrendingUp,
+//   AlertCircle,
+//   DollarSign,
+//   Loader2,
+//   ArrowUpRight,
+//   Boxes,
+//   ShieldCheck,
+// } from 'lucide-react';
+// import { Link } from 'react-router';
+
+// interface DashboardStats {
+//   totalUsers: number;
+//   totalProducts: number;
+//   totalOrders: number;
+//   activeProducts: number;
+//   outOfStockProducts: number;
+//   lowStockProducts: number;
+//   recentUsers: number;
+//   totalRevenue: number;
+// }
+
+// export function AdminDashboard() {
+//   const [stats, setStats] = useState<DashboardStats>({
+//     totalUsers: 0,
+//     totalProducts: 0,
+//     totalOrders: 0,
+//     activeProducts: 0,
+//     outOfStockProducts: 0,
+//     lowStockProducts: 0,
+//     recentUsers: 0,
+//     totalRevenue: 0,
+//   });
+//   const [loading, setLoading] = useState(true);
+//   const totalStockTracked = stats.totalProducts || 1;
+//   const outOfStockPercent = Math.round(
+//     (stats.outOfStockProducts / totalStockTracked) * 100
+//   );
+//   const lowStockPercent = Math.round(
+//     (stats.lowStockProducts / totalStockTracked) * 100
+//   );
+//   const healthyStockProducts = Math.max(
+//     stats.totalProducts - stats.outOfStockProducts - stats.lowStockProducts,
+//     0
+//   );
+//   const healthyStockPercent = Math.round(
+//     (healthyStockProducts / totalStockTracked) * 100
+//   );
+
+//   useEffect(() => {
+//     fetchDashboardData();
+//   }, []);
+
+//   const fetchDashboardData = async () => {
+//     try {
+//       setLoading(true);
+
+//       // Fetch all data in parallel
+//       const [userStats, products] = await Promise.all([
+//         getUserStats(),
+//         getProducts(),
+//       ]);
+
+//       // Calculate product stats
+//       const activeProducts = products.filter(
+//         (p: Product) => p.is_active
+//       ).length;
+//       const outOfStockProducts = products.filter(
+//         (p: Product) => p.stock_quantity === 0
+//       ).length;
+//       const lowStockProducts = products.filter(
+//         (p: Product) => p.stock_quantity > 0 && p.stock_quantity < 10
+//       ).length;
+
+//       // Calculate revenue (placeholder - will be implemented when order creation is added)
+//       const totalRevenue = 0;
+
+//       setStats({
+//         totalUsers: userStats.totalUsers,
+//         totalProducts: products.length,
+//         totalOrders: 0, // Will be implemented when order creation is added
+//         activeProducts,
+//         outOfStockProducts,
+//         lowStockProducts,
+//         recentUsers: userStats.recentUsers.length,
+//         totalRevenue,
+//       });
+//     } catch (error: any) {
+//       console.error('Error fetching dashboard data:', error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   if (loading) {
+//     return (
+//       <div className="flex items-center justify-center py-12">
+//         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="space-y-8">
+//       <div className="rounded-2xl border border-border bg-gradient-to-r from-primary/10 via-secondary/70 to-primary/5 p-6 sm:p-8">
+//         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+//           <div>
+//             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+//               Control Center
+//             </p>
+//             <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
+//               Admin Dashboard
+//             </h1>
+//             <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+//               Monitor users, products, and inventory status from one place.
+//             </p>
+//           </div>
+
+//           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+//             <div className="rounded-xl border border-primary/15 bg-background/80 px-4 py-3">
+//               <p className="text-xs text-muted-foreground">Users</p>
+//               <p className="mt-1 text-xl font-semibold text-foreground">
+//                 {stats.totalUsers}
+//               </p>
+//             </div>
+//             <div className="rounded-xl border border-primary/15 bg-background/80 px-4 py-3">
+//               <p className="text-xs text-muted-foreground">Products</p>
+//               <p className="mt-1 text-xl font-semibold text-foreground">
+//                 {stats.totalProducts}
+//               </p>
+//             </div>
+//             <div className="rounded-xl border border-primary/15 bg-background/80 px-4 py-3 col-span-2 sm:col-span-1">
+//               <p className="text-xs text-muted-foreground">Revenue</p>
+//               <p className="mt-1 text-xl font-semibold text-foreground">
+//                 KES {stats.totalRevenue.toLocaleString()}
+//               </p>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+//         <Link
+//           to="/admin/users"
+//           className="group rounded-xl border border-border bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+//         >
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+//                 Total Users
+//               </p>
+//               <p className="mt-1 text-3xl font-bold text-foreground">
+//                 {stats.totalUsers}
+//               </p>
+//               {stats.recentUsers > 0 && (
+//                 <p className="mt-2 text-sm text-primary">
+//                   +{stats.recentUsers} this month
+//                 </p>
+//               )}
+//             </div>
+//             <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-blue-100">
+//               <Users className="h-5 w-5 text-blue-700" />
+//             </div>
+//           </div>
+//           <div className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-primary">
+//             Open users <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+//           </div>
+//         </Link>
+
+//         <Link
+//           to="/admin/products"
+//           className="group rounded-xl border border-border bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+//         >
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+//                 Total Products
+//               </p>
+//               <p className="mt-1 text-3xl font-bold text-foreground">
+//                 {stats.totalProducts}
+//               </p>
+//               <p className="mt-2 text-sm text-muted-foreground">
+//                 {stats.activeProducts} active
+//               </p>
+//             </div>
+//             <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-violet-100">
+//               <Package className="h-5 w-5 text-violet-700" />
+//             </div>
+//           </div>
+//           <div className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-primary">
+//             Open catalog <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+//           </div>
+//         </Link>
+
+//         <Link
+//           to="/admin/orders"
+//           className="group rounded-xl border border-border bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+//         >
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+//                 Total Orders
+//               </p>
+//               <p className="mt-1 text-3xl font-bold text-foreground">
+//                 {stats.totalOrders}
+//               </p>
+//               <p className="mt-2 text-sm text-muted-foreground">All time</p>
+//             </div>
+//             <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-secondary">
+//               <ShoppingCart className="h-5 w-5 text-primary" />
+//             </div>
+//           </div>
+//           <div className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-primary">
+//             Review orders <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+//           </div>
+//         </Link>
+
+//         <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+//                 Total Revenue
+//               </p>
+//               <p className="mt-1 text-3xl font-bold text-foreground">
+//                 KES {stats.totalRevenue.toLocaleString()}
+//               </p>
+//               <p className="mt-2 text-sm text-muted-foreground">All time</p>
+//             </div>
+//             <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber-100">
+//               <DollarSign className="h-5 w-5 text-amber-700" />
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+//         <div className="xl:col-span-2 rounded-xl border border-border bg-white p-6 shadow-sm">
+//           <div className="mb-5 flex items-center justify-between">
+//             <div>
+//               <h2 className="text-lg font-semibold text-foreground">
+//                 Inventory Health
+//               </h2>
+//               <p className="text-sm text-muted-foreground">
+//                 Snapshot of product availability.
+//               </p>
+//             </div>
+//             <Boxes className="h-5 w-5 text-muted-foreground" />
+//           </div>
+
+//           <div className="space-y-4">
+//             <div>
+//               <div className="mb-2 flex items-center justify-between text-sm">
+//                 <span className="text-muted-foreground">Healthy stock</span>
+//                 <span className="font-medium text-foreground">
+//                   {healthyStockProducts} ({healthyStockPercent}%)
+//                 </span>
+//               </div>
+//               <div className="h-2 rounded-full bg-secondary">
+//                 <div
+//                   className="h-full rounded-full bg-emerald-500"
+//                   style={{ width: `${healthyStockPercent}%` }}
+//                 />
+//               </div>
+//             </div>
+
+//             <div>
+//               <div className="mb-2 flex items-center justify-between text-sm">
+//                 <span className="text-muted-foreground">Low stock</span>
+//                 <span className="font-medium text-foreground">
+//                   {stats.lowStockProducts} ({lowStockPercent}%)
+//                 </span>
+//               </div>
+//               <div className="h-2 rounded-full bg-secondary">
+//                 <div
+//                   className="h-full rounded-full bg-amber-500"
+//                   style={{ width: `${lowStockPercent}%` }}
+//                 />
+//               </div>
+//             </div>
+
+//             <div>
+//               <div className="mb-2 flex items-center justify-between text-sm">
+//                 <span className="text-muted-foreground">Out of stock</span>
+//                 <span className="font-medium text-foreground">
+//                   {stats.outOfStockProducts} ({outOfStockPercent}%)
+//                 </span>
+//               </div>
+//               <div className="h-2 rounded-full bg-secondary">
+//                 <div
+//                   className="h-full rounded-full bg-red-500"
+//                   style={{ width: `${outOfStockPercent}%` }}
+//                 />
+//               </div>
+//             </div>
+//           </div>
+
+//           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+//             <Link
+//               to="/admin/products"
+//               className="rounded-lg border border-red-200 bg-red-50 px-4 py-3"
+//             >
+//               <p className="text-xs font-medium uppercase tracking-wide text-red-700">
+//                 Out of Stock
+//               </p>
+//               <p className="mt-1 text-2xl font-bold text-red-700">
+//                 {stats.outOfStockProducts}
+//               </p>
+//             </Link>
+//             <Link
+//               to="/admin/products"
+//               className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+//             >
+//               <p className="text-xs font-medium uppercase tracking-wide text-amber-700">
+//                 Low Stock
+//               </p>
+//               <p className="mt-1 text-2xl font-bold text-amber-700">
+//                 {stats.lowStockProducts}
+//               </p>
+//             </Link>
+//             <Link
+//               to="/admin/products"
+//               className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3"
+//             >
+//               <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">
+//                 Active Products
+//               </p>
+//               <p className="mt-1 text-2xl font-bold text-emerald-700">
+//                 {stats.activeProducts}
+//               </p>
+//             </Link>
+//           </div>
+//         </div>
+
+//         <div className="rounded-xl border border-border bg-white p-6 shadow-sm">
+//           <div className="mb-4 flex items-center justify-between">
+//             <div>
+//               <h2 className="text-lg font-semibold text-foreground">
+//                 Quick Actions
+//               </h2>
+//               <p className="text-sm text-muted-foreground">Common tasks</p>
+//             </div>
+//             <ShieldCheck className="h-5 w-5 text-muted-foreground" />
+//           </div>
+//           <Link
+//             to="/admin/products"
+//             className="group mb-3 flex items-center justify-between rounded-lg border border-border px-4 py-3 hover:border-primary/40 hover:bg-secondary/50"
+//           >
+//             <span className="font-medium text-foreground">Add New Product</span>
+//             <ArrowUpRight className="h-4 w-4 text-muted-foreground transition group-hover:text-primary" />
+//           </Link>
+//           <Link
+//             to="/admin/users"
+//             className="group mb-3 flex items-center justify-between rounded-lg border border-border px-4 py-3 hover:border-primary/40 hover:bg-secondary/50"
+//           >
+//             <span className="font-medium text-foreground">Manage Users</span>
+//             <ArrowUpRight className="h-4 w-4 text-muted-foreground transition group-hover:text-primary" />
+//           </Link>
+//           <Link
+//             to="/admin/orders"
+//             className="group flex items-center justify-between rounded-lg border border-border px-4 py-3 hover:border-primary/40 hover:bg-secondary/50"
+//           >
+//             <span className="font-medium text-foreground">View Orders</span>
+//             <ArrowUpRight className="h-4 w-4 text-muted-foreground transition group-hover:text-primary" />
+//           </Link>
+//         </div>
+//       </div>
+
+//       {(stats.outOfStockProducts > 0 || stats.lowStockProducts > 0) && (
+//         <div className="rounded-xl border border-amber-200 bg-amber-50/80 p-5">
+//           <div className="flex items-start gap-3">
+//             <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-700" />
+//             <div>
+//               <h3 className="mb-1 font-semibold text-amber-900">
+//                 Inventory Alerts
+//               </h3>
+//               <ul className="space-y-1 text-sm text-amber-800">
+//                 {stats.outOfStockProducts > 0 && (
+//                   <li>
+//                     • {stats.outOfStockProducts} product(s) are out of stock
+//                   </li>
+//                 )}
+//                 {stats.lowStockProducts > 0 && (
+//                   <li>
+//                     • {stats.lowStockProducts} product(s) have low stock (&lt;10
+//                     units)
+//                   </li>
+//                 )}
+//               </ul>
+//               <Link
+//                 to="/admin/products"
+//                 className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-amber-900 underline hover:text-amber-700"
+//               >
+//                 Manage inventory <ArrowUpRight className="h-4 w-4" />
+//               </Link>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+
+
+
+
 import { useState, useEffect } from 'react';
 import { getUserStats } from '@/services/users.service';
 import { getProducts, type Product } from '@/services/products.service';
@@ -44,16 +456,12 @@ export function AdminDashboard() {
     try {
       setLoading(true);
 
-      // Fetch all data in parallel
       const [userStats, products] = await Promise.all([
         getUserStats(),
         getProducts(),
       ]);
 
-      // Calculate product stats
-      const activeProducts = products.filter(
-        (p: Product) => p.is_active
-      ).length;
+      const activeProducts = products.filter((p: Product) => p.is_active).length;
       const outOfStockProducts = products.filter(
         (p: Product) => p.stock_quantity === 0
       ).length;
@@ -61,13 +469,12 @@ export function AdminDashboard() {
         (p: Product) => p.stock_quantity > 0 && p.stock_quantity < 10
       ).length;
 
-      // Calculate revenue (placeholder - will be implemented when order creation is added)
       const totalRevenue = 0;
 
       setStats({
         totalUsers: userStats.totalUsers,
         totalProducts: products.length,
-        totalOrders: 0, // Will be implemented when order creation is added
+        totalOrders: 0,
         activeProducts,
         outOfStockProducts,
         lowStockProducts,
@@ -83,139 +490,174 @@ export function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex items-center justify-center py-16">
+        <div className="flex items-center gap-3 rounded-xl border bg-background/60 px-5 py-4 shadow-sm">
+          <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Loading dashboard…</p>
+        </div>
       </div>
     );
   }
 
+  const cardBase =
+    'group rounded-2xl border bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50';
+  const iconWrapBase =
+    'h-12 w-12 rounded-2xl flex items-center justify-center ring-1 ring-black/5 transition';
+
   return (
-    <div>
+    <div className="space-y-8">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Overview of your platform&apos;s key metrics
-        </p>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Admin Dashboard
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Overview of your platform&apos;s key metrics
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={fetchDashboardData}
+            className="inline-flex items-center gap-2 rounded-xl border bg-background px-3 py-2 text-sm font-medium text-foreground shadow-sm transition hover:bg-muted"
+          >
+            <Loader2 className="h-4 w-4 opacity-0 group-hover:opacity-100" />
+            Refresh
+          </button>
+        </div>
       </div>
 
       {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {/* Total Users */}
-        <Link
-          to="/admin/users"
-          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">Total Users</p>
-              <p className="text-3xl font-bold text-foreground">
+        <Link to="/admin/users" className={cardBase}>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-muted-foreground">
+                Total Users
+              </p>
+              <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
                 {stats.totalUsers}
               </p>
               {stats.recentUsers > 0 && (
-                <p className="text-sm text-primary mt-2">
+                <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
                   +{stats.recentUsers} this month
                 </p>
               )}
             </div>
-            <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Users className="h-6 w-6 text-blue-600" />
+
+            <div
+              className={`${iconWrapBase} bg-blue-500/10 text-blue-600 group-hover:bg-blue-500/15`}
+            >
+              <Users className="h-6 w-6" />
             </div>
           </div>
         </Link>
 
         {/* Total Products */}
-        <Link
-          to="/admin/products"
-          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">
+        <Link to="/admin/products" className={cardBase}>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-muted-foreground">
                 Total Products
               </p>
-              <p className="text-3xl font-bold text-foreground">
+              <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
                 {stats.totalProducts}
               </p>
-              <p className="text-sm text-muted-foreground mt-2">
-                {stats.activeProducts} active
+              <p className="mt-2 text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">
+                  {stats.activeProducts}
+                </span>{' '}
+                active
               </p>
             </div>
-            <div className="h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <Package className="h-6 w-6 text-purple-600" />
+
+            <div
+              className={`${iconWrapBase} bg-purple-500/10 text-purple-600 group-hover:bg-purple-500/15`}
+            >
+              <Package className="h-6 w-6" />
             </div>
           </div>
         </Link>
 
         {/* Total Orders */}
-        <Link
-          to="/admin/orders"
-          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">Total Orders</p>
-              <p className="text-3xl font-bold text-foreground">
+        <Link to="/admin/orders" className={cardBase}>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-muted-foreground">
+                Total Orders
+              </p>
+              <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
                 {stats.totalOrders}
               </p>
-              <p className="text-sm text-muted-foreground mt-2">All time</p>
+              <p className="mt-2 text-sm text-muted-foreground">All time</p>
             </div>
-            <div className="h-12 w-12 bg-secondary rounded-lg flex items-center justify-center">
-              <ShoppingCart className="h-6 w-6 text-primary" />
+
+            <div
+              className={`${iconWrapBase} bg-primary/10 text-primary group-hover:bg-primary/15`}
+            >
+              <ShoppingCart className="h-6 w-6" />
             </div>
           </div>
         </Link>
 
         {/* Total Revenue */}
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">
+        <div className={`${cardBase} cursor-default hover:translate-y-0`}>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-muted-foreground">
                 Total Revenue
               </p>
-              <p className="text-3xl font-bold text-foreground">
+              <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
                 KES {stats.totalRevenue.toLocaleString()}
               </p>
-              <p className="text-sm text-muted-foreground mt-2">All time</p>
+              <p className="mt-2 text-sm text-muted-foreground">All time</p>
             </div>
-            <div className="h-12 w-12 bg-orange-100 rounded-lg flex items-center justify-center">
-              <DollarSign className="h-6 w-6 text-orange-600" />
+
+            <div
+              className={`${iconWrapBase} bg-orange-500/10 text-orange-600`}
+            >
+              <DollarSign className="h-6 w-6" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Secondary Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {/* Out of Stock */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <Link
           to="/admin/products"
-          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-red-500"
+          className={`${cardBase} border-l-4 border-l-red-500`}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Out of Stock</p>
-              <p className="text-2xl font-bold text-red-600">
+              <p className="text-sm font-medium text-muted-foreground">
+                Out of Stock
+              </p>
+              <p className="mt-2 text-2xl font-semibold text-red-600">
                 {stats.outOfStockProducts}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">products</p>
+              <p className="mt-1 text-xs text-muted-foreground">products</p>
             </div>
             <AlertCircle className="h-8 w-8 text-red-600" />
           </div>
         </Link>
 
-        {/* Low Stock */}
         <Link
           to="/admin/products"
-          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-orange-500"
+          className={`${cardBase} border-l-4 border-l-orange-500`}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Low Stock</p>
-              <p className="text-2xl font-bold text-orange-600">
+              <p className="text-sm font-medium text-muted-foreground">
+                Low Stock
+              </p>
+              <p className="mt-2 text-2xl font-semibold text-orange-600">
                 {stats.lowStockProducts}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="mt-1 text-xs text-muted-foreground">
                 products (&lt;10 units)
               </p>
             </div>
@@ -223,20 +665,19 @@ export function AdminDashboard() {
           </div>
         </Link>
 
-        {/* Active Products */}
         <Link
           to="/admin/products"
-          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition border-l-4 border-primary"
+          className={`${cardBase} border-l-4 border-l-primary`}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-muted-foreground mb-1">
+              <p className="text-sm font-medium text-muted-foreground">
                 Active Products
               </p>
-              <p className="text-2xl font-bold text-primary">
+              <p className="mt-2 text-2xl font-semibold text-primary">
                 {stats.activeProducts}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="mt-1 text-xs text-muted-foreground">
                 visible to customers
               </p>
             </div>
@@ -246,17 +687,25 @@ export function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-lg font-semibold text-foreground mb-4">
-          Quick Actions
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="rounded-2xl border bg-card p-6 shadow-sm">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">
+            Quick Actions
+          </h2>
+          <p className="hidden text-sm text-muted-foreground sm:block">
+            Common admin workflows
+          </p>
+        </div>
+
+        <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
           <Link
             to="/admin/products"
-            className="flex items-center gap-3 p-4 border-2 border-border rounded-lg hover:border-primary transition"
+            className="group flex items-center gap-3 rounded-2xl border bg-background p-4 shadow-sm transition hover:bg-muted/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            <Package className="h-6 w-6 text-primary" />
-            <div>
+            <div className={`${iconWrapBase} h-11 w-11 bg-primary/10 text-primary`}>
+              <Package className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
               <p className="font-medium text-foreground">Add New Product</p>
               <p className="text-sm text-muted-foreground">
                 Create a new product listing
@@ -266,10 +715,12 @@ export function AdminDashboard() {
 
           <Link
             to="/admin/users"
-            className="flex items-center gap-3 p-4 border-2 border-border rounded-lg hover:border-primary transition"
+            className="group flex items-center gap-3 rounded-2xl border bg-background p-4 shadow-sm transition hover:bg-muted/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            <Users className="h-6 w-6 text-primary" />
-            <div>
+            <div className={`${iconWrapBase} h-11 w-11 bg-blue-500/10 text-blue-600`}>
+              <Users className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
               <p className="font-medium text-foreground">Manage Users</p>
               <p className="text-sm text-muted-foreground">
                 View and update user roles
@@ -279,10 +730,12 @@ export function AdminDashboard() {
 
           <Link
             to="/admin/orders"
-            className="flex items-center gap-3 p-4 border-2 border-border rounded-lg hover:border-primary transition"
+            className="group flex items-center gap-3 rounded-2xl border bg-background p-4 shadow-sm transition hover:bg-muted/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
-            <ShoppingCart className="h-6 w-6 text-primary" />
-            <div>
+            <div className={`${iconWrapBase} h-11 w-11 bg-primary/10 text-primary`}>
+              <ShoppingCart className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
               <p className="font-medium text-foreground">View Orders</p>
               <p className="text-sm text-muted-foreground">
                 Monitor customer orders
@@ -294,31 +747,34 @@ export function AdminDashboard() {
 
       {/* Alerts Section */}
       {(stats.outOfStockProducts > 0 || stats.lowStockProducts > 0) && (
-        <div className="mt-8 bg-orange-50 border border-orange-200 rounded-lg p-6">
+        <div className="rounded-2xl border border-orange-200 bg-orange-50/70 p-6 shadow-sm">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-6 w-6 text-orange-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="font-semibold text-orange-900 mb-2">
-                Inventory Alerts
-              </h3>
-              <ul className="space-y-1 text-sm text-orange-800">
+            <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-700 ring-1 ring-orange-200">
+              <AlertCircle className="h-5 w-5" />
+            </div>
+
+            <div className="min-w-0">
+              <h3 className="font-semibold text-orange-900">Inventory Alerts</h3>
+              <ul className="mt-2 space-y-1 text-sm text-orange-800">
                 {stats.outOfStockProducts > 0 && (
                   <li>
-                    • {stats.outOfStockProducts} product(s) are out of stock
+                    • <span className="font-semibold">{stats.outOfStockProducts}</span>{' '}
+                    product(s) are out of stock
                   </li>
                 )}
                 {stats.lowStockProducts > 0 && (
                   <li>
-                    • {stats.lowStockProducts} product(s) have low stock (&lt;10
-                    units)
+                    • <span className="font-semibold">{stats.lowStockProducts}</span>{' '}
+                    product(s) have low stock (&lt;10 units)
                   </li>
                 )}
               </ul>
+
               <Link
                 to="/admin/products"
-                className="inline-block mt-3 text-sm font-medium text-orange-900 underline hover:text-orange-700"
+                className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-orange-900 underline decoration-orange-400 underline-offset-4 hover:text-orange-700"
               >
-                Manage Inventory →
+                Manage Inventory <span aria-hidden>→</span>
               </Link>
             </div>
           </div>
