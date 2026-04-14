@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { products } from '@/app/data/products';
-import { Trash2, Plus, Minus, CreditCard } from 'lucide-react';
+import { Trash2, Plus, Minus, CreditCard, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import { motion } from 'motion/react';
 
 interface CartItem {
   id: string;
@@ -66,18 +67,23 @@ export function Cart() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-background/90 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center py-16">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
+      <div className="min-h-screen py-12">
+        <div className="mx-auto w-full max-w-[var(--section-max-width)] px-4 sm:px-6 lg:px-8">
+          <div className="cinematic-panel-strong mx-auto max-w-2xl p-10 text-center sm:p-14">
+            <div className="mb-5 flex justify-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-primary">
+                <ShoppingBag className="h-6 w-6" />
+              </div>
+            </div>
+            <h2 className="mb-4 text-3xl font-semibold text-white/90">
               Your Cart is Empty
             </h2>
-            <p className="text-muted-foreground mb-8">
+            <p className="mb-8 text-white/60">
               Add some products to get started!
             </p>
             <Link
               to="/products"
-              className="inline-block px-8 py-3 bg-primary text-white rounded-md hover:bg-primary/90 transition"
+              className="inline-flex items-center rounded-md border border-primary/35 bg-primary/90 px-8 py-3 font-semibold text-primary-foreground transition hover:bg-primary"
             >
               Browse Products
             </Link>
@@ -88,109 +94,130 @@ export function Cart() {
   }
 
   return (
-    <div className="min-h-screen bg-background/90 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-foreground mb-8">
-          Shopping Cart
-        </h1>
+    <div className="min-h-screen py-10 lg:py-14">
+      <div className="mx-auto w-full max-w-[var(--section-max-width)] px-4 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(140deg,rgba(12,14,20,0.95),rgba(9,11,17,0.82))] p-8 sm:p-10">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(73,201,255,0.18),transparent_35%),radial-gradient(circle_at_88%_76%,rgba(49,209,122,0.16),transparent_40%)]" />
+          <div className="relative flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="cinematic-eyebrow">Checkout Chapter • Cart</p>
+              <h1 className="mt-3 text-4xl font-semibold text-white/90 sm:text-5xl">
+                Shopping Cart
+              </h1>
+              <p className="mt-3 text-white/60">
+                Review quantities, verify pricing, and proceed when ready.
+              </p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm text-white/65">
+              {cartItems.length} line item{cartItems.length === 1 ? '' : 's'}
+            </div>
+          </div>
+        </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="mt-9 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-4">
-            {cartItems.map((item) => (
-              <div key={item!.id} className="bg-white rounded-lg shadow-md p-6">
-                <div className="flex gap-6">
+          <div className="space-y-4">
+            {cartItems.map((item, index) => (
+              <motion.article
+                key={item!.id}
+                className="cinematic-panel p-5 sm:p-6"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.45, delay: index * 0.04 }}
+              >
+                <div className="flex gap-5">
                   <img
                     src={item!.imageUrl}
                     alt={item!.name}
-                    className="w-32 h-32 object-cover rounded-md"
+                    className="h-28 w-28 rounded-md object-cover sm:h-32 sm:w-32"
                   />
 
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <h3 className="text-lg font-semibold text-foreground">
+                        <h3 className="text-lg font-semibold text-white/90">
                           {item!.name}
                         </h3>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-white/55">
                           {item!.category}
                         </p>
                       </div>
                       <button
                         onClick={() => removeItem(item!.id)}
-                        className="text-red-600 hover:text-red-700"
+                        className="rounded-md p-1 text-red-300 transition hover:bg-red-500/10 hover:text-red-200"
                       >
                         <Trash2 className="h-5 w-5" />
                       </button>
                     </div>
 
-                    <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                    <p className="mb-4 line-clamp-2 text-sm text-white/60">
                       {item!.description}
                     </p>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5">
                         <button
                           onClick={() => updateQuantity(item!.id, -1)}
-                          className="p-1 rounded-md hover:bg-gray-100"
+                          className="rounded-md p-1 text-white/80 transition hover:bg-white/10"
                         >
                           <Minus className="h-4 w-4" />
                         </button>
-                        <span className="text-lg font-semibold w-8 text-center">
+                        <span className="w-8 text-center text-lg font-semibold text-white/90">
                           {item!.quantity}
                         </span>
                         <button
                           onClick={() => updateQuantity(item!.id, 1)}
-                          className="p-1 rounded-md hover:bg-gray-100"
+                          className="rounded-md p-1 text-white/80 transition hover:bg-white/10"
                         >
                           <Plus className="h-4 w-4" />
                         </button>
                       </div>
 
                       <div className="text-right">
-                        <div className="text-lg font-bold text-foreground">
+                        <div className="text-lg font-semibold text-white/90">
                           ${(item!.price * item!.quantity).toFixed(2)}
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-sm text-white/55">
                           ${item!.price} each
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.article>
             ))}
           </div>
 
           {/* Order Summary */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
-              <h2 className="text-xl font-bold text-foreground mb-6">
+          <div>
+            <div className="cinematic-panel-strong sticky top-24 p-6">
+              <h2 className="mb-6 text-xl font-semibold text-white/90">
                 Order Summary
               </h2>
 
               <div className="space-y-4 mb-6">
-                <div className="flex justify-between text-muted-foreground">
+                <div className="flex justify-between text-white/60">
                   <span>Subtotal</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-muted-foreground">
+                <div className="flex justify-between text-white/60">
                   <span>Tax (8%)</span>
                   <span>${tax.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-muted-foreground">
+                <div className="flex justify-between text-white/60">
                   <span>Shipping</span>
                   <span>
                     {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
                   </span>
                 </div>
                 {subtotal > 1000 && (
-                  <div className="text-sm text-primary">
+                  <div className="rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-primary">
                     Free shipping on orders over $1,000!
                   </div>
                 )}
-                <div className="border-t pt-4">
-                  <div className="flex justify-between font-bold text-lg text-foreground">
+                <div className="border-t border-white/10 pt-4">
+                  <div className="flex justify-between text-lg font-semibold text-white/90">
                     <span>Total</span>
                     <span>${total.toFixed(2)}</span>
                   </div>
@@ -199,13 +226,13 @@ export function Cart() {
 
               <button
                 onClick={handleCheckout}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-md hover:bg-primary/90 transition font-semibold"
+                className="flex w-full items-center justify-center gap-2 rounded-md border border-primary/35 bg-primary/90 px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary"
               >
                 <CreditCard className="h-5 w-5" />
                 Proceed to Checkout
               </button>
 
-              <p className="text-xs text-muted-foreground text-center mt-4">
+              <p className="mt-4 text-center text-xs text-white/50">
                 Secure payment processing • SSL encrypted
               </p>
             </div>

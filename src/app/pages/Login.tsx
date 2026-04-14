@@ -6,6 +6,7 @@ import { AuthService } from '@/services/auth.service';
 import { registerSchema, loginSchema } from '@/utils/validation';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ZodError } from 'zod';
+import { motion } from 'motion/react';
 
 export function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -117,10 +118,21 @@ export function Login() {
     }
   };
 
+  const fieldClassName =
+    'w-full rounded-md border border-white/10 bg-white/5 py-2 pl-10 pr-4 text-white/88 placeholder:text-white/45 focus:ring-2 focus:ring-primary/35 focus:border-primary/30 disabled:bg-white/10 disabled:text-white/50';
+
   return (
-    <div className="min-h-screen bg-background/90 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full">
-        <div className="bg-white rounded-lg shadow-lg p-8">
+    <div className="relative min-h-screen overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(73,201,255,0.2),transparent_34%),radial-gradient(circle_at_84%_82%,rgba(49,209,122,0.16),transparent_40%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,12,0.66)_0%,rgba(8,8,12,0.9)_100%)]" />
+      <div className="relative flex min-h-[calc(100vh-6rem)] items-center justify-center">
+        <motion.div
+          className="w-full max-w-md"
+          initial={{ opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease: [0.2, 0.65, 0.2, 1] }}
+        >
+          <div className="cinematic-panel-strong p-8">
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <div className="flex items-center gap-3">
@@ -129,7 +141,7 @@ export function Login() {
                 alt="Feraj Solar Limited Logo"
                 className="h-16 w-16 object-contain"
               />
-              <span className="text-2xl font-bold text-foreground">
+              <span className="text-2xl font-semibold tracking-tight text-white/90">
                 Feraj Solar Limited
               </span>
             </div>
@@ -137,10 +149,10 @@ export function Login() {
 
           {/* Email verification notice */}
           {emailSent && (
-            <div className="mb-6 p-4 bg-secondary border border-primary/20 rounded-md flex items-start gap-3">
+            <div className="mb-6 flex items-start gap-3 rounded-md border border-primary/30 bg-primary/10 p-4">
               <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm text-primary">
+                <p className="text-sm text-primary/90">
                   Please check your email and click the verification link to
                   activate your account.
                 </p>
@@ -151,27 +163,27 @@ export function Login() {
           {/* Reset Password Form */}
           {showResetPassword ? (
             <>
-              <h2 className="text-2xl font-bold text-foreground mb-6 text-center">
+              <h2 className="mb-2 text-center text-2xl font-semibold text-white/90">
                 Reset Password
               </h2>
-              <p className="text-sm text-muted-foreground mb-6 text-center">
+              <p className="mb-6 text-center text-sm text-white/60">
                 Enter your email address and we&apos;ll send you a link to reset
                 your password.
               </p>
               <form onSubmit={handleResetPassword} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-foreground/80 mb-2">
+                  <label className="mb-2 block text-sm font-medium text-white/75">
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/45" />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       disabled={loading}
-                      className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100"
+                      className={fieldClassName}
                       placeholder="you@example.com"
                     />
                   </div>
@@ -180,7 +192,7 @@ export function Login() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 bg-primary text-white rounded-md font-semibold hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full rounded-md border border-primary/35 bg-primary/90 py-3 font-semibold text-primary-foreground transition hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {loading ? 'Sending...' : 'Send Reset Link'}
                 </button>
@@ -188,7 +200,7 @@ export function Login() {
                 <button
                   type="button"
                   onClick={() => setShowResetPassword(false)}
-                  className="w-full text-sm text-primary hover:text-primary font-semibold"
+                  className="w-full text-sm font-semibold text-primary transition hover:text-primary/85"
                 >
                   Back to Login
                 </button>
@@ -203,10 +215,10 @@ export function Login() {
                     setIsLogin(true);
                     setEmailSent(false);
                   }}
-                  className={`flex-1 py-2 text-center font-semibold rounded-md transition ${
+                  className={`flex-1 rounded-md border py-2 text-center font-semibold transition ${
                     isLogin
-                      ? 'bg-primary text-white'
-                      : 'bg-gray-100 text-foreground/80 hover:bg-gray-200'
+                      ? 'border-primary/35 bg-primary/90 text-primary-foreground'
+                      : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
                   }`}
                 >
                   Login
@@ -216,10 +228,10 @@ export function Login() {
                     setIsLogin(false);
                     setEmailSent(false);
                   }}
-                  className={`flex-1 py-2 text-center font-semibold rounded-md transition ${
+                  className={`flex-1 rounded-md border py-2 text-center font-semibold transition ${
                     !isLogin
-                      ? 'bg-primary text-white'
-                      : 'bg-gray-100 text-foreground/80 hover:bg-gray-200'
+                      ? 'border-primary/35 bg-primary/90 text-primary-foreground'
+                      : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
                   }`}
                 >
                   Sign Up
@@ -230,18 +242,18 @@ export function Login() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {!isLogin && (
                   <div>
-                    <label className="block text-sm font-medium text-foreground/80 mb-2">
+                    <label className="mb-2 block text-sm font-medium text-white/75">
                       Full Name
                     </label>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                      <User className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/45" />
                       <input
                         type="text"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         required={!isLogin}
                         disabled={loading}
-                        className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100"
+                        className={fieldClassName}
                         placeholder="John Doe"
                       />
                     </div>
@@ -249,41 +261,41 @@ export function Login() {
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground/80 mb-2">
+                  <label className="mb-2 block text-sm font-medium text-white/75">
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/45" />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       disabled={loading}
-                      className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100"
+                      className={fieldClassName}
                       placeholder="you@example.com"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground/80 mb-2">
+                  <label className="mb-2 block text-sm font-medium text-white/75">
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/45" />
                     <input
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       disabled={loading}
-                      className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100"
+                      className={fieldClassName}
                       placeholder="••••••••"
                     />
                   </div>
                   {!isLogin && (
-                    <p className="mt-2 text-xs text-muted-foreground">
+                    <p className="mt-2 text-xs text-white/52">
                       Must be at least 8 characters with uppercase, lowercase,
                       number, and special character
                     </p>
@@ -295,7 +307,7 @@ export function Login() {
                     <button
                       type="button"
                       onClick={() => setShowResetPassword(true)}
-                      className="text-sm text-primary hover:text-primary"
+                      className="text-sm text-primary transition hover:text-primary/85"
                     >
                       Forgot password?
                     </button>
@@ -305,7 +317,7 @@ export function Login() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 bg-primary text-white rounded-md font-semibold hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full rounded-md border border-primary/35 bg-primary/90 py-3 font-semibold text-primary-foreground transition hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -320,7 +332,7 @@ export function Login() {
                 </button>
               </form>
 
-              <p className="mt-6 text-center text-sm text-muted-foreground">
+              <p className="mt-6 text-center text-sm text-white/58">
                 {isLogin
                   ? "Don't have an account? "
                   : 'Already have an account? '}
@@ -330,7 +342,7 @@ export function Login() {
                     setEmailSent(false);
                   }}
                   disabled={loading}
-                  className="text-primary hover:text-primary font-semibold disabled:opacity-50"
+                  className="font-semibold text-primary transition hover:text-primary/85 disabled:opacity-50"
                 >
                   {isLogin ? 'Sign up' : 'Sign in'}
                 </button>
@@ -338,6 +350,7 @@ export function Login() {
             </>
           )}
         </div>
+        </motion.div>
       </div>
     </div>
   );

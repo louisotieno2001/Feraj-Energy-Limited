@@ -195,11 +195,11 @@ export function AdminUsers() {
 
   if (!canManageUsers) {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
-        <h1 className="text-2xl font-bold text-foreground mb-2">
+      <div className="cinematic-panel p-6">
+        <h1 className="mb-2 text-2xl font-semibold text-white/92">
           User Management
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-white/60">
           You do not have permission to manage users. Contact an admin to
           request access.
         </p>
@@ -219,55 +219,59 @@ export function AdminUsers() {
   }));
 
   return (
-    <div>
+    <div className="space-y-8">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">User Management</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(13,16,23,0.96),rgba(8,10,15,0.86))] p-6 sm:p-8">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(73,201,255,0.12),transparent_30%),radial-gradient(circle_at_88%_0%,rgba(49,209,122,0.12),transparent_28%)]" />
+        <div className="relative">
+          <p className="cinematic-eyebrow">People Ops</p>
+          <h1 className="mt-2 text-3xl font-semibold text-white/92">User Management</h1>
+          <p className="mt-2 text-sm text-white/60">
           Manage user roles and permissions
-        </p>
+          </p>
+        </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-muted-foreground">Total Users</div>
-          <div className="text-2xl font-bold text-foreground">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="cinematic-panel p-4">
+          <div className="text-sm text-white/55">Total Users</div>
+          <div className="text-2xl font-semibold text-white/92">
             {users.length}
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-muted-foreground">Admins</div>
-          <div className="text-2xl font-bold text-purple-600">
+        <div className="cinematic-panel p-4">
+          <div className="text-sm text-white/55">Admins</div>
+          <div className="text-2xl font-semibold text-violet-300">
             {users.filter((u) => u.role === 'admin').length}
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-muted-foreground">Co-admins</div>
-          <div className="text-2xl font-bold text-indigo-600">
+        <div className="cinematic-panel p-4">
+          <div className="text-sm text-white/55">Co-admins</div>
+          <div className="text-2xl font-semibold text-indigo-300">
             {users.filter((u) => u.role === 'co_admin').length}
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-muted-foreground">Employees</div>
-          <div className="text-2xl font-bold text-blue-600">
+        <div className="cinematic-panel p-4">
+          <div className="text-sm text-white/55">Employees</div>
+          <div className="text-2xl font-semibold text-sky-300">
             {users.filter((u) => u.role === 'employee').length}
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-lg shadow mb-6">
+      <div className="cinematic-panel p-4">
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search */}
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/45" />
             <input
               type="text"
               placeholder="Search by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full rounded-md border border-white/10 bg-white/5 py-2 pl-10 pr-4 text-white/86 placeholder:text-white/38 focus:border-primary/40 focus:ring-2 focus:ring-primary/40"
             />
           </div>
 
@@ -275,7 +279,7 @@ export function AdminUsers() {
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value as any)}
-            className="px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="rounded-md border border-white/10 bg-white/5 px-4 py-2 text-white/82 focus:border-primary/40 focus:ring-2 focus:ring-primary/40"
           >
             <option value="all">All Roles</option>
             <option value="admin">Admins</option>
@@ -288,40 +292,37 @@ export function AdminUsers() {
 
       {/* Users Table Groups */}
       {groupedUsers.map((group) => (
-        <div
-          key={group.role}
-          className="bg-white rounded-lg shadow overflow-hidden mb-6"
-        >
-          <div className="px-6 py-4 border-b bg-background/90">
-            <h2 className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
+        <div key={group.role} className="cinematic-panel overflow-hidden">
+          <div className="border-b border-white/8 px-6 py-4 bg-white/4">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-white/72">
               {group.role.replace('_', ' ')}
             </h2>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-border">
-              <thead className="bg-white">
+            <table className="min-w-full divide-y divide-white/8">
+              <thead className="bg-white/4">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white/45">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white/45">
                     Role
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white/45">
                     Joined
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-white/45">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-border">
+              <tbody className="divide-y divide-white/8">
                 {group.users.map((user) => (
-                  <tr key={user.id} className="hover:bg-secondary/70">
+                  <tr key={user.id} className="hover:bg-white/5">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="h-10 w-10 flex-shrink-0">
-                          <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/8 ring-1 ring-white/10">
                             <span className="text-primary font-semibold">
                               {user.full_name?.charAt(0) ||
                                 user.email.charAt(0).toUpperCase()}
@@ -329,10 +330,10 @@ export function AdminUsers() {
                           </div>
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-foreground">
+                          <div className="text-sm font-medium text-white/90">
                             {user.full_name || 'No name'}
                           </div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-sm text-white/55">
                             {user.email}
                           </div>
                         </div>
@@ -348,7 +349,7 @@ export function AdminUsers() {
                         {user.role.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-white/55">
                       {new Date(user.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -359,7 +360,7 @@ export function AdminUsers() {
                           setShowRoleModal(true);
                           loadPermissionsForUser(user.id);
                         }}
-                        className="text-primary hover:text-primary/90 disabled:text-gray-300"
+                        className="text-primary hover:text-primary/90 disabled:text-white/25"
                         disabled={
                           user.id === currentUser?.id ||
                           (isCoAdmin &&
@@ -376,9 +377,9 @@ export function AdminUsers() {
           </div>
 
           {group.users.length === 0 && (
-            <div className="text-center py-8">
-              <AlertCircle className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-              <p className="text-muted-foreground text-sm">
+            <div className="py-8 text-center">
+              <AlertCircle className="mx-auto mb-2 h-10 w-10 text-white/25" />
+              <p className="text-sm text-white/55">
                 No users in this group
               </p>
             </div>
@@ -387,32 +388,32 @@ export function AdminUsers() {
       ))}
 
       {filteredUsers.length === 0 && (
-        <div className="text-center py-12">
-          <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-          <p className="text-muted-foreground">No users found</p>
+        <div className="py-12 text-center">
+          <AlertCircle className="mx-auto mb-3 h-12 w-12 text-white/25" />
+          <p className="text-white/55">No users found</p>
         </div>
       )}
 
       {/* Role Change Modal */}
       {showRoleModal && selectedUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(12,14,20,0.98),rgba(8,10,15,0.96))] p-6 shadow-[0_30px_120px_rgba(0,0,0,0.45)]">
+            <h3 className="mb-4 text-lg font-semibold text-white/92">
               Manage User
             </h3>
 
             <div className="mb-4">
-              <p className="text-sm text-muted-foreground mb-2">User:</p>
-              <p className="font-medium">
+              <p className="mb-2 text-sm text-white/50">User:</p>
+              <p className="font-medium text-white/90">
                 {selectedUser.full_name || selectedUser.email}
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-white/55">
                 {selectedUser.email}
               </p>
             </div>
 
             <div className="mb-6">
-              <p className="text-sm text-muted-foreground mb-3">Role:</p>
+              <p className="mb-3 text-sm text-white/50">Role:</p>
               <div className="space-y-2">
                 {(isAdmin
                   ? (['customer', 'employee', 'co_admin', 'admin'] as const)
@@ -422,14 +423,14 @@ export function AdminUsers() {
                     key={role}
                     onClick={() => setSelectedRole(role)}
                     disabled={updating}
-                    className={`w-full flex items-center gap-3 px-4 py-3 border-2 rounded-lg transition ${
+                    className={`w-full flex items-center gap-3 rounded-lg border-2 px-4 py-3 transition ${
                       selectedRole === role
-                        ? 'border-primary bg-secondary'
-                        : 'border-border hover:border-primary/40'
-                    } ${updating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        ? 'border-primary bg-white/8'
+                        : 'border-white/10 hover:border-primary/40 hover:bg-white/5'
+                    } ${updating ? 'cursor-not-allowed opacity-50' : ''}`}
                   >
                     {getRoleIcon(role)}
-                    <span className="font-medium">
+                    <span className="font-medium text-white/86">
                       {role.replace('_', ' ')}
                     </span>
                     {selectedRole === role && (
@@ -443,9 +444,9 @@ export function AdminUsers() {
             </div>
 
             <div className="mb-6">
-              <p className="text-sm text-muted-foreground mb-3">Privileges:</p>
+              <p className="mb-3 text-sm text-white/50">Privileges:</p>
               {loadingPermissions && (
-                <p className="text-xs text-muted-foreground mb-2">
+                <p className="mb-2 text-xs text-white/45">
                   Loading permissions...
                 </p>
               )}
@@ -468,7 +469,7 @@ export function AdminUsers() {
                     }
                     disabled={loadingPermissions || updating}
                   />
-                  <span className="text-sm text-foreground/80">
+                  <span className="text-sm text-white/78">
                     Handle products
                   </span>
                 </label>
@@ -490,7 +491,7 @@ export function AdminUsers() {
                     }
                     disabled={loadingPermissions || updating}
                   />
-                  <span className="text-sm text-foreground/80">
+                  <span className="text-sm text-white/78">
                     Handle tickets
                   </span>
                 </label>
@@ -509,12 +510,12 @@ export function AdminUsers() {
                     }
                     disabled={!isAdmin || updating}
                   />
-                  <span className="text-sm text-foreground/80">
+                  <span className="text-sm text-white/78">
                     Make co-admin
                   </span>
                 </label>
                 {!isAdmin && (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-white/48">
                     Only admins can promote a user to co-admin.
                   </p>
                 )}
@@ -530,14 +531,14 @@ export function AdminUsers() {
                   setSelectedPermissions(null);
                 }}
                 disabled={updating}
-                className="flex-1 px-4 py-2 rounded-md btn-secondary disabled:opacity-50"
+                className="flex-1 rounded-md border border-white/10 bg-white/6 px-4 py-2 text-white/80 disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={applyUserChanges}
                 disabled={updating || loadingPermissions}
-                className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition disabled:opacity-50"
+                className="flex-1 rounded-md bg-primary px-4 py-2 text-white transition hover:bg-primary/90 disabled:opacity-50"
               >
                 {updating ? 'Saving...' : 'Save Changes'}
               </button>

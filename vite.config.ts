@@ -20,15 +20,7 @@ export default defineConfig({
     },
   },
   build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
-        },
-      },
-    },
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1900,
   },
   test: {
     globals: true,

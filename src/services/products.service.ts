@@ -1,5 +1,8 @@
 import { supabase } from '@/lib/supabase';
 
+const PRODUCT_COLUMNS =
+  'id,name,description,category,price,stock_quantity,specifications,images,is_active,created_at,updated_at';
+
 export interface Product {
   id: string;
   name: string;
@@ -34,7 +37,7 @@ export interface UpdateProductDto extends Partial<CreateProductDto> {
 export async function getProducts() {
   const { data, error } = await supabase
     .from('products')
-    .select('*')
+    .select(PRODUCT_COLUMNS)
     .eq('is_active', true)
     .order('created_at', { ascending: false });
 
@@ -48,7 +51,7 @@ export async function getProducts() {
 export async function getAllProducts() {
   const { data, error } = await supabase
     .from('products')
-    .select('*')
+    .select(PRODUCT_COLUMNS)
     .order('created_at', { ascending: false });
 
   if (error) throw error;
@@ -61,7 +64,7 @@ export async function getAllProducts() {
 export async function getProductById(id: string) {
   const { data, error } = await supabase
     .from('products')
-    .select('*')
+    .select(PRODUCT_COLUMNS)
     .eq('id', id)
     .eq('is_active', true)
     .single();
@@ -76,7 +79,7 @@ export async function getProductById(id: string) {
 export async function getProductsByCategory(category: string) {
   const { data, error } = await supabase
     .from('products')
-    .select('*')
+    .select(PRODUCT_COLUMNS)
     .eq('category', category)
     .eq('is_active', true)
     .order('created_at', { ascending: false });
@@ -151,7 +154,7 @@ export async function hardDeleteProduct(id: string) {
 export async function searchProducts(query: string) {
   const { data, error } = await supabase
     .from('products')
-    .select('*')
+    .select(PRODUCT_COLUMNS)
     .eq('is_active', true)
     .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
     .order('created_at', { ascending: false });

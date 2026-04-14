@@ -1,5 +1,11 @@
 import { supabase } from '@/lib/supabase';
 
+const DEVICE_COLUMNS =
+  'id,serial_number,mac_address,qr_code,device_type,location,installation_date,customer_id,status,last_seen_at,created_at,updated_at';
+
+const TELEMETRY_COLUMNS =
+  'device_id,recorded_at,voltage,current,power_output,energy_generated,battery_level,temperature,fault_code,status,raw';
+
 export interface Device {
   id: string;
   serial_number: string;
@@ -45,7 +51,7 @@ export interface TelemetryPoint {
 export async function getMyDevices(userId: string) {
   const { data, error } = await supabase
     .from('devices')
-    .select('*')
+    .select(DEVICE_COLUMNS)
     .eq('customer_id', userId)
     .order('created_at', { ascending: false });
 
@@ -56,7 +62,7 @@ export async function getMyDevices(userId: string) {
 export async function getAllDevices() {
   const { data, error } = await supabase
     .from('devices')
-    .select('*')
+    .select(DEVICE_COLUMNS)
     .order('created_at', { ascending: false });
 
   if (error) throw error;
@@ -133,7 +139,7 @@ export async function getLatestTelemetry(deviceIds: string[]) {
   if (deviceIds.length === 0) return [];
   const { data, error } = await supabase
     .from('device_latest_telemetry')
-    .select('*')
+    .select(TELEMETRY_COLUMNS)
     .in('device_id', deviceIds);
 
   if (error) throw error;
@@ -147,7 +153,7 @@ export async function getTelemetryRange(
 ) {
   const { data, error } = await supabase
     .from('device_telemetry')
-    .select('*')
+    .select(TELEMETRY_COLUMNS)
     .eq('device_id', deviceId)
     .gte('recorded_at', start)
     .lte('recorded_at', end)

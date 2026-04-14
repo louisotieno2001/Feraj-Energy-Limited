@@ -1,29 +1,94 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { Navbar } from '@/app/components/Navbar';
 import { Footer } from '@/app/components/Footer';
 import { ProtectedRoute } from '@/app/components/ProtectedRoute';
 import { AdminRoute } from '@/app/components/AdminRoute';
-import { AdminLayout } from '@/app/components/layouts/AdminLayout';
-import { Home } from '@/app/pages/Home';
-import { Products } from '@/app/pages/Products';
-import { Cart } from '@/app/pages/Cart';
-import { Orders } from '@/app/pages/Orders';
-import { Profile } from '@/app/pages/Profile';
-import { Devices } from '@/app/pages/Devices';
-import { Login } from '@/app/pages/Login';
-import { ResetPassword } from '@/app/pages/ResetPassword';
-import { About } from '@/app/pages/About';
-import { Partnerships } from '@/app/pages/Partnerships';
-import { WhyGreen } from '@/app/pages/WhyGreen';
-import { EnergyStats } from '@/app/pages/EnergyStats';
-import { Team } from '@/app/pages/Team';
-import { AdminDashboard } from '@/app/pages/admin/Dashboard';
-import { AdminUsers } from '@/app/pages/admin/Users';
-import { AdminProducts } from '@/app/pages/admin/Products';
-import { AdminAudit } from '@/app/pages/admin/Audit';
-import { AdminDevices } from '@/app/pages/admin/Devices';
+
+const Home = lazy(() =>
+  import('@/app/pages/Home').then((module) => ({ default: module.Home }))
+);
+const Products = lazy(() =>
+  import('@/app/pages/Products').then((module) => ({ default: module.Products }))
+);
+const Cart = lazy(() =>
+  import('@/app/pages/Cart').then((module) => ({ default: module.Cart }))
+);
+const Orders = lazy(() =>
+  import('@/app/pages/Orders').then((module) => ({ default: module.Orders }))
+);
+const Profile = lazy(() =>
+  import('@/app/pages/Profile').then((module) => ({ default: module.Profile }))
+);
+const Devices = lazy(() =>
+  import('@/app/pages/Devices').then((module) => ({ default: module.Devices }))
+);
+const Login = lazy(() =>
+  import('@/app/pages/Login').then((module) => ({ default: module.Login }))
+);
+const ResetPassword = lazy(() =>
+  import('@/app/pages/ResetPassword').then((module) => ({
+    default: module.ResetPassword,
+  }))
+);
+const About = lazy(() =>
+  import('@/app/pages/About').then((module) => ({ default: module.About }))
+);
+const Partnerships = lazy(() =>
+  import('@/app/pages/Partnerships').then((module) => ({
+    default: module.Partnerships,
+  }))
+);
+const WhyGreen = lazy(() =>
+  import('@/app/pages/WhyGreen').then((module) => ({ default: module.WhyGreen }))
+);
+const EnergyStats = lazy(() =>
+  import('@/app/pages/EnergyStats').then((module) => ({
+    default: module.EnergyStats,
+  }))
+);
+const Team = lazy(() =>
+  import('@/app/pages/Team').then((module) => ({ default: module.Team }))
+);
+const AdminLayout = lazy(() =>
+  import('@/app/components/layouts/AdminLayout').then((module) => ({
+    default: module.AdminLayout,
+  }))
+);
+const AdminDashboard = lazy(() =>
+  import('@/app/pages/admin/Dashboard').then((module) => ({
+    default: module.AdminDashboard,
+  }))
+);
+const AdminUsers = lazy(() =>
+  import('@/app/pages/admin/Users').then((module) => ({
+    default: module.AdminUsers,
+  }))
+);
+const AdminProducts = lazy(() =>
+  import('@/app/pages/admin/Products').then((module) => ({
+    default: module.AdminProducts,
+  }))
+);
+const AdminAudit = lazy(() =>
+  import('@/app/pages/admin/Audit').then((module) => ({ default: module.AdminAudit }))
+);
+const AdminDevices = lazy(() =>
+  import('@/app/pages/admin/Devices').then((module) => ({
+    default: module.AdminDevices,
+  }))
+);
+
+function RouteLoadingFallback() {
+  return (
+    <div className="relative z-10 flex min-h-[42vh] items-center justify-center px-6">
+      <div className="rounded-full border border-white/15 bg-white/6 px-4 py-2 text-sm text-white/72">
+        Loading section...
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -49,7 +114,8 @@ export default function App() {
 
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
+      <div className="cinematic-shell min-h-screen flex flex-col">
+        <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-[44vh] bg-[radial-gradient(circle_at_15%_0%,rgba(49,209,122,0.16),transparent_40%),radial-gradient(circle_at_85%_0%,rgba(73,201,255,0.12),transparent_38%)]" />
         <div className="fixed top-0 left-0 z-[60] h-1 w-full bg-transparent">
           <div
             className="h-full bg-gradient-to-r from-primary via-accent to-primary transition-[width] duration-150 ease-out"
@@ -58,70 +124,72 @@ export default function App() {
         </div>
         <Toaster position="top-right" richColors />
         <Navbar />
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/partnerships" element={<Partnerships />} />
-            <Route path="/why-green" element={<WhyGreen />} />
-            <Route path="/energy-stats" element={<EnergyStats />} />
-            <Route path="/team" element={<Team />} />
+        <main className="relative z-10 flex-1">
+          <Suspense fallback={<RouteLoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/partnerships" element={<Partnerships />} />
+              <Route path="/why-green" element={<WhyGreen />} />
+              <Route path="/energy-stats" element={<EnergyStats />} />
+              <Route path="/team" element={<Team />} />
 
-            {/* Protected Routes */}
-            <Route
-              path="/cart"
-              element={
-                <ProtectedRoute>
-                  <Cart />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/orders"
-              element={
-                <ProtectedRoute>
-                  <Orders />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/devices"
-              element={
-                <ProtectedRoute>
-                  <Devices />
-                </ProtectedRoute>
-              }
-            />
+              {/* Protected Routes */}
+              <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute>
+                    <Cart />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/orders"
+                element={
+                  <ProtectedRoute>
+                    <Orders />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/devices"
+                element={
+                  <ProtectedRoute>
+                    <Devices />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Admin Routes */}
-            <Route
-              path="/admin/*"
-              element={
-                <AdminRoute>
-                  <AdminLayout />
-                </AdminRoute>
-              }
-            >
-              <Route index element={<AdminDashboard />} />
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="products" element={<AdminProducts />} />
-              <Route path="devices" element={<AdminDevices />} />
-              <Route path="audit" element={<AdminAudit />} />
-              <Route path="orders" element={<Orders />} />
-            </Route>
-          </Routes>
+              {/* Admin Routes */}
+              <Route
+                path="/admin/*"
+                element={
+                  <AdminRoute>
+                    <AdminLayout />
+                  </AdminRoute>
+                }
+              >
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="devices" element={<AdminDevices />} />
+                <Route path="audit" element={<AdminAudit />} />
+                <Route path="orders" element={<Orders />} />
+              </Route>
+            </Routes>
+          </Suspense>
         </main>
         <Footer />
       </div>

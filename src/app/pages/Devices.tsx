@@ -19,6 +19,7 @@ import {
   type TelemetryPoint,
 } from '@/services/device.service';
 import { toast } from 'sonner';
+import { motion } from 'motion/react';
 
 export function Devices() {
   const { user } = useAuth();
@@ -38,26 +39,45 @@ export function Devices() {
   const [locationDraft, setLocationDraft] = useState('');
 
   useEffect(() => {
+    let cancelled = false;
+
     const fetchDevices = async () => {
       if (!user) return;
       try {
         setLoading(true);
         const data = await getMyDevices(user.id);
-        setDevices(data);
+        if (!cancelled) {
+          setDevices(data);
+        }
       } catch (error: any) {
-        toast.error(error.message || 'Failed to load devices');
+        if (!cancelled) {
+          toast.error(error.message || 'Failed to load devices');
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     };
 
     fetchDevices();
+
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   useEffect(() => {
+    let cancelled = false;
+
     const fetchTelemetry = async () => {
       const ids = devices.map((device) => device.id);
-      if (!ids.length) return;
+      if (!ids.length) {
+        if (!cancelled) {
+          setTelemetry({});
+        }
+        return;
+      }
       try {
         const latest = await getLatestTelemetry(ids);
         const map = latest.reduce<Record<string, TelemetryPoint>>(
@@ -67,13 +87,21 @@ export function Devices() {
           },
           {}
         );
-        setTelemetry(map);
+        if (!cancelled) {
+          setTelemetry(map);
+        }
       } catch (error: any) {
-        console.error('Telemetry fetch failed', error);
+        if (!cancelled) {
+          console.error('Telemetry fetch failed', error);
+        }
       }
     };
 
     fetchTelemetry();
+
+    return () => {
+      cancelled = true;
+    };
   }, [devices]);
 
   useEffect(() => {
@@ -165,18 +193,18 @@ export function Devices() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background/90 py-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-          <div className="h-8 w-56 bg-secondary/60 rounded animate-pulse" />
+      <div className="min-h-screen py-12">
+        <div className="mx-auto max-w-[var(--section-max-width)] space-y-6 px-4 sm:px-6 lg:px-8">
+          <div className="h-8 w-56 rounded bg-white/10 animate-pulse" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-lg shadow-md p-6 animate-pulse space-y-4"
+                className="cinematic-panel p-6 animate-pulse space-y-4"
               >
-                <div className="h-5 w-32 bg-secondary/60 rounded" />
-                <div className="h-4 w-44 bg-secondary/60 rounded" />
-                <div className="h-12 w-full bg-secondary/60 rounded" />
+                <div className="h-5 w-32 rounded bg-white/10" />
+                <div className="h-4 w-44 rounded bg-white/10" />
+                <div className="h-12 w-full rounded bg-white/10" />
               </div>
             ))}
           </div>
@@ -186,41 +214,45 @@ export function Devices() {
   }
 
   return (
-    <div className="min-h-screen bg-background/90 py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">My Devices</h1>
-          <p className="text-muted-foreground mt-2">
+    <div className="min-h-screen py-10 lg:py-14">
+      <div className="mx-auto max-w-[var(--section-max-width)] px-4 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(12,14,20,0.95),rgba(9,11,16,0.84))] p-8 sm:p-10">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(73,201,255,0.16),transparent_35%),radial-gradient(circle_at_84%_78%,rgba(49,209,122,0.14),transparent_42%)]" />
+          <div className="relative">
+            <p className="cinematic-eyebrow">Account Chapter • Devices</p>
+            <h1 className="mt-3 text-4xl font-semibold text-white/90 sm:text-5xl">My Devices</h1>
+            <p className="mt-3 text-white/60">
             Monitor live energy output, device health, and installation details.
-          </p>
-        </div>
+            </p>
+          </div>
+        </section>
 
         {metrics && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex items-center gap-3 text-foreground/80 mb-2">
+          <div className="mb-10 mt-7 grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="cinematic-panel p-6">
+              <div className="mb-2 flex items-center gap-3 text-white/70">
                 <Bolt className="h-5 w-5 text-primary" />
                 <span className="text-sm font-medium">Live Output</span>
               </div>
-              <div className="text-2xl font-bold text-foreground">
+              <div className="text-2xl font-semibold text-white/90">
                 {metrics.power_output.toFixed(1)} kW
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex items-center gap-3 text-foreground/80 mb-2">
+            <div className="cinematic-panel p-6">
+              <div className="mb-2 flex items-center gap-3 text-white/70">
                 <Activity className="h-5 w-5 text-primary" />
                 <span className="text-sm font-medium">Energy Generated</span>
               </div>
-              <div className="text-2xl font-bold text-foreground">
+              <div className="text-2xl font-semibold text-white/90">
                 {metrics.energy_generated.toFixed(1)} kWh
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex items-center gap-3 text-foreground/80 mb-2">
+            <div className="cinematic-panel p-6">
+              <div className="mb-2 flex items-center gap-3 text-white/70">
                 <AlertTriangle className="h-5 w-5 text-primary" />
                 <span className="text-sm font-medium">Active Alerts</span>
               </div>
-              <div className="text-2xl font-bold text-foreground">
+              <div className="text-2xl font-semibold text-white/90">
                 {metrics.faults}
               </div>
             </div>
@@ -230,17 +262,17 @@ export function Devices() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             {devices.length === 0 && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-semibold text-foreground mb-2">
+              <div className="cinematic-panel p-6">
+                <h2 className="mb-2 text-xl font-semibold text-white/90">
                   No registered devices yet
                 </h2>
-                <p className="text-muted-foreground">
+                <p className="text-white/60">
                   Register your device to start monitoring energy production.
                 </p>
               </div>
             )}
 
-            {devices.map((device) => {
+            {devices.map((device, index) => {
               const point = telemetry[device.id];
               const status = point?.status || device.status;
               const alert =
@@ -248,16 +280,20 @@ export function Devices() {
                 (status && status !== 'active' && status !== 'online');
 
               return (
-                <div
+                <motion.article
                   key={device.id}
-                  className="bg-white rounded-lg shadow-md p-6 space-y-4"
+                  className="cinematic-panel space-y-4 p-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.45, delay: index * 0.03 }}
                 >
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                      <h3 className="text-xl font-semibold text-foreground">
+                      <h3 className="text-xl font-semibold text-white/90">
                         {device.device_type} • {device.serial_number}
                       </h3>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-white/55">
                         Last seen{' '}
                         {device.last_seen_at
                           ? new Date(device.last_seen_at).toLocaleString()
@@ -267,8 +303,8 @@ export function Devices() {
                     <span
                       className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
                         alert
-                          ? 'bg-red-100 text-red-700'
-                          : 'bg-secondary text-primary'
+                          ? 'border border-red-500/30 bg-red-500/10 text-red-300'
+                          : 'border border-primary/30 bg-primary/10 text-primary'
                       }`}
                     >
                       {alert ? 'Attention Required' : 'Healthy'}
@@ -276,37 +312,37 @@ export function Devices() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="bg-background/90 rounded-lg p-4">
-                      <p className="text-xs text-muted-foreground">Power</p>
-                      <p className="text-lg font-semibold text-foreground">
+                    <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+                      <p className="text-xs text-white/45">Power</p>
+                      <p className="text-lg font-semibold text-white/90">
                         {point?.power_output?.toFixed(1) || '—'} kW
                       </p>
                     </div>
-                    <div className="bg-background/90 rounded-lg p-4">
-                      <p className="text-xs text-muted-foreground">Voltage</p>
-                      <p className="text-lg font-semibold text-foreground">
+                    <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+                      <p className="text-xs text-white/45">Voltage</p>
+                      <p className="text-lg font-semibold text-white/90">
                         {point?.voltage?.toFixed(1) || '—'} V
                       </p>
                     </div>
-                    <div className="bg-background/90 rounded-lg p-4">
-                      <p className="text-xs text-muted-foreground">Battery</p>
-                      <p className="text-lg font-semibold text-foreground flex items-center gap-2">
+                    <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+                      <p className="text-xs text-white/45">Battery</p>
+                      <p className="flex items-center gap-2 text-lg font-semibold text-white/90">
                         <Battery className="h-4 w-4 text-primary" />
                         {point?.battery_level?.toFixed(0) || '—'}%
                       </p>
                     </div>
-                    <div className="bg-background/90 rounded-lg p-4">
-                      <p className="text-xs text-muted-foreground">
+                    <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+                      <p className="text-xs text-white/45">
                         Temperature
                       </p>
-                      <p className="text-lg font-semibold text-foreground flex items-center gap-2">
+                      <p className="flex items-center gap-2 text-lg font-semibold text-white/90">
                         <Thermometer className="h-4 w-4 text-primary" />
                         {point?.temperature?.toFixed(1) || '—'}°C
                       </p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
+                  <div className="grid grid-cols-1 gap-4 text-sm text-white/60 md:grid-cols-2">
                     <div className="flex items-center gap-2">
                       <MapPin className="h-4 w-4 text-primary" />
                       {device.location || 'No location set'}
@@ -317,19 +353,19 @@ export function Devices() {
                     </div>
                   </div>
 
-                  <div className="border-t pt-4">
+                  <div className="border-t border-white/10 pt-4">
                     {editingId === device.id ? (
                       <div className="flex flex-col md:flex-row gap-3">
                         <input
                           value={locationDraft}
                           onChange={(e) => setLocationDraft(e.target.value)}
-                          className="flex-1 px-4 py-2 border border-border rounded-md bg-white"
+                          className="flex-1 rounded-md border border-white/10 bg-white/5 px-4 py-2 text-white/85 placeholder:text-white/45 focus:ring-2 focus:ring-primary/35"
                           placeholder="Update device location"
                         />
                         <button
                           type="button"
                           onClick={() => handleLocationSave(device)}
-                          className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition"
+                          className="rounded-md border border-primary/35 bg-primary/90 px-4 py-2 text-primary-foreground transition hover:bg-primary"
                         >
                           Save
                         </button>
@@ -348,24 +384,24 @@ export function Devices() {
                           setEditingId(device.id);
                           setLocationDraft(device.location || '');
                         }}
-                        className="text-sm font-semibold text-primary hover:text-primary/80 transition"
+                        className="text-sm font-semibold text-primary transition hover:text-primary/85"
                       >
                         Update device info
                       </button>
                     )}
                   </div>
-                </div>
+                </motion.article>
               );
             })}
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6 h-fit">
-            <h2 className="text-xl font-semibold text-foreground mb-4">
+          <div className="cinematic-panel-strong h-fit p-6 lg:sticky lg:top-24">
+            <h2 className="mb-4 text-xl font-semibold text-white/90">
               Register a Device
             </h2>
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-foreground/80 mb-2">
+                <label className="mb-2 block text-sm font-medium text-white/75">
                   Serial Number
                 </label>
                 <input
@@ -376,13 +412,13 @@ export function Devices() {
                       serial_number: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-2 border border-border rounded-md bg-white"
+                  className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2 text-white/85 placeholder:text-white/45 focus:ring-2 focus:ring-primary/35"
                   placeholder="SN-0001-XYZ"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-foreground/80 mb-2">
+                <label className="mb-2 block text-sm font-medium text-white/75">
                   QR Code (Optional)
                 </label>
                 <input
@@ -393,12 +429,12 @@ export function Devices() {
                       qr_code: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-2 border border-border rounded-md bg-white"
+                  className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2 text-white/85 placeholder:text-white/45 focus:ring-2 focus:ring-primary/35"
                   placeholder="QR-001-ABC"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-foreground/80 mb-2">
+                <label className="mb-2 block text-sm font-medium text-white/75">
                   Installation Location
                 </label>
                 <input
@@ -409,12 +445,12 @@ export function Devices() {
                       location: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-2 border border-border rounded-md bg-white"
+                  className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2 text-white/85 placeholder:text-white/45 focus:ring-2 focus:ring-primary/35"
                   placeholder="Nairobi, Kenya"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-foreground/80 mb-2">
+                <label className="mb-2 block text-sm font-medium text-white/75">
                   Installation Date
                 </label>
                 <input
@@ -426,13 +462,13 @@ export function Devices() {
                       installation_date: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-2 border border-border rounded-md bg-white"
+                  className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2 text-white/85 focus:ring-2 focus:ring-primary/35"
                 />
               </div>
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition disabled:opacity-50"
+                className="w-full rounded-md border border-primary/35 bg-primary/90 px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary disabled:opacity-50"
               >
                 {submitting ? 'Submitting...' : 'Submit Registration'}
               </button>

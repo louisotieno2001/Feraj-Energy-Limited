@@ -9,7 +9,7 @@ import {
 import {
   ProductForm,
   type ProductFormData,
-} from '@/app/components/admin/ProductForm';
+} from '../../components/admin/ProductForm';
 import {
   Loader2,
   Plus,
@@ -206,15 +206,15 @@ export function AdminProducts() {
   const getCategoryBadgeColor = (category: string) => {
     switch (category) {
       case 'panels':
-        return 'bg-blue-100 text-blue-800';
+        return 'border border-cyan-300/25 bg-cyan-300/10 text-cyan-200';
       case 'inverters':
-        return 'bg-purple-100 text-purple-800';
+        return 'border border-violet-300/25 bg-violet-300/10 text-violet-200';
       case 'batteries':
-        return 'bg-orange-100 text-orange-800';
+        return 'border border-amber-300/25 bg-amber-300/10 text-amber-200';
       case 'accessories':
-        return 'bg-secondary text-primary';
+        return 'border border-primary/25 bg-primary/10 text-primary';
       default:
-        return 'bg-gray-100 text-foreground';
+        return 'border border-white/15 bg-white/8 text-white/82';
     }
   };
 
@@ -225,11 +225,11 @@ export function AdminProducts() {
 
   if (!canManageProducts) {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
-        <h1 className="text-2xl font-bold text-foreground mb-2">
+      <div className="cinematic-panel p-6">
+        <h1 className="mb-2 text-2xl font-semibold text-white/92">
           Product Management
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-white/60">
           You do not have permission to manage products. Contact an admin to
           request access.
         </p>
@@ -246,51 +246,55 @@ export function AdminProducts() {
   }
 
   return (
-    <div>
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(13,16,23,0.96),rgba(8,10,15,0.86))] p-6 sm:p-8">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(49,209,122,0.12),transparent_30%),radial-gradient(circle_at_90%_0%,rgba(73,201,255,0.1),transparent_28%)]" />
+        <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">
+          <p className="cinematic-eyebrow">Catalog Control</p>
+          <h1 className="mt-2 text-3xl font-semibold text-white/92">
             Product Management
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-2 text-sm text-white/60">
             Add, edit, and manage your products
           </p>
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition"
+          className="inline-flex items-center gap-2 rounded-xl border border-primary/20 bg-primary px-4 py-2 text-white transition hover:bg-primary/90"
         >
           <Plus className="h-5 w-5" />
           Add Product
         </button>
+        </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-muted-foreground">Total Products</div>
-          <div className="text-2xl font-bold text-foreground">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="cinematic-panel p-4">
+          <div className="text-sm text-white/55">Total Products</div>
+          <div className="text-2xl font-semibold text-white/92">
             {products.length}
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-muted-foreground">Active</div>
-          <div className="text-2xl font-bold text-primary">
+        <div className="cinematic-panel p-4">
+          <div className="text-sm text-white/55">Active</div>
+          <div className="text-2xl font-semibold text-primary">
             {products.filter((p) => p.is_active).length}
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-muted-foreground">Out of Stock</div>
-          <div className="text-2xl font-bold text-red-600">
+        <div className="cinematic-panel p-4">
+          <div className="text-sm text-white/55">Out of Stock</div>
+          <div className="text-2xl font-semibold text-red-300">
             {products.filter((p) => p.stock_quantity === 0).length}
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-sm text-muted-foreground">
+        <div className="cinematic-panel p-4">
+          <div className="text-sm text-white/55">
             Low Stock (&lt;10)
           </div>
-          <div className="text-2xl font-bold text-orange-600">
+          <div className="text-2xl font-semibold text-amber-300">
             {
               products.filter(
                 (p) => p.stock_quantity > 0 && p.stock_quantity < 10
@@ -301,17 +305,17 @@ export function AdminProducts() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-lg shadow mb-6">
+      <div className="cinematic-panel p-4">
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search */}
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/45" />
             <input
               type="text"
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full rounded-md border border-white/10 bg-white/5 py-2 pl-10 pr-4 text-white/86 placeholder:text-white/38 focus:border-primary/40 focus:ring-2 focus:ring-primary/40"
             />
           </div>
 
@@ -319,7 +323,7 @@ export function AdminProducts() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="rounded-md border border-white/10 bg-white/5 px-4 py-2 text-white/82 focus:border-primary/40 focus:ring-2 focus:ring-primary/40"
           >
             <option value="all">All Categories</option>
             <option value="panels">Solar Panels</option>
@@ -332,7 +336,7 @@ export function AdminProducts() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as any)}
-            className="px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="rounded-md border border-white/10 bg-white/5 px-4 py-2 text-white/82 focus:border-primary/40 focus:ring-2 focus:ring-primary/40"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -342,34 +346,34 @@ export function AdminProducts() {
       </div>
 
       {/* Products Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="cinematic-panel overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-border">
-            <thead className="bg-background/90">
+          <table className="min-w-full divide-y divide-white/8">
+            <thead className="bg-white/4">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white/45">
                   Product
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white/45">
                   Category
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white/45">
                   Price
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white/45">
                   Stock
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white/45">
                   Status
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-white/45">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-border">
+            <tbody className="divide-y divide-white/8">
               {filteredProducts.map((product) => (
-                <tr key={product.id} className="hover:bg-secondary/70">
+                <tr key={product.id} className="hover:bg-white/5">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="h-12 w-12 flex-shrink-0">
@@ -387,10 +391,10 @@ export function AdminProducts() {
                         />
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-foreground">
+                        <div className="text-sm font-medium text-white/90">
                           {product.name}
                         </div>
-                        <div className="text-sm text-muted-foreground truncate max-w-xs">
+                        <div className="max-w-xs truncate text-sm text-white/50">
                           {product.description?.substring(0, 50) ||
                             'No description'}
                           ...
@@ -407,16 +411,16 @@ export function AdminProducts() {
                       {product.category.replace('-', ' ').toUpperCase()}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-white/84">
                     KES {product.price.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`text-sm font-medium ${
                         product.stock_quantity === 0
-                          ? 'text-red-600'
+                          ? 'text-red-300'
                           : product.stock_quantity < 10
-                            ? 'text-orange-600'
+                            ? 'text-amber-300'
                             : 'text-primary'
                       }`}
                     >
@@ -427,8 +431,8 @@ export function AdminProducts() {
                     <span
                       className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
                         product.is_active
-                          ? 'bg-secondary text-primary'
-                          : 'bg-gray-100 text-foreground'
+                          ? 'border border-primary/20 bg-white/6 text-primary'
+                          : 'border border-white/8 bg-white/5 text-white/45'
                       }`}
                     >
                       {product.is_active ? (
@@ -447,13 +451,13 @@ export function AdminProducts() {
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button
                       onClick={() => openEditForm(product)}
-                      className="text-blue-600 hover:text-blue-900 mr-4"
+                      className="mr-4 text-primary hover:text-primary/90"
                     >
                       <Edit className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => openDeleteModal(product.id)}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-red-300 hover:text-red-200"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -466,8 +470,8 @@ export function AdminProducts() {
 
         {filteredProducts.length === 0 && (
           <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground">No products found</p>
+            <AlertCircle className="mx-auto mb-3 h-12 w-12 text-white/25" />
+            <p className="text-white/55">No products found</p>
           </div>
         )}
       </div>
@@ -483,12 +487,12 @@ export function AdminProducts() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(12,14,20,0.98),rgba(8,10,15,0.96))] p-6 shadow-[0_30px_120px_rgba(0,0,0,0.45)]">
+            <h3 className="mb-4 text-lg font-semibold text-white/92">
               Delete Product
             </h3>
-            <p className="text-muted-foreground mb-6">
+            <p className="mb-6 text-white/60">
               Are you sure you want to delete this product? This action cannot
               be undone.
             </p>
@@ -498,13 +502,13 @@ export function AdminProducts() {
                   setShowDeleteModal(false);
                   setDeletingId(null);
                 }}
-                className="flex-1 px-4 py-2 rounded-md btn-secondary"
+                className="flex-1 rounded-md border border-white/10 bg-white/6 px-4 py-2 text-white/80"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteProduct}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+                className="flex-1 rounded-md bg-red-500 px-4 py-2 text-white transition hover:bg-red-600"
               >
                 Delete
               </button>

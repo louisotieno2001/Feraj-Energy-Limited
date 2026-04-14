@@ -59,33 +59,33 @@ export function AdminLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(49,209,122,0.08),transparent_28%),radial-gradient(circle_at_top_right,rgba(73,201,255,0.08),transparent_30%),linear-gradient(180deg,#08090c_0%,#0b0d12_100%)] text-white/86">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-gray-600 bg-opacity-75 z-20 lg:hidden"
+          className="fixed inset-0 z-20 bg-black/60 backdrop-blur-[2px] lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
+        className={`fixed inset-y-0 left-0 z-30 w-72 border-r border-white/10 bg-[linear-gradient(180deg,rgba(10,12,18,0.98),rgba(6,8,12,0.96))] shadow-2xl shadow-black/30 backdrop-blur-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between h-16 px-6 border-b">
+          <div className="flex items-center justify-between h-16 px-6 border-b border-white/10">
             <Link to="/admin" className="flex items-center gap-2">
               <LayoutDashboard className="h-6 w-6 text-primary" />
-              <span className="text-lg font-bold text-foreground">
-                Admin Panel
+              <span className="text-lg font-semibold text-white/92">
+                Control Room
               </span>
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-muted-foreground hover:text-foreground/80"
+              className="lg:hidden text-white/55 hover:text-white/90"
             >
               <X className="h-6 w-6" />
             </button>
@@ -106,8 +106,8 @@ export function AdminLayout() {
                   onClick={() => setSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
                     isActive
-                      ? 'bg-secondary text-primary font-medium'
-                      : 'text-foreground/80 hover:bg-secondary/70'
+                      ? 'border border-primary/20 bg-white/8 text-white font-medium shadow-[0_0_0_1px_rgba(49,209,122,0.16)]'
+                      : 'text-white/66 hover:bg-white/5 hover:text-white/92'
                   }`}
                 >
                   <item.icon className="h-5 w-5" />
@@ -118,9 +118,9 @@ export function AdminLayout() {
           </nav>
 
           {/* User info & actions */}
-          <div className="border-t px-4 py-4">
+          <div className="border-t border-white/10 px-4 py-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-white/8 flex items-center justify-center ring-1 ring-white/10">
                 <span className="text-primary font-semibold">
                   {profile?.full_name?.charAt(0) ||
                     profile?.email?.charAt(0) ||
@@ -128,10 +128,10 @@ export function AdminLayout() {
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">
+                <p className="text-sm font-medium text-white/90 truncate">
                   {profile?.full_name || 'Admin'}
                 </p>
-                <p className="text-xs text-muted-foreground truncate">
+                <p className="text-xs text-white/50 truncate">
                   {profile?.email}
                 </p>
               </div>
@@ -140,14 +140,14 @@ export function AdminLayout() {
             <div className="space-y-2">
               <Link
                 to="/"
-                className="flex items-center gap-2 px-3 py-2 text-sm text-foreground/80 hover:bg-secondary/70 rounded-md transition"
+                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-white/70 transition hover:bg-white/5 hover:text-white/92"
               >
                 <Home className="h-4 w-4" />
                 <span>Back to Site</span>
               </Link>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition"
+                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-300 transition hover:bg-red-500/10 hover:text-red-200"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Sign Out</span>
@@ -160,22 +160,22 @@ export function AdminLayout() {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <div className="sticky top-0 z-10 bg-white shadow-sm">
+        <div className="sticky top-0 z-10 border-b border-white/10 bg-[rgba(7,9,13,0.78)] backdrop-blur-xl">
           <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden text-muted-foreground hover:text-foreground/80"
+              className="lg:hidden text-white/60 hover:text-white/90"
             >
               <Menu className="h-6 w-6" />
             </button>
 
             <div className="flex items-center gap-2 lg:hidden">
               <LayoutDashboard className="h-6 w-6 text-primary" />
-              <span className="text-lg font-bold text-foreground">Admin</span>
+              <span className="text-lg font-semibold text-white/92">Control Room</span>
             </div>
 
             <div className="flex items-center gap-4">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-secondary text-primary">
+              <span className="inline-flex items-center rounded-full border border-primary/20 bg-white/6 px-3 py-1 text-xs font-medium text-primary">
                 {profile?.role ? profile.role.replace('_', ' ') : 'Staff'}
               </span>
             </div>

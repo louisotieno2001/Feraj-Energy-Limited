@@ -491,28 +491,31 @@ export function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <div className="flex items-center gap-3 rounded-xl border bg-background/60 px-5 py-4 shadow-sm">
+        <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-5 py-4 shadow-[0_24px_80px_rgba(0,0,0,0.25)] backdrop-blur-xl">
           <Loader2 className="h-5 w-5 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Loading dashboard…</p>
+          <p className="text-sm text-white/60">Loading dashboard…</p>
         </div>
       </div>
     );
   }
 
   const cardBase =
-    'group rounded-2xl border bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50';
+    'group rounded-2xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,18,26,0.96),rgba(9,11,16,0.92))] p-6 shadow-[0_18px_60px_rgba(0,0,0,0.22)] transition-all hover:-translate-y-0.5 hover:border-white/15 hover:shadow-[0_28px_90px_rgba(0,0,0,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50';
   const iconWrapBase =
-    'h-12 w-12 rounded-2xl flex items-center justify-center ring-1 ring-black/5 transition';
+    'h-12 w-12 rounded-2xl flex items-center justify-center ring-1 ring-white/10 transition';
 
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(13,16,23,0.96),rgba(8,10,15,0.86))] p-6 sm:p-8">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_0%,rgba(49,209,122,0.14),transparent_28%),radial-gradient(circle_at_85%_0%,rgba(73,201,255,0.12),transparent_30%)]" />
+        <div className="relative flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+          <p className="cinematic-eyebrow">Admin Console</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white/92">
             Admin Dashboard
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-2 text-sm text-white/60">
             Overview of your platform&apos;s key metrics
           </p>
         </div>
@@ -521,12 +524,14 @@ export function AdminDashboard() {
           <button
             type="button"
             onClick={fetchDashboardData}
-            className="inline-flex items-center gap-2 rounded-xl border bg-background px-3 py-2 text-sm font-medium text-foreground shadow-sm transition hover:bg-muted"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/6 px-3 py-2 text-sm font-medium text-white/84 shadow-sm transition hover:bg-white/10"
           >
             <Loader2 className="h-4 w-4 opacity-0 group-hover:opacity-100" />
             Refresh
           </button>
         </div>
+      </div>
+
       </div>
 
       {/* Main Stats Grid */}
@@ -535,10 +540,10 @@ export function AdminDashboard() {
         <Link to="/admin/users" className={cardBase}>
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-sm font-medium text-white/58">
                 Total Users
               </p>
-              <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
+                  <p className="mt-2 text-3xl font-semibold tracking-tight text-white/92">
                 {stats.totalUsers}
               </p>
               {stats.recentUsers > 0 && (
@@ -560,14 +565,14 @@ export function AdminDashboard() {
         <Link to="/admin/products" className={cardBase}>
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-sm font-medium text-white/58">
                 Total Products
               </p>
-              <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
+              <p className="mt-2 text-3xl font-semibold tracking-tight text-white/92">
                 {stats.totalProducts}
               </p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">
+              <p className="mt-2 text-sm text-white/58">
+                <span className="font-medium text-white/86">
                   {stats.activeProducts}
                 </span>{' '}
                 active
@@ -586,13 +591,13 @@ export function AdminDashboard() {
         <Link to="/admin/orders" className={cardBase}>
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-sm font-medium text-white/58">
                 Total Orders
               </p>
-              <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
+              <p className="mt-2 text-3xl font-semibold tracking-tight text-white/92">
                 {stats.totalOrders}
               </p>
-              <p className="mt-2 text-sm text-muted-foreground">All time</p>
+              <p className="mt-2 text-sm text-white/58">All time</p>
             </div>
 
             <div
@@ -607,13 +612,13 @@ export function AdminDashboard() {
         <div className={`${cardBase} cursor-default hover:translate-y-0`}>
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-sm font-medium text-white/58">
                 Total Revenue
               </p>
-              <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
+              <p className="mt-2 text-3xl font-semibold tracking-tight text-white/92">
                 KES {stats.totalRevenue.toLocaleString()}
               </p>
-              <p className="mt-2 text-sm text-muted-foreground">All time</p>
+              <p className="mt-2 text-sm text-white/58">All time</p>
             </div>
 
             <div
@@ -633,13 +638,13 @@ export function AdminDashboard() {
         >
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-sm font-medium text-white/58">
                 Out of Stock
               </p>
               <p className="mt-2 text-2xl font-semibold text-red-600">
                 {stats.outOfStockProducts}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">products</p>
+              <p className="mt-1 text-xs text-white/50">products</p>
             </div>
             <AlertCircle className="h-8 w-8 text-red-600" />
           </div>
@@ -651,13 +656,13 @@ export function AdminDashboard() {
         >
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-sm font-medium text-white/58">
                 Low Stock
               </p>
               <p className="mt-2 text-2xl font-semibold text-orange-600">
                 {stats.lowStockProducts}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-xs text-white/50">
                 products (&lt;10 units)
               </p>
             </div>
@@ -671,13 +676,13 @@ export function AdminDashboard() {
         >
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-sm font-medium text-white/58">
                 Active Products
               </p>
               <p className="mt-2 text-2xl font-semibold text-primary">
                 {stats.activeProducts}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-xs text-white/50">
                 visible to customers
               </p>
             </div>
@@ -687,12 +692,12 @@ export function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="rounded-2xl border bg-card p-6 shadow-sm">
+      <div className="rounded-2xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,18,26,0.95),rgba(9,11,16,0.92))] p-6 shadow-[0_18px_60px_rgba(0,0,0,0.22)]">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="text-lg font-semibold tracking-tight text-foreground">
+          <h2 className="text-lg font-semibold tracking-tight text-white/90">
             Quick Actions
           </h2>
-          <p className="hidden text-sm text-muted-foreground sm:block">
+          <p className="hidden text-sm text-white/55 sm:block">
             Common admin workflows
           </p>
         </div>
@@ -700,14 +705,14 @@ export function AdminDashboard() {
         <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
           <Link
             to="/admin/products"
-            className="group flex items-center gap-3 rounded-2xl border bg-background p-4 shadow-sm transition hover:bg-muted/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-sm transition hover:bg-white/8 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             <div className={`${iconWrapBase} h-11 w-11 bg-primary/10 text-primary`}>
               <Package className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <p className="font-medium text-foreground">Add New Product</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="font-medium text-white/90">Add New Product</p>
+              <p className="text-sm text-white/55">
                 Create a new product listing
               </p>
             </div>
@@ -715,14 +720,14 @@ export function AdminDashboard() {
 
           <Link
             to="/admin/users"
-            className="group flex items-center gap-3 rounded-2xl border bg-background p-4 shadow-sm transition hover:bg-muted/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-sm transition hover:bg-white/8 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             <div className={`${iconWrapBase} h-11 w-11 bg-blue-500/10 text-blue-600`}>
               <Users className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <p className="font-medium text-foreground">Manage Users</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="font-medium text-white/90">Manage Users</p>
+              <p className="text-sm text-white/55">
                 View and update user roles
               </p>
             </div>
@@ -730,14 +735,14 @@ export function AdminDashboard() {
 
           <Link
             to="/admin/orders"
-            className="group flex items-center gap-3 rounded-2xl border bg-background p-4 shadow-sm transition hover:bg-muted/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-sm transition hover:bg-white/8 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           >
             <div className={`${iconWrapBase} h-11 w-11 bg-primary/10 text-primary`}>
               <ShoppingCart className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <p className="font-medium text-foreground">View Orders</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="font-medium text-white/90">View Orders</p>
+              <p className="text-sm text-white/55">
                 Monitor customer orders
               </p>
             </div>
@@ -747,15 +752,15 @@ export function AdminDashboard() {
 
       {/* Alerts Section */}
       {(stats.outOfStockProducts > 0 || stats.lowStockProducts > 0) && (
-        <div className="rounded-2xl border border-orange-200 bg-orange-50/70 p-6 shadow-sm">
+        <div className="rounded-2xl border border-orange-500/20 bg-[linear-gradient(180deg,rgba(51,20,9,0.78),rgba(19,10,7,0.82))] p-6 shadow-[0_18px_60px_rgba(0,0,0,0.22)]">
           <div className="flex items-start gap-3">
-            <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-700 ring-1 ring-orange-200">
+            <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-200 ring-1 ring-orange-500/20">
               <AlertCircle className="h-5 w-5" />
             </div>
 
             <div className="min-w-0">
-              <h3 className="font-semibold text-orange-900">Inventory Alerts</h3>
-              <ul className="mt-2 space-y-1 text-sm text-orange-800">
+              <h3 className="font-semibold text-white/92">Inventory Alerts</h3>
+              <ul className="mt-2 space-y-1 text-sm text-white/72">
                 {stats.outOfStockProducts > 0 && (
                   <li>
                     • <span className="font-semibold">{stats.outOfStockProducts}</span>{' '}
@@ -772,7 +777,7 @@ export function AdminDashboard() {
 
               <Link
                 to="/admin/products"
-                className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-orange-900 underline decoration-orange-400 underline-offset-4 hover:text-orange-700"
+                className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-orange-300 underline decoration-orange-400 underline-offset-4 hover:text-orange-200"
               >
                 Manage Inventory <span aria-hidden>→</span>
               </Link>

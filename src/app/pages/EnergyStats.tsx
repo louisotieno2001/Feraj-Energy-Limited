@@ -1,121 +1,274 @@
 import { useState, useEffect, useRef } from 'react';
 import Globe from 'react-globe.gl';
+import { motion } from 'motion/react';
 import { energyData } from '@/app/data/energyData';
 import { TrendingUp, TrendingDown, Minus, Activity, Zap } from 'lucide-react';
 
+type EnergyTrend = 'increasing' | 'decreasing' | 'stable';
+
+function getTrendIcon(trend: EnergyTrend) {
+  if (trend === 'increasing') {
+    return <TrendingUp className="h-4 w-4 text-red-300" />;
+  }
+
+  if (trend === 'decreasing') {
+    return <TrendingDown className="h-4 w-4 text-emerald-300" />;
+  }
+
+  return <Minus className="h-4 w-4 text-sky-300" />;
+}
+
 export function EnergyStats() {
-  const globeEl = useRef<any>();
+  const globeEl = useRef<any>(null);
+  const globeWrapRef = useRef<HTMLDivElement>(null);
+  const resumeSpinTimerRefs = useRef<number[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<any>(null);
   const [hoveredCountry, setHoveredCountry] = useState<any>(null);
+  const [globeSize, setGlobeSize] = useState({ width: 0, height: 0 });
+
+  const BASE_AUTO_ROTATE_SPEED = 0.35;
+  const INTERACTION_AUTO_ROTATE_SPEED = 0.06;
+  const RESUME_SPIN_DELAY_MS = 1400;
+  const RESUME_SPIN_STEP_MS = 220;
 
   useEffect(() => {
-    // Auto-rotate globe
-    if (globeEl.current) {
-      globeEl.current.controls().autoRotate = true;
-      globeEl.current.controls().autoRotateSpeed = 0.5;
+    if (!globeWrapRef.current) {
+      return;
     }
+
+    const updateSize = () => {
+      if (!globeWrapRef.current) {
+        return;
+      }
+
+      const rect = globeWrapRef.current.getBoundingClientRect();
+      setGlobeSize({ width: Math.floor(rect.width), height: Math.floor(rect.height) });
+    };
+
+    updateSize();
+
+    const observer = new ResizeObserver(() => {
+      updateSize();
+    });
+
+    observer.observe(globeWrapRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
-  const points = energyData.map((d) => ({
-    lat: d.lat,
-    lng: d.lng,
-    size: Math.log(d.demand + 1) * 0.5,
-    color:
-      d.renewable > 50 ? '#10b981' : d.renewable > 25 ? '#f59e0b' : '#ef4444',
-    country: d.country,
-    ...d,
-  }));
+  useEffect(() => {
+    if (globeEl.current) {
+      const controls = globeEl.current.controls();
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = BASE_AUTO_ROTATE_SPEED;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.rotateSpeed = 0.7;
+      controls.zoomSpeed = 0.85;
+      controls.enablePan = false;
 
-  const getTrendIcon = (trend: string) => {
-    switch (trend) {
-      case 'increasing':
-        return <TrendingUp className="h-5 w-5 text-red-500" />;
-      case 'decreasing':
-        return <TrendingDown className="h-5 w-5 text-primary" />;
-      default:
-        return <Minus className="h-5 w-5 text-blue-500" />;
+      if ('minDistance' in controls) {
+        controls.minDistance = 160;
+      }
+
+      if ('maxDistance' in controls) {
+        controls.maxDistance = 500;
+      }
+
+      // Establish a balanced initial altitude so users can rotate naturally from center.
+      globeEl.current.pointOfView({ lat: 5, lng: 20, altitude: 1.85 }, 0);
     }
+  }, [globeSize]);
+
+  useEffect(() => {
+    return () => {
+      resumeSpinTimerRefs.current.forEach((timerId) => window.clearTimeout(timerId));
+      resumeSpinTimerRefs.current = [];
+    };
+  }, []);
+
+  const clearSpinTimers = () => {
+    resumeSpinTimerRefs.current.forEach((timerId) => window.clearTimeout(timerId));
+    resumeSpinTimerRefs.current = [];
   };
 
+  const setSpinSpeed = (speed: number) => {
+    if (!globeEl.current) {
+      return;
+    }
+
+    const controls = globeEl.current.controls();
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = speed;
+  };
+
+  const handleInteractionStart = () => {
+    clearSpinTimers();
+
+    setSpinSpeed(INTERACTION_AUTO_ROTATE_SPEED);
+  };
+
+  const handleInteractionEnd = () => {
+    clearSpinTimers();
+
+    const rampSpeeds = [0.14, 0.22, 0.29, BASE_AUTO_ROTATE_SPEED];
+
+    rampSpeeds.forEach((speed, index) => {
+      const timerId = window.setTimeout(
+        () => {
+          setSpinSpeed(speed);
+        },
+        RESUME_SPIN_DELAY_MS + index * RESUME_SPIN_STEP_MS
+      );
+
+      resumeSpinTimerRefs.current.push(timerId);
+    });
+  };
+
+  const points = energyData.map((country) => ({
+    size: Math.max(0.2, country.demand / 5000),
+    color:
+      country.renewable > 50
+        ? '#34d399'
+        : country.renewable > 25
+          ? '#f59e0b'
+          : '#ef4444',
+    ...country,
+  }));
+
+  const activeCountry = selectedCountry || hoveredCountry;
+
+  const visualAssets = [
+    {
+      src: '/images/energy_stats/africa_lights.webp',
+      title: 'Nighttime Grid Activity',
+      caption: 'Urban light density reflects demand concentration across African corridors.',
+    },
+    {
+      src: '/images/energy_stats/renewables.png',
+      title: 'Renewable Transition Signal',
+      caption: 'Renewables are accelerating where policy and storage adoption align.',
+    },
+    {
+      src: '/images/energy_stats/HD_40-Years-of-Global-Energy-Production_Timeline_Fossil-1.png',
+      title: '40-Year Production Timeline',
+      caption: 'Historical context shows why diversification and resilience planning matter now.',
+    },
+  ];
+
+  const statCards = [
+    {
+      icon: Activity,
+      label: 'Total Global Demand',
+      value: `${energyData.reduce((sum, item) => sum + item.demand, 0).toLocaleString()} GW`,
+      accent: 'text-primary',
+    },
+    {
+      icon: Zap,
+      label: 'Avg. Renewable %',
+      value: `${Math.round(
+        energyData.reduce((sum, item) => sum + item.renewable, 0) / energyData.length
+      )}%`,
+      accent: 'text-amber-300',
+    },
+    {
+      icon: TrendingUp,
+      label: 'Increasing Demand',
+      value: `${energyData.filter((item) => item.trend === 'increasing').length} Countries`,
+      accent: 'text-red-300',
+    },
+    {
+      icon: TrendingDown,
+      label: 'Decreasing Demand',
+      value: `${energyData.filter((item) => item.trend === 'decreasing').length} Countries`,
+      accent: 'text-sky-300',
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Header */}
-      <div className="bg-gray-800 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-4">Global Energy Demand</h1>
-          <p className="text-xl text-gray-300">
-            Interactive 3D visualization of real-time energy demand and
-            renewable energy adoption worldwide
-          </p>
-        </div>
-      </div>
-
-      {/* Stats Overview */}
-      <div className="bg-gray-800 border-t border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-gray-700 p-4 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <Activity className="h-5 w-5 text-accent" />
-                <span className="text-sm text-gray-300">
-                  Total Global Demand
-                </span>
-              </div>
-              <div className="text-2xl font-bold">
-                {energyData
-                  .reduce((sum, d) => sum + d.demand, 0)
-                  .toLocaleString()}{' '}
-                GW
-              </div>
-            </div>
-
-            <div className="bg-gray-700 p-4 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <Zap className="h-5 w-5 text-yellow-400" />
-                <span className="text-sm text-gray-300">Avg. Renewable %</span>
-              </div>
-              <div className="text-2xl font-bold">
-                {Math.round(
-                  energyData.reduce((sum, d) => sum + d.renewable, 0) /
-                    energyData.length
-                )}
-                %
-              </div>
-            </div>
-
-            <div className="bg-gray-700 p-4 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="h-5 w-5 text-red-400" />
-                <span className="text-sm text-gray-300">Increasing Demand</span>
-              </div>
-              <div className="text-2xl font-bold">
-                {energyData.filter((d) => d.trend === 'increasing').length}{' '}
-                Countries
-              </div>
-            </div>
-
-            <div className="bg-gray-700 p-4 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingDown className="h-5 w-5 text-accent" />
-                <span className="text-sm text-gray-300">Decreasing Demand</span>
-              </div>
-              <div className="text-2xl font-bold">
-                {energyData.filter((d) => d.trend === 'decreasing').length}{' '}
-                Countries
-              </div>
-            </div>
+    <div className="min-h-screen py-10 text-white/86 lg:py-14">
+      <div className="mx-auto w-full max-w-[var(--section-max-width)] px-4 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(12,14,20,0.96),rgba(8,10,15,0.84))] p-8 sm:p-10 lg:p-14">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(73,201,255,0.16),transparent_35%),radial-gradient(circle_at_84%_78%,rgba(49,209,122,0.14),transparent_42%)]" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] overflow-hidden lg:block">
+            <img
+              src="/images/energy_stats/africa_lights.webp"
+              alt="Africa nighttime energy lights"
+              className="h-full w-full object-cover opacity-25"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[rgba(9,10,14,0.94)] via-[rgba(9,10,14,0.74)] to-[rgba(9,10,14,0.3)]" />
           </div>
-        </div>
-      </div>
+          <div className="relative max-w-3xl">
+            <p className="cinematic-eyebrow">Data Chapter • Energy Intelligence</p>
+            <h1 className="mt-3 text-4xl font-semibold leading-tight text-white/92 sm:text-5xl lg:text-6xl">
+              Global Energy Demand
+            </h1>
+            <p className="mt-4 max-w-2xl text-lg text-white/62">
+              Interactive 3D visualization of real-time energy demand and renewable
+              energy adoption worldwide
+            </p>
+          </div>
+        </section>
 
-      {/* Globe and Details */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Globe */}
-          <div className="lg:col-span-2">
-            <div className="bg-gray-800 rounded-lg p-4 h-[600px]">
+        <section className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {visualAssets.map((asset, idx) => (
+            <motion.article
+              key={asset.src}
+              className="cinematic-panel overflow-hidden p-0"
+              initial={{ opacity: 0, y: 22 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: idx * 0.08 }}
+            >
+              <img src={asset.src} alt={asset.title} className="h-44 w-full object-cover" />
+              <div className="p-4">
+                <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-white/78">
+                  {asset.title}
+                </h3>
+                <p className="mt-2 text-sm text-white/56">{asset.caption}</p>
+              </div>
+            </motion.article>
+          ))}
+        </section>
+
+        <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {statCards.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              className="cinematic-panel p-5"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ duration: 0.55, delay: index * 0.06 }}
+            >
+              <div className="mb-2 flex items-center gap-2 text-white/68">
+                <stat.icon className={`h-5 w-5 ${stat.accent}`} />
+                <span className="text-sm text-white/62">{stat.label}</span>
+              </div>
+              <div className="text-2xl font-semibold text-white/90">{stat.value}</div>
+            </motion.div>
+          ))}
+        </section>
+
+        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,0.75fr)]">
+          <div>
+            <div
+              ref={globeWrapRef}
+              className="cinematic-panel h-[640px] overflow-hidden p-4 lg:sticky lg:top-24"
+              onMouseDown={handleInteractionStart}
+              onMouseUp={handleInteractionEnd}
+              onMouseLeave={handleInteractionEnd}
+              onTouchStart={handleInteractionStart}
+              onTouchEnd={handleInteractionEnd}
+              onWheelCapture={handleInteractionStart}
+              onWheel={handleInteractionEnd}
+            >
               <Globe
                 ref={globeEl}
+                width={globeSize.width > 0 ? globeSize.width - 32 : undefined}
+                height={globeSize.height > 0 ? globeSize.height - 32 : undefined}
                 globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
                 backgroundColor="rgba(0,0,0,0)"
                 pointsData={points}
@@ -124,13 +277,13 @@ export function EnergyStats() {
                 pointColor="color"
                 pointAltitude={0.01}
                 pointRadius="size"
-                pointLabel={(d: any) => `
-                  <div style="background: rgba(0,0,0,0.8); padding: 12px; border-radius: 8px; color: white;">
-                    <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">${d.country}</div>
-                    <div>Demand: ${d.demand} GW</div>
-                    <div>Renewable: ${d.renewable}%</div>
-                    <div style="margin-top: 4px; color: ${d.trend === 'increasing' ? '#ef4444' : d.trend === 'decreasing' ? '#10b981' : '#3b82f6'}">
-                      Trend: ${d.trend}
+                pointLabel={(point: any) => `
+                  <div style="background: rgba(8,10,15,0.92); padding: 12px; border-radius: 10px; color: white; border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(14px);">
+                    <div style="font-size: 16px; font-weight: 700; margin-bottom: 8px; color: rgba(255,255,255,0.92);">${point.country}</div>
+                    <div style="color: rgba(255,255,255,0.72);">Demand: ${point.demand} GW</div>
+                    <div style="color: rgba(255,255,255,0.72);">Renewable: ${point.renewable}%</div>
+                    <div style="margin-top: 4px; color: ${point.trend === 'increasing' ? '#fca5a5' : point.trend === 'decreasing' ? '#34d399' : '#60a5fa'}">
+                      Trend: ${point.trend}
                     </div>
                   </div>
                 `}
@@ -138,163 +291,181 @@ export function EnergyStats() {
                 onPointHover={(point: any) => setHoveredCountry(point)}
               />
             </div>
-            <div className="mt-4 bg-gray-800 rounded-lg p-4">
-              <h3 className="font-semibold mb-3">Legend</h3>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-secondary0"></div>
-                  <span className="text-sm">High Renewable (&gt;50%)</span>
+
+            <div className="mt-4 cinematic-panel p-4">
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-white/45">
+                Legend
+              </h3>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="flex items-center gap-2 text-sm text-white/68">
+                  <div className="h-3.5 w-3.5 rounded-full bg-emerald-500" />
+                  <span>High Renewable (&gt;50%)</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-yellow-500"></div>
-                  <span className="text-sm">Medium (25-50%)</span>
+                <div className="flex items-center gap-2 text-sm text-white/68">
+                  <div className="h-3.5 w-3.5 rounded-full bg-amber-500" />
+                  <span>Medium (25-50%)</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full bg-red-500"></div>
-                  <span className="text-sm">Low (&lt;25%)</span>
+                <div className="flex items-center gap-2 text-sm text-white/68">
+                  <div className="h-3.5 w-3.5 rounded-full bg-red-500" />
+                  <span>Low (&lt;25%)</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Country Details */}
-          <div className="lg:col-span-1">
-            <div className="bg-gray-800 rounded-lg p-6 sticky top-24">
-              {selectedCountry || hoveredCountry ? (
+          <div className="space-y-8">
+            <div className="cinematic-panel-strong p-6 lg:sticky lg:top-24">
+              {activeCountry ? (
                 <div>
-                  <h2 className="text-2xl font-bold mb-4">
-                    {(selectedCountry || hoveredCountry).country}
+                  <p className="cinematic-eyebrow mb-2">Selected Country</p>
+                  <h2 className="mb-5 text-3xl font-semibold text-white/90">
+                    {activeCountry.country}
                   </h2>
 
-                  <div className="space-y-4">
+                  <div className="space-y-5">
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">
+                      <div className="mb-1 text-xs uppercase tracking-[0.14em] text-white/45">
                         Energy Demand
                       </div>
-                      <div className="text-3xl font-bold text-accent">
-                        {(selectedCountry || hoveredCountry).demand} GW
+                      <div className="text-3xl font-semibold text-primary">
+                        {activeCountry.demand} GW
                       </div>
                     </div>
 
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">
+                      <div className="mb-1 text-xs uppercase tracking-[0.14em] text-white/45">
                         Renewable Energy
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className="text-2xl font-bold">
-                          {(selectedCountry || hoveredCountry).renewable}%
+                        <div className="text-2xl font-semibold text-white/90">
+                          {activeCountry.renewable}%
                         </div>
-                        <div className="flex-1 bg-gray-700 rounded-full h-3">
+                        <div className="h-3 flex-1 rounded-full bg-white/10">
                           <div
-                            className="bg-secondary0 h-3 rounded-full transition-all"
-                            style={{
-                              width: `${(selectedCountry || hoveredCountry).renewable}%`,
-                            }}
-                          ></div>
+                            className="h-3 rounded-full bg-emerald-500 transition-all"
+                            style={{ width: `${activeCountry.renewable}%` }}
+                          />
                         </div>
                       </div>
                     </div>
 
                     <div>
-                      <div className="text-sm text-muted-foreground mb-2">
+                      <div className="mb-2 text-xs uppercase tracking-[0.14em] text-white/45">
                         Demand Trend
                       </div>
-                      <div className="flex items-center gap-2 px-3 py-2 bg-gray-700 rounded-md">
-                        {getTrendIcon(
-                          (selectedCountry || hoveredCountry).trend
-                        )}
-                        <span className="capitalize">
-                          {(selectedCountry || hoveredCountry).trend}
-                        </span>
+                      <div className="flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-2 text-white/78">
+                        {getTrendIcon(activeCountry.trend)}
+                        <span className="capitalize">{activeCountry.trend}</span>
                       </div>
                     </div>
 
                     <div>
-                      <div className="text-sm text-muted-foreground mb-2">
+                      <div className="mb-2 text-xs uppercase tracking-[0.14em] text-white/45">
                         Key Factors
                       </div>
-                      <ul className="space-y-2">
-                        {(selectedCountry || hoveredCountry).factors.map(
-                          (factor: string, idx: number) => (
-                            <li
-                              key={idx}
-                              className="flex items-start gap-2 text-sm"
-                            >
-                              <span className="text-accent">•</span>
-                              <span>{factor}</span>
-                            </li>
-                          )
-                        )}
+                      <ul className="space-y-2 text-sm text-white/68">
+                        {activeCountry.factors.map((factor: string, idx: number) => (
+                          <li key={idx} className="flex items-start gap-2">
+                            <span className="mt-1 text-primary">•</span>
+                            <span>{factor}</span>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <Activity className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">
+                <div className="py-12 text-center">
+                  <Activity className="mx-auto mb-4 h-16 w-16 text-white/30" />
+                  <h3 className="mb-2 text-lg font-semibold text-white/90">
                     Select a Country
                   </h3>
-                  <p className="text-muted-foreground text-sm">
-                    Click or hover over any point on the globe to view detailed
-                    energy statistics
+                  <p className="text-sm text-white/58">
+                    Click or hover over any point on the globe to view detailed energy
+                    statistics
                   </p>
                 </div>
               )}
             </div>
-          </div>
-        </div>
 
-        {/* Data Table */}
-        <div className="mt-8 bg-gray-800 rounded-lg overflow-hidden">
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Detailed Statistics</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-700">
-                    <th className="text-left py-3 px-4">Country</th>
-                    <th className="text-right py-3 px-4">Demand (GW)</th>
-                    <th className="text-right py-3 px-4">Renewable %</th>
-                    <th className="text-center py-3 px-4">Trend</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {energyData
-                    .sort((a, b) => b.demand - a.demand)
-                    .slice(0, 10)
-                    .map((country, idx) => (
-                      <tr
-                        key={idx}
-                        className="border-b border-gray-700 hover:bg-gray-700 cursor-pointer transition"
-                        onClick={() => setSelectedCountry(country)}
-                      >
-                        <td className="py-3 px-4">{country.country}</td>
-                        <td className="py-3 px-4 text-right">
-                          {country.demand.toLocaleString()}
-                        </td>
-                        <td className="py-3 px-4 text-right">
-                          <span
-                            className={`px-2 py-1 rounded text-sm ${
-                              country.renewable > 50
-                                ? 'bg-accent/20 text-accent'
-                                : country.renewable > 25
-                                  ? 'bg-yellow-900 text-yellow-300'
-                                  : 'bg-red-900 text-red-300'
-                            }`}
-                          >
-                            {country.renewable}%
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-center">
-                          <div className="flex justify-center">
-                            {getTrendIcon(country.trend)}
-                          </div>
-                        </td>
+            <div className="cinematic-panel overflow-hidden">
+              <img
+                src="/images/energy_stats/renewables.png"
+                alt="Renewable energy trend visualization"
+                className="h-56 w-full object-cover"
+              />
+              <div className="border-t border-white/10 p-4">
+                <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-white/68">
+                  Transition Snapshot
+                </h3>
+                <p className="mt-2 text-sm text-white/56">
+                  Use this reference alongside the table to compare demand growth with renewable share across top countries.
+                </p>
+              </div>
+            </div>
+
+            <div className="cinematic-panel overflow-hidden">
+              <div className="p-6">
+                <h2 className="mb-6 text-2xl font-semibold text-white/90">
+                  Detailed Statistics
+                </h2>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-white/10 text-white/48">
+                        <th className="px-4 py-3 text-left text-xs uppercase tracking-[0.14em]">
+                          Country
+                        </th>
+                        <th className="px-4 py-3 text-right text-xs uppercase tracking-[0.14em]">
+                          Demand (GW)
+                        </th>
+                        <th className="px-4 py-3 text-right text-xs uppercase tracking-[0.14em]">
+                          Renewable %
+                        </th>
+                        <th className="px-4 py-3 text-center text-xs uppercase tracking-[0.14em]">
+                          Trend
+                        </th>
                       </tr>
-                    ))}
-                </tbody>
-              </table>
+                    </thead>
+                    <tbody>
+                      {energyData
+                        .slice()
+                        .sort((a, b) => b.demand - a.demand)
+                        .slice(0, 10)
+                        .map((country, idx) => (
+                          <tr
+                            key={idx}
+                            className="cursor-pointer border-b border-white/8 transition hover:bg-white/5"
+                            onClick={() => setSelectedCountry(country)}
+                          >
+                            <td className="px-4 py-3 text-white/86">{country.country}</td>
+                            <td className="px-4 py-3 text-right text-white/70">
+                              {country.demand.toLocaleString()}
+                            </td>
+                            <td className="px-4 py-3 text-right">
+                              <span
+                                className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${
+                                  country.renewable > 50
+                                    ? 'border border-emerald-500/25 bg-emerald-500/10 text-emerald-300'
+                                    : country.renewable > 25
+                                      ? 'border border-amber-500/25 bg-amber-500/10 text-amber-300'
+                                      : 'border border-red-500/25 bg-red-500/10 text-red-300'
+                                }`}
+                              >
+                                {country.renewable}%
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-center">
+                              <div className="flex justify-center">
+                                {getTrendIcon(country.trend)}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
