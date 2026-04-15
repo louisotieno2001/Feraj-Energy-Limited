@@ -84,6 +84,7 @@ export function Products() {
 
     localStorage.setItem('cart', JSON.stringify(cart));
     toast.success('Product added to cart!');
+    window.dispatchEvent(new Event('cart:updated'));
     window.dispatchEvent(new Event('storage'));
   };
 

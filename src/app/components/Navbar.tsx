@@ -19,7 +19,9 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
-  const cartCount = JSON.parse(localStorage.getItem('cart') || '[]').length;
+  const [cartCount, setCartCount] = useState(() =>
+    JSON.parse(localStorage.getItem('cart') || '[]').length
+  );
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,6 +39,24 @@ export function Navbar() {
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const refreshCartCount = () => {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      setCartCount(Array.isArray(cart) ? cart.length : 0);
+    };
+
+    window.addEventListener('storage', refreshCartCount);
+    window.addEventListener('cart:updated', refreshCartCount as EventListener);
+
+    return () => {
+      window.removeEventListener('storage', refreshCartCount);
+      window.removeEventListener(
+        'cart:updated',
+        refreshCartCount as EventListener
+      );
+    };
+  }, []);
 
   const handleSignOut = async () => {
     try {

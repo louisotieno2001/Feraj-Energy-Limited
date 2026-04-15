@@ -1,25 +1,76 @@
 import { useState, useEffect } from 'react';
-import { products } from '@/app/data/products';
+import { products as fallbackProducts } from '@/app/data/products';
 import { Trash2, Plus, Minus, CreditCard, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { motion } from 'motion/react';
+import { getProducts, type Product as DbProduct } from '@/services/products.service';
+import {
+  buildCheckoutMessage,
+  calculatePaymentSummary,
+  getStripeCheckoutUrl,
+} from '@/services/payment.services';
 
 interface CartItem {
   id: string;
   quantity: number;
 }
 
+interface CartDisplayItem {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  quantity: number;
+  imageUrl: string;
+}
+
+const categoryMap: Record<string, string> = {
+  panels: 'Solar Panels',
+  inverters: 'Inverters',
+  batteries: 'Battery Storage',
+  accessories: 'Accessories',
+};
+
+const fallbackImage =
+  'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400';
+
 export function Cart() {
   const readCart = () =>
     JSON.parse(localStorage.getItem('cart') || '[]') as CartItem[];
 
   const [cart, setCart] = useState<CartItem[]>(() => readCart());
+  const [dbProducts, setDbProducts] = useState<DbProduct[]>([]);
 
+  // Sync cart across tabs/windows
   useEffect(() => {
     const handleStorage = () => setCart(readCart());
     window.addEventListener('storage', handleStorage);
     return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadProducts = async () => {
+      try {
+        const data = await getProducts();
+        if (!cancelled) {
+          setDbProducts(data);
+        }
+      } catch (error: any) {
+        if (!cancelled) {
+          console.error('Cart product hydration failed:', error);
+        }
+      }
+    };
+
+    loadProducts();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const updateQuantity = (productId: string, change: number) => {
@@ -35,6 +86,7 @@ export function Cart() {
 
     setCart(newCart);
     localStorage.setItem('cart', JSON.stringify(newCart));
+    window.dispatchEvent(new Event('cart:updated'));
     window.dispatchEvent(new Event('storage'));
   };
 
@@ -43,26 +95,53 @@ export function Cart() {
     setCart(newCart);
     localStorage.setItem('cart', JSON.stringify(newCart));
     toast.success('Item removed from cart');
+    window.dispatchEvent(new Event('cart:updated'));
     window.dispatchEvent(new Event('storage'));
   };
 
   const cartItems = cart
-    .map((item) => {
-      const product = products.find((p) => p.id === item.id);
-      return product ? { ...product, quantity: item.quantity } : null;
-    })
-    .filter(Boolean);
+    .map((item): CartDisplayItem | null => {
+      const dbProduct = dbProducts.find((p) => p.id === item.id);
+      if (dbProduct) {
+        return {
+          id: dbProduct.id,
+          name: dbProduct.name,
+          description: dbProduct.description || 'Premium solar equipment',
+          category: categoryMap[dbProduct.category] || dbProduct.category,
+          price: dbProduct.price,
+          quantity: item.quantity,
+          imageUrl: dbProduct.images?.[0] || fallbackImage,
+        };
+      }
 
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item!.price * item!.quantity,
-    0
+      const fallbackProduct = fallbackProducts.find((p) => p.id === item.id);
+      if (fallbackProduct) {
+        return { ...fallbackProduct, quantity: item.quantity };
+      }
+
+      return null;
+    })
+    .filter((item): item is CartDisplayItem => item !== null);
+
+  const paymentSummary = calculatePaymentSummary(
+    cartItems.map((item) => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+    }))
   );
-  const tax = subtotal * 0.08;
-  const shipping = subtotal > 1000 ? 0 : 49;
-  const total = subtotal + tax + shipping;
 
   const handleCheckout = () => {
-    toast.success('Proceeding to payment gateway... (Demo)');
+    const stripeCheckoutUrl = getStripeCheckoutUrl(paymentSummary);
+
+    if (stripeCheckoutUrl) {
+      toast.success('Redirecting to Stripe Checkout...');
+      window.location.assign(stripeCheckoutUrl);
+      return;
+    }
+
+    toast.success(buildCheckoutMessage(paymentSummary));
   };
 
   if (cart.length === 0) {
@@ -119,7 +198,7 @@ export function Cart() {
           <div className="space-y-4">
             {cartItems.map((item, index) => (
               <motion.article
-                key={item!.id}
+                key={item.id}
                 className="cinematic-panel p-5 sm:p-6"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -128,8 +207,8 @@ export function Cart() {
               >
                 <div className="flex gap-5">
                   <img
-                    src={item!.imageUrl}
-                    alt={item!.name}
+                    src={item.imageUrl}
+                    alt={item.name}
                     className="h-28 w-28 rounded-md object-cover sm:h-32 sm:w-32"
                   />
 
@@ -137,14 +216,14 @@ export function Cart() {
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <h3 className="text-lg font-semibold text-white/90">
-                          {item!.name}
+                          {item.name}
                         </h3>
                         <p className="text-sm text-white/55">
-                          {item!.category}
+                          {item.category}
                         </p>
                       </div>
                       <button
-                        onClick={() => removeItem(item!.id)}
+                        onClick={() => removeItem(item.id)}
                         className="rounded-md p-1 text-red-300 transition hover:bg-red-500/10 hover:text-red-200"
                       >
                         <Trash2 className="h-5 w-5" />
@@ -152,22 +231,22 @@ export function Cart() {
                     </div>
 
                     <p className="mb-4 line-clamp-2 text-sm text-white/60">
-                      {item!.description}
+                      {item.description}
                     </p>
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5">
                         <button
-                          onClick={() => updateQuantity(item!.id, -1)}
+                          onClick={() => updateQuantity(item.id, -1)}
                           className="rounded-md p-1 text-white/80 transition hover:bg-white/10"
                         >
                           <Minus className="h-4 w-4" />
                         </button>
                         <span className="w-8 text-center text-lg font-semibold text-white/90">
-                          {item!.quantity}
+                          {item.quantity}
                         </span>
                         <button
-                          onClick={() => updateQuantity(item!.id, 1)}
+                          onClick={() => updateQuantity(item.id, 1)}
                           className="rounded-md p-1 text-white/80 transition hover:bg-white/10"
                         >
                           <Plus className="h-4 w-4" />
@@ -176,10 +255,10 @@ export function Cart() {
 
                       <div className="text-right">
                         <div className="text-lg font-semibold text-white/90">
-                          ${(item!.price * item!.quantity).toFixed(2)}
+                          ${(item.price * item.quantity).toFixed(2)}
                         </div>
                         <div className="text-sm text-white/55">
-                          ${item!.price} each
+                          ${item.price} each
                         </div>
                       </div>
                     </div>
@@ -199,19 +278,21 @@ export function Cart() {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-white/60">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>${paymentSummary.subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-white/60">
                   <span>Tax (8%)</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>${paymentSummary.tax.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-white/60">
                   <span>Shipping</span>
                   <span>
-                    {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
+                    {paymentSummary.shipping === 0
+                      ? 'Free'
+                      : `$${paymentSummary.shipping.toFixed(2)}`}
                   </span>
                 </div>
-                {subtotal > 1000 && (
+                {paymentSummary.subtotal > 1000 && (
                   <div className="rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-primary">
                     Free shipping on orders over $1,000!
                   </div>
@@ -219,7 +300,7 @@ export function Cart() {
                 <div className="border-t border-white/10 pt-4">
                   <div className="flex justify-between text-lg font-semibold text-white/90">
                     <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>${paymentSummary.total.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
@@ -233,7 +314,7 @@ export function Cart() {
               </button>
 
               <p className="mt-4 text-center text-xs text-white/50">
-                Secure payment processing • SSL encrypted
+                Secure payment processing • Stripe supported • SSL encrypted
               </p>
             </div>
           </div>
