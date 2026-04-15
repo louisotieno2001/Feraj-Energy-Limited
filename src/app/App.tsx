@@ -27,6 +27,11 @@ const Devices = lazy(() =>
 const Login = lazy(() =>
   import('@/app/pages/Login').then((module) => ({ default: module.Login }))
 );
+const AuthCallback = lazy(() =>
+  import('@/app/pages/AuthCallback').then((module) => ({
+    default: module.AuthCallback,
+  }))
+);
 const ResetPassword = lazy(() =>
   import('@/app/pages/ResetPassword').then((module) => ({
     default: module.ResetPassword,
@@ -130,6 +135,7 @@ export default function App() {
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<Products />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/about" element={<About />} />
               <Route path="/partnerships" element={<Partnerships />} />

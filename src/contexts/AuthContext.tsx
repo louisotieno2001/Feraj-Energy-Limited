@@ -100,37 +100,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const syncAuthState = (nextSession: Session | null) => {
+    setSession(nextSession);
+    setUser(nextSession?.user ?? null);
+
+    if (!nextSession?.user) {
+      setProfile(null);
+      setPermissions(null);
+      setLoading(false);
+      return;
+    }
+
+    // Keep this non-blocking for onAuthStateChange callback safety,
+    // but only clear loading after profile/permissions hydration settles.
+    void Promise.allSettled([
+      fetchProfile(nextSession.user.id),
+      fetchPermissions(nextSession.user.id),
+    ]).finally(() => {
+      setLoading(false);
+    });
+  };
+
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-
-      if (session?.user) {
-        fetchProfile(session.user.id);
-        fetchPermissions(session.user.id);
-      }
-
-      setLoading(false);
+      syncAuthState(session);
     });
 
     // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-
-      if (session?.user) {
-        // Keep auth callback synchronous; run follow-up queries without awaiting.
-        void fetchProfile(session.user.id);
-        void fetchPermissions(session.user.id);
-      } else {
-        setProfile(null);
-        setPermissions(null);
-      }
-
-      setLoading(false);
+      syncAuthState(session);
     });
 
     return () => subscription.unsubscribe();

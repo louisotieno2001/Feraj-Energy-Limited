@@ -14,6 +14,7 @@ import { Loader2, Search, Shield, User, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 
+// Note: This page is only accessible to admins and co-admins. Employees and customers will see an access denied message.
 export function AdminUsers() {
   const { user: currentUser, profile: currentProfile } = useAuth();
   const [users, setUsers] = useState<Profile[]>([]);
@@ -108,12 +109,6 @@ export function AdminUsers() {
       if (selectedRole !== selectedUser.role) {
         await updateUserRole(selectedUser.id, selectedRole);
 
-        setUsers((prev) =>
-          prev.map((u) =>
-            u.id === selectedUser.id ? { ...u, role: selectedRole } : u
-          )
-        );
-
         if (currentUser?.id) {
           await createAuditLog({
             actor_user_id: currentUser.id,
@@ -146,6 +141,9 @@ export function AdminUsers() {
         }
       }
 
+      // Refresh from source of truth so UI reflects what Supabase persisted.
+      await fetchUsers();
+
       toast.success('User updated');
       setShowRoleModal(false);
       setSelectedUser(null);
@@ -153,7 +151,7 @@ export function AdminUsers() {
       setSelectedPermissions(null);
     } catch (error: any) {
       console.error('Error updating user:', error);
-      toast.error('Failed to update user');
+      toast.error(error?.message || 'Failed to update user');
     } finally {
       setUpdating(false);
     }
