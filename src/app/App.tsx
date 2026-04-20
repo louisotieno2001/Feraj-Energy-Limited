@@ -89,39 +89,39 @@ function RouteLoadingFallback() {
     </div>
   );
 }
-
-export default function App() {
-  const [scrollProgress, setScrollProgress] = useState(0);
+function ScrollProgress() {
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const updateScroll = () => {
+    let frameId: number;
+    const update = () => {
       const scrollTop = window.scrollY;
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      setScrollProgress(Math.min(100, Math.max(0, progress)));
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const nextProgress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      setProgress(Math.min(100, Math.max(0, nextProgress)));
+      frameId = requestAnimationFrame(update);
     };
 
-    updateScroll();
-    window.addEventListener('scroll', updateScroll, { passive: true });
-    window.addEventListener('resize', updateScroll);
-
-    return () => {
-      window.removeEventListener('scroll', updateScroll);
-      window.removeEventListener('resize', updateScroll);
-    };
+    frameId = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(frameId);
   }, []);
 
+  return (
+    <div className="fixed top-0 left-0 z-[60] h-1 w-full bg-transparent">
+      <div
+        className="h-full bg-gradient-to-r from-primary via-accent to-primary transition-[width] duration-150 ease-out"
+        style={{ width: `${progress}%` }}
+      />
+    </div>
+  );
+}
+
+export default function App() {
   return (
     <Router>
       <div className="cinematic-shell min-h-screen flex flex-col">
         <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-[44vh] bg-[radial-gradient(circle_at_15%_0%,rgba(49,209,122,0.16),transparent_40%),radial-gradient(circle_at_85%_0%,rgba(73,201,255,0.12),transparent_38%)]" />
-        <div className="fixed top-0 left-0 z-[60] h-1 w-full bg-transparent">
-          <div
-            className="h-full bg-gradient-to-r from-primary via-accent to-primary transition-[width] duration-150 ease-out"
-            style={{ width: `${scrollProgress}%` }}
-          />
-        </div>
+        <ScrollProgress />
         <Toaster position="top-right" richColors />
         <Navbar />
         <main className="relative z-10 flex-1">

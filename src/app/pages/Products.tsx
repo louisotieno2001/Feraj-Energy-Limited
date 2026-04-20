@@ -140,54 +140,54 @@ export function Products() {
   return (
     <div className="min-h-screen py-10 text-white/85 lg:py-14">
       <div className="mx-auto w-full max-w-[var(--section-max-width)] px-4 sm:px-6 lg:px-8">
-        <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(130deg,rgba(12,14,20,0.95),rgba(10,12,16,0.82))] p-8 sm:p-10 lg:p-14">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_25%,rgba(73,201,255,0.2),transparent_38%),radial-gradient(circle_at_88%_72%,rgba(49,209,122,0.16),transparent_42%)]" />
+        <section className="relative overflow-hidden p-8 sm:p-10 lg:p-14">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_25%,rgba(73,201,255,0.12),transparent_38%),radial-gradient(circle_at_88%_72%,rgba(49,209,122,0.1),transparent_42%)]" />
           <div className="relative">
             <p className="cinematic-eyebrow">Curated Shop • Chapter 04</p>
-            <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-tight text-white/90 sm:text-5xl">
-              Premium solar systems, curated for performance and reliability
+            <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-tight text-white/92 sm:text-5xl lg:text-6xl">
+              Premium solar systems
             </h1>
-            <p className="mt-5 max-w-2xl text-white/65">
+            <p className="mt-6 max-w-2xl text-xl text-white/60 leading-relaxed">
               Browse production-grade components with transparent specs,
               inventory visibility, and direct add-to-cart flow.
             </p>
           </div>
         </section>
 
-        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[280px_minmax(0,1fr)]">
           <aside className="lg:sticky lg:top-24 lg:h-fit">
-            <div className="cinematic-panel p-5">
-              <p className="text-xs uppercase tracking-[0.14em] text-white/45">
-                Filters
-              </p>
-              <div className="mt-4 w-full">
+            <div className="space-y-10 border-l border-white/10 pl-8">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-white/40 font-bold mb-4">
+                  Search
+                </p>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by name or description..."
-                  className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-3 text-white/85 placeholder:text-white/45 focus:ring-2 focus:ring-primary/35 focus:border-primary/30"
+                  placeholder="Find products..."
+                  className="w-full border-b border-white/10 bg-transparent py-2 text-white/90 placeholder:text-white/30 focus:border-primary focus:outline-none transition-colors"
                 />
                 {searching && (
-                  <p className="mt-2 text-sm text-white/60">
-                    Showing results for &quot;{searchQuery.trim()}&quot;
+                  <p className="mt-2 text-xs text-primary/60 italic">
+                    Filtering for &quot;{searchQuery.trim()}&quot;
                   </p>
                 )}
               </div>
 
-              <div className="mt-6">
-                <p className="mb-3 text-xs uppercase tracking-[0.14em] text-white/45">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-white/40 font-bold mb-6">
                   Category
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-col gap-3">
                   {categories.map((category) => (
                     <button
                       key={category}
                       onClick={() => setSelectedCategory(category)}
-                      className={`rounded-full px-4 py-2 text-sm transition ${
+                      className={`text-left text-sm transition-all hover:pl-2 ${
                         selectedCategory === category
-                          ? 'bg-primary text-primary-foreground'
-                          : 'border border-white/10 bg-white/5 text-white/75 hover:bg-white/10'
+                          ? 'text-primary font-bold'
+                          : 'text-white/50 hover:text-white'
                       }`}
                     >
                       {category}
@@ -196,23 +196,23 @@ export function Products() {
                 </div>
               </div>
 
-              <div className="mt-6 border-t border-white/10 pt-4 text-sm text-white/55">
+              <div className="pt-4 text-[10px] uppercase tracking-[0.15em] text-white/30 font-bold">
                 {filteredProducts.length} product
-                {filteredProducts.length === 1 ? '' : 's'} available
+                {filteredProducts.length === 1 ? '' : 's'} matches
               </div>
             </div>
           </aside>
 
           <section>
-            <div className="mb-5 flex items-center justify-between gap-3">
-              <p className="text-sm uppercase tracking-[0.14em] text-white/45">
+            <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-white/40 font-bold">
                 Catalog
               </p>
-              <p className="text-sm text-white/60">Prices in KES</p>
+              <p className="text-xs text-white/30 font-medium">Prices in KES</p>
             </div>
 
             {/* Products Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-12">
               {filteredProducts.map((product, index) => {
                 const displayImage =
                   product.images && product.images.length > 0
@@ -223,86 +223,76 @@ export function Products() {
                 return (
                   <motion.article
                     key={product.id}
-                    className="group cinematic-panel overflow-hidden"
-                    initial={{ opacity: 0, y: 28 }}
+                    className="group animate-reveal"
+                    initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.55, delay: (index % 6) * 0.04 }}
+                    viewport={{ once: true, amount: 0.1 }}
+                    transition={{ duration: 0.5, delay: (index % 6) * 0.05 }}
                   >
-                    <div className="relative h-60 overflow-hidden border-b border-white/10">
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-xl border border-white/5 bg-white/5">
                       <img
                         src={displayImage}
                         alt={product.name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:opacity-80"
                         onError={(e) => {
                           e.currentTarget.src =
                             'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400';
                         }}
                       />
-                      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgba(8,8,12,0.78)_100%)]" />
-                      <div className="absolute left-3 top-3 rounded-full border border-white/15 bg-[#0f1219]/80 px-3 py-1 text-xs text-white/80 backdrop-blur-sm">
-                        {categoryMap[product.category] || product.category}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                      
+                      <div className="absolute left-4 top-4">
+                        <span className="rounded-full bg-black/40 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white/90 backdrop-blur-md border border-white/10">
+                          {categoryMap[product.category] || product.category}
+                        </span>
                       </div>
+                      
                       {product.stock_quantity === 0 && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-                          <span className="rounded-md border border-red-400/30 bg-red-500/20 px-4 py-2 text-sm font-semibold text-red-200">
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                          <span className="rounded border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-red-300">
                             Out of Stock
                           </span>
                         </div>
                       )}
-                    </div>
 
-                    <div className="p-5">
-                      <h3 className="text-xl font-semibold text-white/90 mb-2">
-                        {product.name}
-                      </h3>
-                      <p className="mb-4 line-clamp-2 text-sm text-white/60">
-                        {product.description || 'Premium solar equipment'}
-                      </p>
-
-                      {displaySpecs.length > 0 && (
-                        <div className="mb-4">
-                          <h4 className="mb-2 text-xs uppercase tracking-[0.12em] text-white/45">
-                            Key Features
-                          </h4>
-                          <ul className="space-y-1.5">
-                            {displaySpecs.slice(0, 3).map((spec, idx) => (
-                              <li
-                                key={idx}
-                                className="flex items-center gap-2 text-sm text-white/60"
-                              >
-                                <Check className="h-4 w-4 text-primary flex-shrink-0" />
-                                <span>{spec}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      <div className="flex items-center justify-between border-t border-white/10 pt-4">
-                        <div>
-                          <div className="text-2xl font-semibold text-white/90">
-                            KES {product.price.toLocaleString()}
-                          </div>
-                          <div className="text-sm text-white/55">
-                            {product.stock_quantity > 0
-                              ? `${product.stock_quantity} in stock`
-                              : 'Out of stock'}
-                          </div>
-                        </div>
+                      <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                         <button
                           onClick={() => addToCart(product.id)}
                           disabled={product.stock_quantity === 0}
-                          className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition ${
-                            product.stock_quantity === 0
-                              ? 'cursor-not-allowed border border-white/10 bg-white/10 text-white/45'
-                              : 'border border-primary/35 bg-primary/90 text-primary-foreground hover:bg-primary'
-                          }`}
+                          className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary py-3 text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-xl transition-transform active:scale-95 disabled:opacity-50 disabled:active:scale-100"
                         >
                           <ShoppingCart className="h-4 w-4" />
                           Add to Cart
                         </button>
                       </div>
+                    </div>
+
+                    <div className="mt-6 px-1">
+                      <div className="flex items-start justify-between gap-4 mb-2">
+                        <h3 className="text-lg font-bold text-white/90 group-hover:text-primary transition-colors">
+                          {product.name}
+                        </h3>
+                        <div className="text-lg font-bold text-white/92">
+                          {product.price.toLocaleString()}
+                        </div>
+                      </div>
+                      
+                      <p className="mb-4 line-clamp-2 text-sm text-white/50 leading-relaxed">
+                        {product.description || 'Premium solar equipment engineered for long-term reliability.'}
+                      </p>
+
+                      {displaySpecs.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {displaySpecs.slice(0, 2).map((spec, idx) => (
+                            <span
+                              key={idx}
+                              className="text-[10px] uppercase tracking-wider text-white/30 border border-white/10 px-2 py-0.5 rounded"
+                            >
+                              {spec}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </motion.article>
                 );
@@ -310,9 +300,9 @@ export function Products() {
             </div>
 
             {filteredProducts.length === 0 && (
-              <div className="cinematic-panel mt-8 p-8 text-center">
-                <p className="text-white/65 text-lg">
-                  No products found in this category.
+              <div className="py-20 text-center border border-dashed border-white/10 rounded-2xl">
+                <p className="text-white/40 text-lg italic">
+                  No products match your current selection.
                 </p>
               </div>
             )}

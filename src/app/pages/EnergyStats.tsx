@@ -190,15 +190,15 @@ export function EnergyStats() {
   return (
     <div className="min-h-screen py-10 text-white/86 lg:py-14">
       <div className="mx-auto w-full max-w-[var(--section-max-width)] px-4 sm:px-6 lg:px-8">
-        <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(12,14,20,0.96),rgba(8,10,15,0.84))] p-8 sm:p-10 lg:p-14">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(73,201,255,0.16),transparent_35%),radial-gradient(circle_at_84%_78%,rgba(49,209,122,0.14),transparent_42%)]" />
+        <section className="relative overflow-hidden p-8 sm:p-10 lg:p-14">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(73,201,255,0.12),transparent_35%),radial-gradient(circle_at_84%_78%,rgba(49,209,122,0.1),transparent_42%)]" />
           <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] overflow-hidden lg:block">
             <img
               src="/images/energy_stats/africa_lights.webp"
               alt="Africa nighttime energy lights"
-              className="h-full w-full object-cover opacity-25"
+              className="h-full w-full object-cover opacity-20"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[rgba(9,10,14,0.94)] via-[rgba(9,10,14,0.74)] to-[rgba(9,10,14,0.3)]" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[rgba(9,10,14,1)] via-[rgba(9,10,14,0.8)] to-transparent" />
           </div>
           <div className="relative max-w-3xl">
             <p className="cinematic-eyebrow">Data Chapter • Energy Intelligence</p>
@@ -212,18 +212,18 @@ export function EnergyStats() {
           </div>
         </section>
 
-        <section className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <section className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
           {visualAssets.map((asset, idx) => (
             <motion.article
               key={asset.src}
-              className="cinematic-panel overflow-hidden p-0"
+              className="overflow-hidden border-t border-white/10 pt-6"
               initial={{ opacity: 0, y: 22 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
             >
-              <img src={asset.src} alt={asset.title} className="h-44 w-full object-cover" />
-              <div className="p-4">
+              <img src={asset.src} alt={asset.title} className="aspect-video w-full rounded-lg object-cover" />
+              <div className="mt-4">
                 <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-white/78">
                   {asset.title}
                 </h3>
@@ -233,30 +233,30 @@ export function EnergyStats() {
           ))}
         </section>
 
-        <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <section className="mt-12 grid grid-cols-1 divide-y divide-white/10 border-y border-white/10 md:grid-cols-2 md:divide-x md:divide-y-0 xl:grid-cols-4">
           {statCards.map((stat, index) => (
             <motion.div
               key={stat.label}
-              className="cinematic-panel p-5"
-              initial={{ opacity: 0, y: 24 }}
+              className="px-6 py-8"
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.35 }}
               transition={{ duration: 0.55, delay: index * 0.06 }}
             >
-              <div className="mb-2 flex items-center gap-2 text-white/68">
+              <div className="mb-3 flex items-center gap-2 text-white/68">
                 <stat.icon className={`h-5 w-5 ${stat.accent}`} />
-                <span className="text-sm text-white/62">{stat.label}</span>
+                <span className="text-xs uppercase tracking-[0.12em] text-white/50">{stat.label}</span>
               </div>
-              <div className="text-2xl font-semibold text-white/90">{stat.value}</div>
+              <div className="text-3xl font-semibold text-white/90">{stat.value}</div>
             </motion.div>
           ))}
         </section>
 
-        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,0.75fr)]">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,0.75fr)]">
           <div>
             <div
               ref={globeWrapRef}
-              className="cinematic-panel h-[640px] overflow-hidden p-4 lg:sticky lg:top-24"
+              className="relative h-[640px] overflow-hidden lg:sticky lg:top-24"
               onMouseDown={handleInteractionStart}
               onMouseUp={handleInteractionEnd}
               onMouseLeave={handleInteractionEnd}
@@ -267,8 +267,8 @@ export function EnergyStats() {
             >
               <Globe
                 ref={globeEl}
-                width={globeSize.width > 0 ? globeSize.width - 32 : undefined}
-                height={globeSize.height > 0 ? globeSize.height - 32 : undefined}
+                width={globeSize.width > 0 ? globeSize.width : undefined}
+                height={globeSize.height > 0 ? globeSize.height : undefined}
                 globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
                 backgroundColor="rgba(0,0,0,0)"
                 pointsData={points}
@@ -292,57 +292,57 @@ export function EnergyStats() {
               />
             </div>
 
-            <div className="mt-4 cinematic-panel p-4">
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-white/45">
+            <div className="mt-8 border-t border-white/10 pt-6">
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-white/45">
                 Legend
               </h3>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                <div className="flex items-center gap-2 text-sm text-white/68">
-                  <div className="h-3.5 w-3.5 rounded-full bg-emerald-500" />
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div className="flex items-center gap-3 text-sm text-white/68">
+                  <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                   <span>High Renewable (&gt;50%)</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-white/68">
-                  <div className="h-3.5 w-3.5 rounded-full bg-amber-500" />
+                <div className="flex items-center gap-3 text-sm text-white/68">
+                  <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
                   <span>Medium (25-50%)</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-white/68">
-                  <div className="h-3.5 w-3.5 rounded-full bg-red-500" />
+                <div className="flex items-center gap-3 text-sm text-white/68">
+                  <div className="h-2.5 w-2.5 rounded-full bg-red-500" />
                   <span>Low (&lt;25%)</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="space-y-8">
-            <div className="cinematic-panel-strong p-6 lg:sticky lg:top-24">
+          <div className="space-y-12">
+            <div className="lg:sticky lg:top-24">
               {activeCountry ? (
-                <div>
+                <div className="animate-reveal">
                   <p className="cinematic-eyebrow mb-2">Selected Country</p>
-                  <h2 className="mb-5 text-3xl font-semibold text-white/90">
+                  <h2 className="mb-8 text-4xl font-semibold text-white/90">
                     {activeCountry.country}
                   </h2>
 
-                  <div className="space-y-5">
+                  <div className="space-y-8">
                     <div>
-                      <div className="mb-1 text-xs uppercase tracking-[0.14em] text-white/45">
+                      <div className="mb-2 text-xs uppercase tracking-[0.14em] text-white/45">
                         Energy Demand
                       </div>
-                      <div className="text-3xl font-semibold text-primary">
+                      <div className="text-4xl font-semibold text-primary">
                         {activeCountry.demand} GW
                       </div>
                     </div>
 
                     <div>
-                      <div className="mb-1 text-xs uppercase tracking-[0.14em] text-white/45">
+                      <div className="mb-2 text-xs uppercase tracking-[0.14em] text-white/45">
                         Renewable Energy
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-4">
                         <div className="text-2xl font-semibold text-white/90">
                           {activeCountry.renewable}%
                         </div>
-                        <div className="h-3 flex-1 rounded-full bg-white/10">
+                        <div className="h-2 flex-1 rounded-full bg-white/10">
                           <div
-                            className="h-3 rounded-full bg-emerald-500 transition-all"
+                            className="h-2 rounded-full bg-emerald-500 transition-all duration-700"
                             style={{ width: `${activeCountry.renewable}%` }}
                           />
                         </div>
@@ -350,23 +350,23 @@ export function EnergyStats() {
                     </div>
 
                     <div>
-                      <div className="mb-2 text-xs uppercase tracking-[0.14em] text-white/45">
+                      <div className="mb-3 text-xs uppercase tracking-[0.14em] text-white/45">
                         Demand Trend
                       </div>
-                      <div className="flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-2 text-white/78">
+                      <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white/80">
                         {getTrendIcon(activeCountry.trend)}
-                        <span className="capitalize">{activeCountry.trend}</span>
+                        <span className="text-sm font-medium capitalize">{activeCountry.trend}</span>
                       </div>
                     </div>
 
                     <div>
-                      <div className="mb-2 text-xs uppercase tracking-[0.14em] text-white/45">
+                      <div className="mb-3 text-xs uppercase tracking-[0.14em] text-white/45">
                         Key Factors
                       </div>
-                      <ul className="space-y-2 text-sm text-white/68">
+                      <ul className="space-y-3 text-sm leading-relaxed text-white/60">
                         {activeCountry.factors.map((factor: string, idx: number) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <span className="mt-1 text-primary">•</span>
+                          <li key={idx} className="flex items-start gap-3">
+                            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary/60 shrink-0" />
                             <span>{factor}</span>
                           </li>
                         ))}
@@ -375,12 +375,12 @@ export function EnergyStats() {
                   </div>
                 </div>
               ) : (
-                <div className="py-12 text-center">
-                  <Activity className="mx-auto mb-4 h-16 w-16 text-white/30" />
-                  <h3 className="mb-2 text-lg font-semibold text-white/90">
+                <div className="py-20 text-center">
+                  <Activity className="mx-auto mb-6 h-12 w-12 text-white/20" />
+                  <h3 className="mb-3 text-lg font-semibold text-white/80">
                     Select a Country
                   </h3>
-                  <p className="text-sm text-white/58">
+                  <p className="text-sm text-white/50">
                     Click or hover over any point on the globe to view detailed energy
                     statistics
                   </p>
@@ -388,83 +388,63 @@ export function EnergyStats() {
               )}
             </div>
 
-            <div className="cinematic-panel overflow-hidden">
+            <div className="border-t border-white/10 pt-10">
               <img
                 src="/images/energy_stats/renewables.png"
                 alt="Renewable energy trend visualization"
-                className="h-56 w-full object-cover"
+                className="aspect-video w-full rounded-xl object-cover"
               />
-              <div className="border-t border-white/10 p-4">
-                <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-white/68">
+              <div className="mt-6">
+                <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-white/50">
                   Transition Snapshot
                 </h3>
-                <p className="mt-2 text-sm text-white/56">
+                <p className="mt-3 text-sm leading-relaxed text-white/60">
                   Use this reference alongside the table to compare demand growth with renewable share across top countries.
                 </p>
               </div>
             </div>
 
-            <div className="cinematic-panel overflow-hidden">
-              <div className="p-6">
-                <h2 className="mb-6 text-2xl font-semibold text-white/90">
-                  Detailed Statistics
-                </h2>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-white/10 text-white/48">
-                        <th className="px-4 py-3 text-left text-xs uppercase tracking-[0.14em]">
-                          Country
-                        </th>
-                        <th className="px-4 py-3 text-right text-xs uppercase tracking-[0.14em]">
-                          Demand (GW)
-                        </th>
-                        <th className="px-4 py-3 text-right text-xs uppercase tracking-[0.14em]">
-                          Renewable %
-                        </th>
-                        <th className="px-4 py-3 text-center text-xs uppercase tracking-[0.14em]">
-                          Trend
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {energyData
-                        .slice()
-                        .sort((a, b) => b.demand - a.demand)
-                        .slice(0, 10)
-                        .map((country, idx) => (
-                          <tr
-                            key={idx}
-                            className="cursor-pointer border-b border-white/8 transition hover:bg-white/5"
-                            onClick={() => setSelectedCountry(country)}
-                          >
-                            <td className="px-4 py-3 text-white/86">{country.country}</td>
-                            <td className="px-4 py-3 text-right text-white/70">
-                              {country.demand.toLocaleString()}
-                            </td>
-                            <td className="px-4 py-3 text-right">
-                              <span
-                                className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${
-                                  country.renewable > 50
-                                    ? 'border border-emerald-500/25 bg-emerald-500/10 text-emerald-300'
-                                    : country.renewable > 25
-                                      ? 'border border-amber-500/25 bg-amber-500/10 text-amber-300'
-                                      : 'border border-red-500/25 bg-red-500/10 text-red-300'
-                                }`}
-                              >
-                                {country.renewable}%
-                              </span>
-                            </td>
-                            <td className="px-4 py-3 text-center">
-                              <div className="flex justify-center">
-                                {getTrendIcon(country.trend)}
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
+            <div className="border-t border-white/10 pt-10">
+              <h2 className="mb-8 text-2xl font-semibold text-white/90">
+                Detailed Statistics
+              </h2>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-white/10 text-white/40">
+                      <th className="pb-4 text-left text-[10px] uppercase tracking-[0.2em]">
+                        Country
+                      </th>
+                      <th className="pb-4 text-right text-[10px] uppercase tracking-[0.2em]">
+                        Demand (GW)
+                      </th>
+                      <th className="pb-4 text-right text-[10px] uppercase tracking-[0.2em]">
+                        Renewable %
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {energyData
+                      .slice()
+                      .sort((a, b) => b.demand - a.demand)
+                      .slice(0, 10)
+                      .map((country, idx) => (
+                        <tr
+                          key={idx}
+                          className="group cursor-pointer transition-colors hover:bg-white/5"
+                          onClick={() => setSelectedCountry(country)}
+                        >
+                          <td className="py-4 text-sm text-white/80 group-hover:text-primary transition-colors">{country.country}</td>
+                          <td className="py-4 text-right text-sm text-white/60">
+                            {country.demand.toLocaleString()}
+                          </td>
+                          <td className="py-4 text-right">
+                            <span className="text-sm font-medium text-white/80">{country.renewable}%</span>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
