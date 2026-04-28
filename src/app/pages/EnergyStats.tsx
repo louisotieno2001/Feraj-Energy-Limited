@@ -42,7 +42,10 @@ export function EnergyStats() {
       }
 
       const rect = globeWrapRef.current.getBoundingClientRect();
-      setGlobeSize({ width: Math.floor(rect.width), height: Math.floor(rect.height) });
+      setGlobeSize({
+        width: Math.floor(rect.width),
+        height: Math.floor(rect.height),
+      });
     };
 
     updateSize();
@@ -84,13 +87,17 @@ export function EnergyStats() {
 
   useEffect(() => {
     return () => {
-      resumeSpinTimerRefs.current.forEach((timerId) => window.clearTimeout(timerId));
+      resumeSpinTimerRefs.current.forEach((timerId) =>
+        window.clearTimeout(timerId)
+      );
       resumeSpinTimerRefs.current = [];
     };
   }, []);
 
   const clearSpinTimers = () => {
-    resumeSpinTimerRefs.current.forEach((timerId) => window.clearTimeout(timerId));
+    resumeSpinTimerRefs.current.forEach((timerId) =>
+      window.clearTimeout(timerId)
+    );
     resumeSpinTimerRefs.current = [];
   };
 
@@ -144,17 +151,20 @@ export function EnergyStats() {
     {
       src: '/images/energy_stats/africa_lights.webp',
       title: 'Nighttime Grid Activity',
-      caption: 'Urban light density reflects demand concentration across African corridors.',
+      caption:
+        'Urban light density reflects demand concentration across African corridors.',
     },
     {
       src: '/images/energy_stats/renewables.png',
       title: 'Renewable Transition Signal',
-      caption: 'Renewables are accelerating where policy and storage adoption align.',
+      caption:
+        'Renewables are accelerating where policy and storage adoption align.',
     },
     {
       src: '/images/energy_stats/HD_40-Years-of-Global-Energy-Production_Timeline_Fossil-1.png',
       title: '40-Year Production Timeline',
-      caption: 'Historical context shows why diversification and resilience planning matter now.',
+      caption:
+        'Historical context shows why diversification and resilience planning matter now.',
     },
   ];
 
@@ -169,7 +179,8 @@ export function EnergyStats() {
       icon: Zap,
       label: 'Avg. Renewable %',
       value: `${Math.round(
-        energyData.reduce((sum, item) => sum + item.renewable, 0) / energyData.length
+        energyData.reduce((sum, item) => sum + item.renewable, 0) /
+          energyData.length
       )}%`,
       accent: 'text-amber-300',
     },
@@ -201,13 +212,15 @@ export function EnergyStats() {
             <div className="absolute inset-0 bg-gradient-to-r from-[rgba(9,10,14,1)] via-[rgba(9,10,14,0.8)] to-transparent" />
           </div>
           <div className="relative max-w-3xl">
-            <p className="cinematic-eyebrow">Data Chapter • Energy Intelligence</p>
+            <p className="cinematic-eyebrow">
+              Data Chapter • Energy Intelligence
+            </p>
             <h1 className="mt-3 text-4xl font-semibold leading-tight text-white/92 sm:text-5xl lg:text-6xl">
               Global Energy Demand
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-white/62">
-              Interactive 3D visualization of real-time energy demand and renewable
-              energy adoption worldwide
+              Interactive 3D visualization of real-time energy demand and
+              renewable energy adoption worldwide
             </p>
           </div>
         </section>
@@ -222,7 +235,11 @@ export function EnergyStats() {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
             >
-              <img src={asset.src} alt={asset.title} className="aspect-video w-full rounded-lg object-cover" />
+              <img
+                src={asset.src}
+                alt={asset.title}
+                className="aspect-video w-full rounded-lg object-cover"
+              />
               <div className="mt-4">
                 <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-white/78">
                   {asset.title}
@@ -245,9 +262,13 @@ export function EnergyStats() {
             >
               <div className="mb-3 flex items-center gap-2 text-white/68">
                 <stat.icon className={`h-5 w-5 ${stat.accent}`} />
-                <span className="text-xs uppercase tracking-[0.12em] text-white/50">{stat.label}</span>
+                <span className="text-xs uppercase tracking-[0.12em] text-white/50">
+                  {stat.label}
+                </span>
               </div>
-              <div className="text-3xl font-semibold text-white/90">{stat.value}</div>
+              <div className="text-3xl font-semibold text-white/90">
+                {stat.value}
+              </div>
             </motion.div>
           ))}
         </section>
@@ -355,7 +376,9 @@ export function EnergyStats() {
                       </div>
                       <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white/80">
                         {getTrendIcon(activeCountry.trend)}
-                        <span className="text-sm font-medium capitalize">{activeCountry.trend}</span>
+                        <span className="text-sm font-medium capitalize">
+                          {activeCountry.trend}
+                        </span>
                       </div>
                     </div>
 
@@ -364,12 +387,14 @@ export function EnergyStats() {
                         Key Factors
                       </div>
                       <ul className="space-y-3 text-sm leading-relaxed text-white/60">
-                        {activeCountry.factors.map((factor: string, idx: number) => (
-                          <li key={idx} className="flex items-start gap-3">
-                            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary/60 shrink-0" />
-                            <span>{factor}</span>
-                          </li>
-                        ))}
+                        {activeCountry.factors.map(
+                          (factor: string, idx: number) => (
+                            <li key={idx} className="flex items-start gap-3">
+                              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary/60 shrink-0" />
+                              <span>{factor}</span>
+                            </li>
+                          )
+                        )}
                       </ul>
                     </div>
                   </div>
@@ -381,8 +406,8 @@ export function EnergyStats() {
                     Select a Country
                   </h3>
                   <p className="text-sm text-white/50">
-                    Click or hover over any point on the globe to view detailed energy
-                    statistics
+                    Click or hover over any point on the globe to view detailed
+                    energy statistics
                   </p>
                 </div>
               )}
@@ -399,7 +424,8 @@ export function EnergyStats() {
                   Transition Snapshot
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-white/60">
-                  Use this reference alongside the table to compare demand growth with renewable share across top countries.
+                  Use this reference alongside the table to compare demand
+                  growth with renewable share across top countries.
                 </p>
               </div>
             </div>
@@ -434,12 +460,16 @@ export function EnergyStats() {
                           className="group cursor-pointer transition-colors hover:bg-white/5"
                           onClick={() => setSelectedCountry(country)}
                         >
-                          <td className="py-4 text-sm text-white/80 group-hover:text-primary transition-colors">{country.country}</td>
+                          <td className="py-4 text-sm text-white/80 group-hover:text-primary transition-colors">
+                            {country.country}
+                          </td>
                           <td className="py-4 text-right text-sm text-white/60">
                             {country.demand.toLocaleString()}
                           </td>
                           <td className="py-4 text-right">
-                            <span className="text-sm font-medium text-white/80">{country.renewable}%</span>
+                            <span className="text-sm font-medium text-white/80">
+                              {country.renewable}%
+                            </span>
                           </td>
                         </tr>
                       ))}

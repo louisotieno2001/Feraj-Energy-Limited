@@ -10,6 +10,7 @@ import {
   Menu,
   X,
   Home,
+  Handshake,
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -47,6 +48,12 @@ export function AdminLayout() {
       visible: isAdmin || isCoAdmin,
     },
     { name: 'Audit', href: '/admin/audit', icon: ShoppingBag, visible: true },
+    {
+      name: 'Partnership Requests',
+      href: '/admin/partnership-requests',
+      icon: Handshake,
+      visible: true,
+    },
   ].filter((item) => item.visible);
 
   const handleSignOut = async () => {
@@ -171,7 +178,9 @@ export function AdminLayout() {
 
             <div className="flex items-center gap-2 lg:hidden">
               <LayoutDashboard className="h-6 w-6 text-primary" />
-              <span className="text-lg font-semibold text-white/92">Control Room</span>
+              <span className="text-lg font-semibold text-white/92">
+                Control Room
+              </span>
             </div>
 
             <div className="flex items-center gap-4">

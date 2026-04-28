@@ -12,7 +12,11 @@
     @apply min-h-screen text-foreground;
     position: relative;
     background:
-      linear-gradient(180deg, rgba(9, 8, 11, 0.96) 0%, rgba(11, 11, 16, 0.98) 100%),
+      linear-gradient(
+        180deg,
+        rgba(9, 8, 11, 0.96) 0%,
+        rgba(11, 11, 16, 0.98) 100%
+      ),
       repeating-linear-gradient(
         90deg,
         transparent 0,
@@ -35,7 +39,11 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1.5rem;
     background:
-      linear-gradient(180deg, rgba(16, 17, 25, 0.24) 0%, rgba(9, 9, 14, 0.84) 100%),
+      linear-gradient(
+        180deg,
+        rgba(16, 17, 25, 0.24) 0%,
+        rgba(9, 9, 14, 0.84) 100%
+      ),
       var(--surface-3);
     overflow: clip;
   }
@@ -98,7 +106,7 @@
   .font-orbitron {
     font-family: 'Orbitron', sans-serif;
   }
-  
+
   .font-space-grotesk {
     font-family: 'Space Grotesk', sans-serif;
   }
@@ -175,7 +183,8 @@
   }
 
   @keyframes gradient-x {
-    0%, 100% {
+    0%,
+    100% {
       background-position: 0% 50%;
     }
     50% {

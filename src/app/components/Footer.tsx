@@ -56,22 +56,34 @@ export function Footer() {
             <h3 className="font-semibold mb-4 text-white/90">Products</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/products" className="hover:text-primary transition text-white/70">
+                <Link
+                  to="/products"
+                  className="hover:text-primary transition text-white/70"
+                >
                   Solar Panels
                 </Link>
               </li>
               <li>
-                <Link to="/products" className="hover:text-primary transition text-white/70">
+                <Link
+                  to="/products"
+                  className="hover:text-primary transition text-white/70"
+                >
                   Inverters
                 </Link>
               </li>
               <li>
-                <Link to="/products" className="hover:text-primary transition text-white/70">
+                <Link
+                  to="/products"
+                  className="hover:text-primary transition text-white/70"
+                >
                   Battery Storage
                 </Link>
               </li>
               <li>
-                <Link to="/products" className="hover:text-primary transition text-white/70">
+                <Link
+                  to="/products"
+                  className="hover:text-primary transition text-white/70"
+                >
                   Mounting Systems
                 </Link>
               </li>
@@ -83,12 +95,18 @@ export function Footer() {
             <h3 className="font-semibold mb-4 text-white/90">Company</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/about" className="hover:text-primary transition text-white/70">
+                <Link
+                  to="/about"
+                  className="hover:text-primary transition text-white/70"
+                >
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/team" className="hover:text-primary transition text-white/70">
+                <Link
+                  to="/team"
+                  className="hover:text-primary transition text-white/70"
+                >
                   Our Team
                 </Link>
               </li>

@@ -65,7 +65,9 @@ export function Products() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [selectedApplications, setSelectedApplications] = useState<string[]>([]);
+  const [selectedApplications, setSelectedApplications] = useState<string[]>(
+    []
+  );
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000000]);
   const [inStockOnly, setInStockOnly] = useState(false);
 
@@ -91,24 +93,42 @@ export function Products() {
       const matchesSearch =
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.description?.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       const matchesCategory =
-        selectedCategories.length === 0 || selectedCategories.includes(p.category);
-      
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(p.category);
+
       const matchesBrand =
-        selectedBrands.length === 0 || (p.brand && selectedBrands.includes(p.brand));
-      
+        selectedBrands.length === 0 ||
+        (p.brand && selectedBrands.includes(p.brand));
+
       const matchesApplication =
-        selectedApplications.length === 0 || 
-        (p.application && p.application.some(app => selectedApplications.includes(app)));
-      
+        selectedApplications.length === 0 ||
+        (p.application &&
+          p.application.some((app) => selectedApplications.includes(app)));
+
       const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
-      
+
       const matchesStock = !inStockOnly || p.stock_quantity > 0;
 
-      return matchesSearch && matchesCategory && matchesBrand && matchesApplication && matchesPrice && matchesStock;
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesBrand &&
+        matchesApplication &&
+        matchesPrice &&
+        matchesStock
+      );
     });
-  }, [products, searchQuery, selectedCategories, selectedBrands, selectedApplications, priceRange, inStockOnly]);
+  }, [
+    products,
+    searchQuery,
+    selectedCategories,
+    selectedBrands,
+    selectedApplications,
+    priceRange,
+    inStockOnly,
+  ]);
 
   const addToCart = (productId: string) => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -173,13 +193,16 @@ export function Products() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <p className="cinematic-eyebrow mb-4">Professional Grade • Solutions</p>
+              <p className="cinematic-eyebrow mb-4">
+                Professional Grade • Solutions
+              </p>
               <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white/90 mb-6">
                 Production Systems
               </h1>
               <p className="text-xl text-white/50 max-w-2xl leading-relaxed">
-                Explore our curated selection of high-performance solar components, 
-                engineered for reliability and maximum energy yields.
+                Explore our curated selection of high-performance solar
+                components, engineered for reliability and maximum energy
+                yields.
               </p>
             </motion.div>
           </div>
@@ -187,7 +210,6 @@ export function Products() {
 
         <div className="mx-auto max-w-[var(--section-max-width)] px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12 py-12">
-            
             {/* Filters Sidebar */}
             <aside className="w-full lg:w-80 space-y-8">
               <div className="sticky top-24 space-y-8">
@@ -195,8 +217,12 @@ export function Products() {
                   <h2 className="text-xs uppercase tracking-[0.2em] font-bold text-white/40 flex items-center gap-2">
                     <Filter className="h-3 w-3" /> Filters
                   </h2>
-                  {(selectedCategories.length > 0 || selectedBrands.length > 0 || selectedApplications.length > 0 || searchQuery || inStockOnly) && (
-                    <button 
+                  {(selectedCategories.length > 0 ||
+                    selectedBrands.length > 0 ||
+                    selectedApplications.length > 0 ||
+                    searchQuery ||
+                    inStockOnly) && (
+                    <button
                       onClick={clearFilters}
                       className="text-[10px] uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
                     >
@@ -217,7 +243,15 @@ export function Products() {
                   />
                 </div>
 
-                <Accordion type="multiple" defaultValue={['categories', 'brands', 'applications', 'price']}>
+                <Accordion
+                  type="multiple"
+                  defaultValue={[
+                    'categories',
+                    'brands',
+                    'applications',
+                    'price',
+                  ]}
+                >
                   {/* Categories */}
                   <AccordionItem value="categories" className="border-white/5">
                     <AccordionTrigger className="text-sm font-bold uppercase tracking-widest py-4">
@@ -226,20 +260,30 @@ export function Products() {
                     <AccordionContent className="space-y-6 pt-2">
                       {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
                         <div key={group} className="space-y-3">
-                          <p className="text-[10px] uppercase tracking-widest text-white/30 font-bold">{group}</p>
+                          <p className="text-[10px] uppercase tracking-widest text-white/30 font-bold">
+                            {group}
+                          </p>
                           <div className="space-y-2">
-                            {cats.map(cat => (
-                              <div key={cat} className="flex items-center space-x-2">
-                                <Checkbox 
-                                  id={`cat-${cat}`} 
+                            {cats.map((cat) => (
+                              <div
+                                key={cat}
+                                className="flex items-center space-x-2"
+                              >
+                                <Checkbox
+                                  id={`cat-${cat}`}
                                   checked={selectedCategories.includes(cat)}
                                   onCheckedChange={(checked) => {
-                                    setSelectedCategories(prev => 
-                                      checked ? [...prev, cat] : prev.filter(c => c !== cat)
+                                    setSelectedCategories((prev) =>
+                                      checked
+                                        ? [...prev, cat]
+                                        : prev.filter((c) => c !== cat)
                                     );
                                   }}
                                 />
-                                <label htmlFor={`cat-${cat}`} className="text-sm text-white/60 cursor-pointer hover:text-white transition-colors">
+                                <label
+                                  htmlFor={`cat-${cat}`}
+                                  className="text-sm text-white/60 cursor-pointer hover:text-white transition-colors"
+                                >
                                   {CATEGORY_LABELS[cat] || cat}
                                 </label>
                               </div>
@@ -257,44 +301,62 @@ export function Products() {
                     </AccordionTrigger>
                     <AccordionContent className="pt-2">
                       <div className="grid grid-cols-1 gap-2">
-                        {Object.values(BRANDS).flat().map(brand => (
-                          <div key={brand} className="flex items-center space-x-2">
-                            <Checkbox 
-                              id={`brand-${brand}`} 
-                              checked={selectedBrands.includes(brand)}
-                              onCheckedChange={(checked) => {
-                                setSelectedBrands(prev => 
-                                  checked ? [...prev, brand] : prev.filter(b => b !== brand)
-                                );
-                              }}
-                            />
-                            <label htmlFor={`brand-${brand}`} className="text-sm text-white/60 cursor-pointer hover:text-white transition-colors">
-                              {brand}
-                            </label>
-                          </div>
-                        ))}
+                        {Object.values(BRANDS)
+                          .flat()
+                          .map((brand) => (
+                            <div
+                              key={brand}
+                              className="flex items-center space-x-2"
+                            >
+                              <Checkbox
+                                id={`brand-${brand}`}
+                                checked={selectedBrands.includes(brand)}
+                                onCheckedChange={(checked) => {
+                                  setSelectedBrands((prev) =>
+                                    checked
+                                      ? [...prev, brand]
+                                      : prev.filter((b) => b !== brand)
+                                  );
+                                }}
+                              />
+                              <label
+                                htmlFor={`brand-${brand}`}
+                                className="text-sm text-white/60 cursor-pointer hover:text-white transition-colors"
+                              >
+                                {brand}
+                              </label>
+                            </div>
+                          ))}
                       </div>
                     </AccordionContent>
                   </AccordionItem>
 
                   {/* Applications */}
-                  <AccordionItem value="applications" className="border-white/5">
+                  <AccordionItem
+                    value="applications"
+                    className="border-white/5"
+                  >
                     <AccordionTrigger className="text-sm font-bold uppercase tracking-widest py-4">
                       Application
                     </AccordionTrigger>
                     <AccordionContent className="pt-2 space-y-2">
-                      {APPLICATIONS.map(app => (
+                      {APPLICATIONS.map((app) => (
                         <div key={app} className="flex items-center space-x-2">
-                          <Checkbox 
-                            id={`app-${app}`} 
+                          <Checkbox
+                            id={`app-${app}`}
                             checked={selectedApplications.includes(app)}
                             onCheckedChange={(checked) => {
-                              setSelectedApplications(prev => 
-                                checked ? [...prev, app] : prev.filter(a => a !== app)
+                              setSelectedApplications((prev) =>
+                                checked
+                                  ? [...prev, app]
+                                  : prev.filter((a) => a !== app)
                               );
                             }}
                           />
-                          <label htmlFor={`app-${app}`} className="text-sm text-white/60 cursor-pointer hover:text-white transition-colors">
+                          <label
+                            htmlFor={`app-${app}`}
+                            className="text-sm text-white/60 cursor-pointer hover:text-white transition-colors"
+                          >
                             {app}
                           </label>
                         </div>
@@ -313,7 +375,9 @@ export function Products() {
                         max={2000000}
                         step={5000}
                         value={priceRange}
-                        onValueChange={(val) => setPriceRange(val as [number, number])}
+                        onValueChange={(val) =>
+                          setPriceRange(val as [number, number])
+                        }
                         className="mb-6"
                       />
                       <div className="flex justify-between items-center text-[10px] font-mono text-white/40">
@@ -325,12 +389,15 @@ export function Products() {
                 </Accordion>
 
                 <div className="flex items-center space-x-2 pt-4">
-                  <Checkbox 
-                    id="stock" 
+                  <Checkbox
+                    id="stock"
                     checked={inStockOnly}
                     onCheckedChange={(checked) => setInStockOnly(!!checked)}
                   />
-                  <label htmlFor="stock" className="text-sm font-bold uppercase tracking-widest text-white/60 cursor-pointer">
+                  <label
+                    htmlFor="stock"
+                    className="text-sm font-bold uppercase tracking-widest text-white/60 cursor-pointer"
+                  >
                     In Stock Only
                   </label>
                 </div>
@@ -356,28 +423,38 @@ export function Products() {
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, amount: 0.1 }}
-                      transition={{ duration: 0.6, delay: Math.min(index * 0.05, 0.3) }}
+                      transition={{
+                        duration: 0.6,
+                        delay: Math.min(index * 0.05, 0.3),
+                      }}
                       className="group relative py-16 border-b border-white/5 last:border-0"
                     >
                       <div className="grid grid-cols-1 md:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20 items-start">
                         {/* Product Image Section */}
                         <div className="relative aspect-square md:aspect-[4/5] overflow-hidden bg-white/[0.02] rounded-2xl group-hover:bg-white/[0.04] transition-colors duration-500">
                           <img
-                            src={product.images?.[0] || 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800'}
+                            src={
+                              product.images?.[0] ||
+                              'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800'
+                            }
                             alt={product.name}
                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                           />
-                          
+
                           {/* Dynamic Badges */}
                           <div className="absolute top-6 left-6 flex flex-col gap-2">
-                             <Badge variant="secondary" className="bg-black/60 backdrop-blur-md border-white/10 text-[10px] uppercase tracking-widest px-3">
-                                {CATEGORY_LABELS[product.category] || product.category}
-                             </Badge>
-                             {product.brand && (
-                               <Badge className="bg-primary/20 text-primary border-primary/20 text-[10px] uppercase tracking-widest px-3">
-                                  {product.brand}
-                               </Badge>
-                             )}
+                            <Badge
+                              variant="secondary"
+                              className="bg-black/60 backdrop-blur-md border-white/10 text-[10px] uppercase tracking-widest px-3"
+                            >
+                              {CATEGORY_LABELS[product.category] ||
+                                product.category}
+                            </Badge>
+                            {product.brand && (
+                              <Badge className="bg-primary/20 text-primary border-primary/20 text-[10px] uppercase tracking-widest px-3">
+                                {product.brand}
+                              </Badge>
+                            )}
                           </div>
 
                           {product.stock_quantity === 0 && (
@@ -402,24 +479,33 @@ export function Products() {
                                 </div>
                               </div>
                               <p className="mt-4 text-white/50 text-lg leading-relaxed max-w-2xl">
-                                {product.description || 'Premium solar component engineered for high-efficiency energy systems.'}
+                                {product.description ||
+                                  'Premium solar component engineered for high-efficiency energy systems.'}
                               </p>
                             </div>
 
                             {/* Quick Specs */}
                             {(() => {
-                              const specs = Array.isArray(product.specifications) 
-                                ? product.specifications 
-                                : typeof product.specifications === 'object' && product.specifications !== null
-                                  ? Object.entries(product.specifications).map(([k, v]) => `${k}: ${v}`)
+                              const specs = Array.isArray(
+                                product.specifications
+                              )
+                                ? product.specifications
+                                : typeof product.specifications === 'object' &&
+                                    product.specifications !== null
+                                  ? Object.entries(product.specifications).map(
+                                      ([k, v]) => `${k}: ${v}`
+                                    )
                                   : [];
-                              
+
                               if (specs.length === 0) return null;
 
                               return (
                                 <div className="grid grid-cols-2 gap-x-8 gap-y-4 pt-4">
                                   {specs.slice(0, 4).map((spec, i) => (
-                                    <div key={i} className="flex items-center gap-3">
+                                    <div
+                                      key={i}
+                                      className="flex items-center gap-3"
+                                    >
                                       <div className="h-1.5 w-1.5 rounded-full bg-primary/40" />
                                       <span className="text-xs uppercase tracking-wider text-white/40 font-medium">
                                         {spec}
@@ -433,12 +519,21 @@ export function Products() {
                             {/* Technical Highlights if available */}
                             {product.technical_specs && (
                               <div className="flex flex-wrap gap-3 pt-4">
-                                 {Object.entries(product.technical_specs).map(([key, value]) => (
-                                   <div key={key} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
-                                      <span className="text-[10px] block text-white/30 uppercase tracking-widest font-bold mb-0.5">{key}</span>
-                                      <span className="text-xs text-white/70 font-mono">{String(value)}</span>
-                                   </div>
-                                 ))}
+                                {Object.entries(product.technical_specs).map(
+                                  ([key, value]) => (
+                                    <div
+                                      key={key}
+                                      className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10"
+                                    >
+                                      <span className="text-[10px] block text-white/30 uppercase tracking-widest font-bold mb-0.5">
+                                        {key}
+                                      </span>
+                                      <span className="text-xs text-white/70 font-mono">
+                                        {String(value)}
+                                      </span>
+                                    </div>
+                                  )
+                                )}
                               </div>
                             )}
                           </div>
@@ -462,9 +557,18 @@ export function Products() {
                 ) : (
                   <div className="py-40 text-center">
                     <Info className="h-12 w-12 text-white/10 mx-auto mb-6" />
-                    <h3 className="text-xl font-medium text-white/60 mb-2">No products found</h3>
-                    <p className="text-white/30">Try adjusting your filters to find what you&apos;re looking for.</p>
-                    <Button variant="link" onClick={clearFilters} className="mt-4 text-primary">
+                    <h3 className="text-xl font-medium text-white/60 mb-2">
+                      No products found
+                    </h3>
+                    <p className="text-white/30">
+                      Try adjusting your filters to find what you&apos;re
+                      looking for.
+                    </p>
+                    <Button
+                      variant="link"
+                      onClick={clearFilters}
+                      className="mt-4 text-primary"
+                    >
                       Clear all filters
                     </Button>
                   </div>

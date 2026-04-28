@@ -20,8 +20,8 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
-  const [cartCount, setCartCount] = useState(() =>
-    JSON.parse(localStorage.getItem('cart') || '[]').length
+  const [cartCount, setCartCount] = useState(
+    () => JSON.parse(localStorage.getItem('cart') || '[]').length
   );
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
@@ -93,7 +93,7 @@ export function Navbar() {
     >
       {/* Animated green energy line at bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-      
+
       <div className="mx-auto w-full max-w-[var(--section-max-width)] px-4 sm:px-6 lg:px-8">
         <div
           className={`flex justify-between items-center transition-[height] duration-500 ${
@@ -155,7 +155,10 @@ export function Navbar() {
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full" />
             </Link>
             {isStaff && (
-              <Link to="/admin" className="relative text-sm font-medium text-primary/90 hover:text-primary transition-all duration-300 group">
+              <Link
+                to="/admin"
+                className="relative text-sm font-medium text-primary/90 hover:text-primary transition-all duration-300 group"
+              >
                 <span className="px-4 py-2 block flex items-center gap-2">
                   <Zap className="h-3.5 w-3.5" />
                   Admin Panel
@@ -185,7 +188,9 @@ export function Navbar() {
                       </div>
                       <div>
                         <p className="font-medium">Partnerships</p>
-                        <p className="text-xs text-white/40">Collaborate with us</p>
+                        <p className="text-xs text-white/40">
+                          Collaborate with us
+                        </p>
                       </div>
                     </Link>
                   </DropdownMenu.Item>
@@ -199,7 +204,9 @@ export function Navbar() {
                       </div>
                       <div>
                         <p className="font-medium">Why Green Energy</p>
-                        <p className="text-xs text-white/40">Sustainable future</p>
+                        <p className="text-xs text-white/40">
+                          Sustainable future
+                        </p>
                       </div>
                     </Link>
                   </DropdownMenu.Item>
@@ -213,7 +220,9 @@ export function Navbar() {
                       </div>
                       <div>
                         <p className="font-medium">Energy Stats</p>
-                        <p className="text-xs text-white/40">Live data insights</p>
+                        <p className="text-xs text-white/40">
+                          Live data insights
+                        </p>
                       </div>
                     </Link>
                   </DropdownMenu.Item>
@@ -224,7 +233,10 @@ export function Navbar() {
 
           {/* Right Section */}
           <div className="hidden md:flex items-center gap-3">
-            <Link to="/cart" className="relative p-2 rounded-lg hover:bg-white/5 transition-all duration-300 group">
+            <Link
+              to="/cart"
+              className="relative p-2 rounded-lg hover:bg-white/5 transition-all duration-300 group"
+            >
               <ShoppingCart className="h-5 w-5 text-white/75 group-hover:text-primary transition-colors" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-[10px] font-bold text-white shadow-lg shadow-primary/50 animate-pulse">
@@ -262,7 +274,9 @@ export function Navbar() {
                         <p className="text-sm font-semibold text-white/90 font-space-grotesk">
                           {profile?.full_name || 'User'}
                         </p>
-                        <p className="text-xs text-white/45 mt-0.5">{user.email}</p>
+                        <p className="text-xs text-white/45 mt-0.5">
+                          {user.email}
+                        </p>
                       </div>
                       <DropdownMenu.Item asChild>
                         <Link
@@ -347,8 +361,12 @@ export function Navbar() {
               className="relative p-1.5 rounded-lg text-white/80 hover:bg-white/10 transition-all duration-300"
             >
               <div className="relative w-6 h-6">
-                <Menu className={`absolute inset-0 h-6 w-6 transition-all duration-300 ${isOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'}`} />
-                <X className={`absolute inset-0 h-6 w-6 transition-all duration-300 ${isOpen ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'}`} />
+                <Menu
+                  className={`absolute inset-0 h-6 w-6 transition-all duration-300 ${isOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'}`}
+                />
+                <X
+                  className={`absolute inset-0 h-6 w-6 transition-all duration-300 ${isOpen ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'}`}
+                />
               </div>
             </button>
           </div>

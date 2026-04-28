@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { Mail, Phone, Linkedin, Building2, Target, Award, ArrowRight, Globe2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import {
+  Mail,
+  Phone,
+  Linkedin,
+  Building2,
+  Target,
+  Award,
+  ArrowRight,
+  Globe2,
+} from 'lucide-react';
 
 interface PartnershipFormData {
   companyName: string;
@@ -34,7 +44,9 @@ export function PartnershipRequest() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -46,7 +58,18 @@ export function PartnershipRequest() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.companyName || !formData.website || !formData.email || !formData.contactPerson || !formData.industry || !formData.country || !formData.businessDescription || !formData.expertise || !formData.partnershipAlignment || formData.yearsInBusiness <= 0) {
+    if (
+      !formData.companyName ||
+      !formData.website ||
+      !formData.email ||
+      !formData.contactPerson ||
+      !formData.industry ||
+      !formData.country ||
+      !formData.businessDescription ||
+      !formData.expertise ||
+      !formData.partnershipAlignment ||
+      formData.yearsInBusiness <= 0
+    ) {
       toast.error('Please fill in all required fields.');
       return;
     }
@@ -57,10 +80,27 @@ export function PartnershipRequest() {
 
     setIsSubmitting(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const { error } = await supabase.from('partnership_requests').insert([
+        {
+          company_name: formData.companyName,
+          website: formData.website,
+          industry: formData.industry,
+          country: formData.country,
+          contact_person: formData.contactPerson,
+          email: formData.email,
+          phone: formData.phone || null,
+          business_description: formData.businessDescription,
+          expertise: formData.expertise,
+          partnership_alignment: formData.partnershipAlignment,
+          years_in_business: formData.yearsInBusiness,
+        },
+      ]);
 
-      console.log('Partnership Request Submitted:', formData);
-      toast.success('Thank you for your partnership interest! We will review your submission and get back to you shortly.');
+      if (error) throw error;
+
+      toast.success(
+        'Thank you for your partnership interest! We will review your submission and get back to you shortly.'
+      );
       setFormData({
         companyName: '',
         website: '',
@@ -74,9 +114,12 @@ export function PartnershipRequest() {
         partnershipAlignment: '',
         yearsInBusiness: 0,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting partnership request:', error);
-      toast.error('Failed to submit your request. Please try again later.');
+      toast.error(
+        error.message ||
+          'Failed to submit your request. Please try again later.'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -92,7 +135,9 @@ export function PartnershipRequest() {
             Partner With Us
           </h1>
           <p className="text-xl max-w-3xl mx-auto text-white/60 leading-relaxed">
-            Join us in building a sustainable energy future. We are looking for strategic partners who share our vision and commitment to innovation and excellence.
+            Join us in building a sustainable energy future. We are looking for
+            strategic partners who share our vision and commitment to innovation
+            and excellence.
           </p>
         </div>
       </section>
@@ -103,43 +148,60 @@ export function PartnershipRequest() {
             {/* Contact Info Sidebar */}
             <aside className="lg:sticky lg:top-24 space-y-12">
               <div>
-                <h2 className="text-3xl font-bold mb-6 text-white/92">Get in Touch</h2>
+                <h2 className="text-3xl font-bold mb-6 text-white/92">
+                  Get in Touch
+                </h2>
                 <p className="text-white/60 leading-relaxed mb-8">
-                  Interested in collaborating with Feraj Solar? Fill out the form below, and our partnership team will review your request.
+                  Interested in collaborating with Feraj Solar? Fill out the
+                  form below, and our partnership team will review your request.
                 </p>
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
                     <Building2 className="h-6 w-6 text-primary" />
                     <div>
-                      <p className="text-sm font-semibold text-white/70">Company Name</p>
+                      <p className="text-sm font-semibold text-white/70">
+                        Company Name
+                      </p>
                       <p className="text-white/50 text-sm">Feraj Solar</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <Target className="h-6 w-6 text-primary" />
                     <div>
-                      <p className="text-sm font-semibold text-white/70">Industry</p>
-                      <p className="text-white/50 text-sm">Solar Energy & Renewable Technologies</p>
+                      <p className="text-sm font-semibold text-white/70">
+                        Industry
+                      </p>
+                      <p className="text-white/50 text-sm">
+                        Solar Energy & Renewable Technologies
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <Globe2 className="h-6 w-6 text-primary" />
                     <div>
-                      <p className="text-sm font-semibold text-white/70">Country</p>
+                      <p className="text-sm font-semibold text-white/70">
+                        Country
+                      </p>
                       <p className="text-white/50 text-sm">Kenya</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <Mail className="h-6 w-6 text-primary" />
                     <div>
-                      <p className="text-sm font-semibold text-white/70">Email</p>
-                      <p className="text-white/50 text-sm">partnerships@ferajsolar.com</p>
+                      <p className="text-sm font-semibold text-white/70">
+                        Email
+                      </p>
+                      <p className="text-white/50 text-sm">
+                        partnerships@ferajsolar.com
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <Phone className="h-6 w-6 text-primary" />
                     <div>
-                      <p className="text-sm font-semibold text-white/70">Phone</p>
+                      <p className="text-sm font-semibold text-white/70">
+                        Phone
+                      </p>
                       <p className="text-white/50 text-sm"> +254720944707</p>
                     </div>
                   </div>
@@ -147,11 +209,28 @@ export function PartnershipRequest() {
               </div>
 
               <div className="pt-12">
-                <h3 className="text-xl font-bold mb-6 text-white/92">Follow Us</h3>
+                <h3 className="text-xl font-bold mb-6 text-white/92">
+                  Follow Us
+                </h3>
                 <div className="flex space-x-6">
-                  <a href="#" className="text-white/50 hover:text-primary transition-colors"><Linkedin className="h-6 w-6" /></a>
-                  <a href="#" className="text-white/50 hover:text-primary transition-colors"><Mail className="h-6 w-6" /></a>
-                  <a href="#" className="text-white/50 hover:text-primary transition-colors"><Award className="h-6 w-6" /></a>
+                  <a
+                    href="#"
+                    className="text-white/50 hover:text-primary transition-colors"
+                  >
+                    <Linkedin className="h-6 w-6" />
+                  </a>
+                  <a
+                    href="#"
+                    className="text-white/50 hover:text-primary transition-colors"
+                  >
+                    <Mail className="h-6 w-6" />
+                  </a>
+                  <a
+                    href="#"
+                    className="text-white/50 hover:text-primary transition-colors"
+                  >
+                    <Award className="h-6 w-6" />
+                  </a>
                 </div>
               </div>
             </aside>
@@ -163,10 +242,17 @@ export function PartnershipRequest() {
               </h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <fieldset className="border border-white/10 rounded-lg p-6">
-                  <legend className="text-primary font-semibold uppercase tracking-wider text-xs px-2 mb-4">Company Details</legend>
+                  <legend className="text-primary font-semibold uppercase tracking-wider text-xs px-2 mb-4">
+                    Company Details
+                  </legend>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="companyName" className="block text-sm font-medium text-white/70 mb-2">Company Name *</label>
+                      <label
+                        htmlFor="companyName"
+                        className="block text-sm font-medium text-white/70 mb-2"
+                      >
+                        Company Name *
+                      </label>
                       <input
                         type="text"
                         id="companyName"
@@ -179,7 +265,12 @@ export function PartnershipRequest() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="website" className="block text-sm font-medium text-white/70 mb-2">Website *</label>
+                      <label
+                        htmlFor="website"
+                        className="block text-sm font-medium text-white/70 mb-2"
+                      >
+                        Website *
+                      </label>
                       <input
                         type="url"
                         id="website"
@@ -192,7 +283,12 @@ export function PartnershipRequest() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="industry" className="block text-sm font-medium text-white/70 mb-2">Industry *</label>
+                      <label
+                        htmlFor="industry"
+                        className="block text-sm font-medium text-white/70 mb-2"
+                      >
+                        Industry *
+                      </label>
                       <input
                         type="text"
                         id="industry"
@@ -205,7 +301,12 @@ export function PartnershipRequest() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="country" className="block text-sm font-medium text-white/70 mb-2">Country *</label>
+                      <label
+                        htmlFor="country"
+                        className="block text-sm font-medium text-white/70 mb-2"
+                      >
+                        Country *
+                      </label>
                       <input
                         type="text"
                         id="country"
@@ -221,10 +322,17 @@ export function PartnershipRequest() {
                 </fieldset>
 
                 <fieldset className="border border-white/10 rounded-lg p-6">
-                  <legend className="text-primary font-semibold uppercase tracking-wider text-xs px-2 mb-4">Contact Information</legend>
+                  <legend className="text-primary font-semibold uppercase tracking-wider text-xs px-2 mb-4">
+                    Contact Information
+                  </legend>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="contactPerson" className="block text-sm font-medium text-white/70 mb-2">Contact Person *</label>
+                      <label
+                        htmlFor="contactPerson"
+                        className="block text-sm font-medium text-white/70 mb-2"
+                      >
+                        Contact Person *
+                      </label>
                       <input
                         type="text"
                         id="contactPerson"
@@ -237,7 +345,12 @@ export function PartnershipRequest() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-white/70 mb-2">Email *</label>
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-medium text-white/70 mb-2"
+                      >
+                        Email *
+                      </label>
                       <input
                         type="email"
                         id="email"
@@ -250,7 +363,12 @@ export function PartnershipRequest() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-white/70 mb-2">Phone Number</label>
+                      <label
+                        htmlFor="phone"
+                        className="block text-sm font-medium text-white/70 mb-2"
+                      >
+                        Phone Number
+                      </label>
                       <input
                         type="tel"
                         id="phone"
@@ -262,7 +380,12 @@ export function PartnershipRequest() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="yearsInBusiness" className="block text-sm font-medium text-white/70 mb-2">Years in Business *</label>
+                      <label
+                        htmlFor="yearsInBusiness"
+                        className="block text-sm font-medium text-white/70 mb-2"
+                      >
+                        Years in Business *
+                      </label>
                       <input
                         type="number"
                         id="yearsInBusiness"
@@ -279,10 +402,15 @@ export function PartnershipRequest() {
                 </fieldset>
 
                 <fieldset className="border border-white/10 rounded-lg p-6">
-                  <legend className="text-primary font-semibold uppercase tracking-wider text-xs px-2 mb-4">Your Business & Expertise</legend>
+                  <legend className="text-primary font-semibold uppercase tracking-wider text-xs px-2 mb-4">
+                    Your Business & Expertise
+                  </legend>
                   <div className="space-y-6">
                     <div>
-                      <label htmlFor="businessDescription" className="block text-sm font-medium text-white/70 mb-2">
+                      <label
+                        htmlFor="businessDescription"
+                        className="block text-sm font-medium text-white/70 mb-2"
+                      >
                         Describe your business briefly *
                       </label>
                       <textarea
@@ -297,7 +425,10 @@ export function PartnershipRequest() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="expertise" className="block text-sm font-medium text-white/70 mb-2">
+                      <label
+                        htmlFor="expertise"
+                        className="block text-sm font-medium text-white/70 mb-2"
+                      >
                         Areas of Expertise *
                       </label>
                       <textarea
@@ -315,9 +446,14 @@ export function PartnershipRequest() {
                 </fieldset>
 
                 <fieldset className="border border-white/10 rounded-lg p-6">
-                  <legend className="text-primary font-semibold uppercase tracking-wider text-xs px-2 mb-4">Why You're a Great Partner</legend>
+                  <legend className="text-primary font-semibold uppercase tracking-wider text-xs px-2 mb-4">
+                    Why You're a Great Partner
+                  </legend>
                   <div>
-                    <label htmlFor="partnershipAlignment" className="block text-sm font-medium text-white/70 mb-2">
+                    <label
+                      htmlFor="partnershipAlignment"
+                      className="block text-sm font-medium text-white/70 mb-2"
+                    >
                       How do you align with Feraj Solar's mission and values? *
                     </label>
                     <textarea
@@ -338,7 +474,9 @@ export function PartnershipRequest() {
                   disabled={isSubmitting}
                   className="w-full flex justify-center items-center gap-2 rounded-md bg-primary px-6 py-3 text-lg font-bold text-primary-foreground transition-all duration-300 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit Partnership Proposal'}
+                  {isSubmitting
+                    ? 'Submitting...'
+                    : 'Submit Partnership Proposal'}
                   <ArrowRight className="h-5 w-5" />
                 </button>
               </form>

@@ -10,7 +10,9 @@ const Home = lazy(() =>
   import('@/app/pages/Home').then((module) => ({ default: module.Home }))
 );
 const Products = lazy(() =>
-  import('@/app/pages/Products').then((module) => ({ default: module.Products }))
+  import('@/app/pages/Products').then((module) => ({
+    default: module.Products,
+  }))
 );
 const Cart = lazy(() =>
   import('@/app/pages/Cart').then((module) => ({ default: module.Cart }))
@@ -51,7 +53,9 @@ const PartnershipRequest = lazy(() =>
   }))
 );
 const WhyGreen = lazy(() =>
-  import('@/app/pages/WhyGreen').then((module) => ({ default: module.WhyGreen }))
+  import('@/app/pages/WhyGreen').then((module) => ({
+    default: module.WhyGreen,
+  }))
 );
 const EnergyStats = lazy(() =>
   import('@/app/pages/EnergyStats').then((module) => ({
@@ -82,11 +86,18 @@ const AdminProducts = lazy(() =>
   }))
 );
 const AdminAudit = lazy(() =>
-  import('@/app/pages/admin/Audit').then((module) => ({ default: module.AdminAudit }))
+  import('@/app/pages/admin/Audit').then((module) => ({
+    default: module.AdminAudit,
+  }))
 );
 const AdminDevices = lazy(() =>
   import('@/app/pages/admin/Devices').then((module) => ({
     default: module.AdminDevices,
+  }))
+);
+const AdminPartnershipRequests = lazy(() =>
+  import('@/app/pages/admin/PartnershipRequests').then((module) => ({
+    default: module.PartnershipRequests,
   }))
 );
 
@@ -106,7 +117,8 @@ function ScrollProgress() {
     let frameId: number;
     const update = () => {
       const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       const nextProgress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
       setProgress(Math.min(100, Math.max(0, nextProgress)));
       frameId = requestAnimationFrame(update);
@@ -144,7 +156,10 @@ export default function App() {
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/about" element={<About />} />
               <Route path="/partnerships" element={<Partnerships />} />
-              <Route path="/partnership-request" element={<PartnershipRequest />} />
+              <Route
+                path="/partnership-request"
+                element={<PartnershipRequest />}
+              />
               <Route path="/why-green" element={<WhyGreen />} />
               <Route path="/energy-stats" element={<EnergyStats />} />
               <Route path="/team" element={<Team />} />
@@ -198,6 +213,10 @@ export default function App() {
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="devices" element={<AdminDevices />} />
                 <Route path="audit" element={<AdminAudit />} />
+                <Route
+                  path="partnership-requests"
+                  element={<AdminPartnershipRequests />}
+                />
                 <Route path="orders" element={<Orders />} />
               </Route>
             </Routes>
