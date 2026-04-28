@@ -21,7 +21,7 @@ export function Login() {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user && profile) {
+    if (user?.email_confirmed_at && profile) {
       if (['admin', 'co_admin', 'employee'].includes(profile.role)) {
         navigate('/admin', { replace: true });
       } else {
@@ -81,7 +81,7 @@ export function Login() {
       if (error.errors) {
         // Zod validation error
         const zodError = error as ZodError;
-        const firstError = zodError.errors[0];
+        const firstError = zodError.issues[0];
         toast.error(firstError.message);
       } else {
         toast.error('An unexpected error occurred. Please try again.');
