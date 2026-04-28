@@ -266,3 +266,110 @@ Normal users can view:
 - Terms of Service at `/terms-of-service`
 - Privacy Policy at `/privacy-policy`
 
+---
+
+## Newsletter System
+
+## 9. Create Newsletters Table
+
+```sql
+-- Create newsletters table for admin to compose and send newsletters
+CREATE TABLE IF NOT EXISTS public.newsletters (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  subject TEXT NOT NULL,
+  content TEXT NOT NULL,
+  status TEXT DEFAULT 'draft' CHECK (status IN ('draft', 'sending', 'sent', 'failed')),
+  recipient_count INTEGER DEFAULT 0,
+  sent_at TIMESTAMPTZ,
+  created_by UUID REFERENCES auth.users(id),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE public.newsletters ENABLE ROW LEVEL SECURITY;
+
+-- Allow authenticated users (admins) to manage newsletters
+CREATE POLICY "Allow authenticated full access" ON public.newsletters
+  FOR ALL TO authenticated
+  USING (true)
+  WITH CHECK (true);
+
+-- Auto-update timestamp trigger
+CREATE TRIGGER update_newsletters_updated_at
+  BEFORE UPDATE ON public.newsletters
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+```
+
+## 10. Create Newsletter Recipients Table
+
+```sql
+-- Track which users received which newsletter
+CREATE TABLE IF NOT EXISTS public.newsletter_recipients (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  newsletter_id UUID REFERENCES public.newsletters(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  sent_at TIMESTAMPTZ,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'sent', 'failed')),
+  error_message TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(newsletter_id, user_id)
+);
+
+-- Enable RLS
+ALTER TABLE public.newsletter_recipients ENABLE ROW LEVEL SECURITY;
+
+-- Allow authenticated users to manage recipients
+CREATE POLICY "Allow authenticated full access" ON public.newsletter_recipients
+  FOR ALL TO authenticated
+  USING (true)
+  WITH CHECK (true);
+
+-- Index for performance
+CREATE INDEX IF NOT EXISTS idx_newsletter_recipients_newsletter_id 
+  ON public.newsletter_recipients(newsletter_id);
+```
+
+## 11. Insert Sample Newsletter (Optional)
+
+```sql
+-- Insert a sample draft newsletter
+INSERT INTO public.newsletters (subject, content, status, created_by)
+VALUES (
+  'Welcome to Feraj Solar Newsletter',
+  '# Welcome to Our Newsletter
+
+Dear Valued Customer,
+
+Thank you for choosing Feraj Solar. We are excited to share the latest updates with you.
+
+## Latest Products
+Check out our new solar panel series with improved efficiency.
+
+## Upcoming Events
+Join us for our annual solar energy workshop next month.
+
+Best regards,
+The Feraj Solar Team',
+  'draft',
+  NULL
+);
+```
+
+---
+
+## 12. Optional: Sample Query to Verify Tables
+
+```sql
+-- Check newsletters table
+SELECT * FROM public.newsletters ORDER BY created_at DESC LIMIT 5;
+
+-- Check newsletter_recipients table
+SELECT * FROM public.newsletter_recipients LIMIT 5;
+
+-- Check RLS policies
+SELECT * FROM pg_policies WHERE tablename IN ('newsletters', 'newsletter_recipients');
+```
+

@@ -115,6 +115,11 @@ const AdminLegalDocuments = lazy(() =>
     default: module.LegalDocuments,
   }))
 );
+const AdminNewsletters = lazy(() =>
+  import('@/app/pages/admin/Newsletters').then((module) => ({
+    default: module.Newsletters,
+  }))
+);
 
 function RouteLoadingFallback() {
   return (
@@ -235,6 +240,7 @@ export default function App() {
                   element={<AdminPartnershipRequests />}
                 />
                 <Route path="legal-documents" element={<AdminLegalDocuments />} />
+                <Route path="newsletters" element={<AdminNewsletters />} />
                 <Route path="orders" element={<Orders />} />
               </Route>
             </Routes>
