@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Mail, Phone, Linkedin, Building2, Target, Award, Zap, ArrowRight, Globe2 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Mail, Phone, Linkedin, Building2, Target, Award, ArrowRight, Globe2 } from 'lucide-react';
 
 interface PartnershipFormData {
   companyName: string;
@@ -39,7 +37,10 @@ export function PartnershipRequest() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'yearsInBusiness' ? Number(value) : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
