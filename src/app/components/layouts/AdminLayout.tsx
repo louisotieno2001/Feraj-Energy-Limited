@@ -13,6 +13,7 @@ import {
   Handshake,
   FileText,
   Mail,
+  Briefcase,
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -66,6 +67,12 @@ export function AdminLayout() {
       name: 'Newsletters',
       href: '/admin/newsletters',
       icon: Mail,
+      visible: true,
+    },
+    {
+      name: 'Job Postings',
+      href: '/admin/job-postings',
+      icon: Briefcase,
       visible: true,
     },
   ].filter((item) => item.visible);

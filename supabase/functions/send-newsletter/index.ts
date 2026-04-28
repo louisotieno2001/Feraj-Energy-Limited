@@ -205,7 +205,7 @@ async function sendEmail({
 }): Promise<boolean> {
   try {
     if (service === 'console') {
-      // Development/testing mode - just log
+      // Development/testing mode - just log to console
       console.log('--- EMAIL ---');
       console.log('To:', to);
       console.log('Subject:', subject);

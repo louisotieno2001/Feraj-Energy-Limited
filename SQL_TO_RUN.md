@@ -373,3 +373,128 @@ SELECT * FROM public.newsletter_recipients LIMIT 5;
 SELECT * FROM pg_policies WHERE tablename IN ('newsletters', 'newsletter_recipients');
 ```
 
+---
+
+## Job Postings & Applications System
+
+## 13. Create Job Postings Table
+
+```sql
+-- Create job_postings table for admin to post open positions
+CREATE TABLE IF NOT EXISTS public.job_postings (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL,
+  department TEXT NOT NULL,
+  location TEXT NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('full-time', 'part-time', 'contract', 'internship')),
+  description TEXT NOT NULL,
+  requirements TEXT,
+  responsibilities TEXT,
+  salary_range TEXT,
+  status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closed', 'draft')),
+  created_by UUID REFERENCES auth.users(id),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE public.job_postings ENABLE ROW LEVEL SECURITY;
+
+-- Allow public to view open jobs
+CREATE POLICY "Allow public read open jobs" ON public.job_postings
+  FOR SELECT TO anon, authenticated
+  USING (status = 'open');
+
+-- Allow authenticated users (admins) to manage all job postings
+CREATE POLICY "Allow authenticated full access" ON public.job_postings
+  FOR ALL TO authenticated
+  USING (true)
+  WITH CHECK (true);
+
+-- Auto-update timestamp trigger
+CREATE TRIGGER update_job_postings_updated_at
+  BEFORE UPDATE ON public.job_postings
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+```
+
+## 14. Create Job Applications Table
+
+```sql
+-- Create job_applications table for users to apply to jobs
+CREATE TABLE IF NOT EXISTS public.job_applications (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  job_id UUID REFERENCES public.job_postings(id) ON DELETE CASCADE,
+  applicant_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  cover_letter TEXT,
+  resume_url TEXT,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'reviewed', 'interviewed', 'accepted', 'rejected')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE public.job_applications ENABLE ROW LEVEL SECURITY;
+
+-- Allow public to submit applications (insert only)
+CREATE POLICY "Allow public insert applications" ON public.job_applications
+  FOR INSERT TO anon, authenticated
+  WITH CHECK (true);
+
+-- Allow authenticated users (admins) to view and manage applications
+CREATE POLICY "Allow authenticated full access" ON public.job_applications
+  FOR ALL TO authenticated
+  USING (true)
+  WITH CHECK (true);
+
+-- Auto-update timestamp trigger
+CREATE TRIGGER update_job_applications_updated_at
+  BEFORE UPDATE ON public.job_applications
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Index for performance
+CREATE INDEX IF NOT EXISTS idx_job_applications_job_id 
+  ON public.job_applications(job_id);
+```
+
+## 15. Insert Sample Job Posting (Optional)
+
+```sql
+-- Insert a sample job posting
+INSERT INTO public.job_postings (title, department, location, type, description, requirements, responsibilities, status)
+VALUES (
+  'Solar Installation Engineer',
+  'Engineering',
+  'Nairobi, Kenya',
+  'full-time',
+  'We are seeking an experienced Solar Installation Engineer to join our growing team. You will be responsible for designing and installing solar systems for residential and commercial clients.',
+  '• Bachelor\'s degree in Electrical Engineering or related field
+• 3+ years of experience in solar installations
+• Strong knowledge of electrical systems
+• Valid driver\'s license',
+  '• Design and install solar PV systems
+• Conduct site assessments
+• Ensure compliance with safety standards
+• Maintain documentation and reports',
+  'open'
+);
+```
+
+---
+
+## 16. Optional: Sample Query to Verify Tables
+
+```sql
+-- Check job_postings table
+SELECT * FROM public.job_postings ORDER BY created_at DESC;
+
+-- Check job_applications table
+SELECT * FROM public.job_applications LIMIT 5;
+
+-- Check RLS policies
+SELECT * FROM pg_policies WHERE tablename IN ('job_postings', 'job_applications');
+```
+

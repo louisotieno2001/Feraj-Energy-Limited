@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { directors } from '@/app/data/teamData';
-import { ChevronDown, Linkedin, Mail } from 'lucide-react';
+import { ChevronDown, Linkedin, Mail, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export function Team() {
   const [openIds, setOpenIds] = useState<Record<string, boolean>>({});
@@ -131,15 +132,19 @@ export function Team() {
                 about clean energy and sustainability. Join us in shaping the
                 future of power in East Africa.
               </p>
-              <button className="px-8 py-4 bg-primary/10 border border-primary/40 text-primary rounded-lg hover:bg-primary transition-all font-bold uppercase tracking-widest text-sm">
+              <Link
+                to="/careers"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-primary/10 border border-primary/40 text-white rounded-lg hover:bg-primary transition-all font-bold uppercase tracking-widest text-sm cursor-pointer"
+              >
                 View Open Positions
-              </button>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
               <div className="border-l-2 border-primary/20 pl-6 py-2">
                 <div className="text-4xl font-bold text-primary mb-2">
-                  2,500+
+                  5+
                 </div>
                 <div className="text-xs uppercase tracking-widest text-white/40 font-semibold">
                   Team Members
@@ -153,7 +158,7 @@ export function Team() {
               </div>
               <div className="border-l-2 border-primary/20 pl-6 py-2">
                 <div className="text-4xl font-bold text-primary mb-2">
-                  4.8/5
+                  4.9/5
                 </div>
                 <div className="text-xs uppercase tracking-widest text-white/40 font-semibold">
                   Satisfaction

@@ -62,6 +62,11 @@ const PrivacyPolicy = lazy(() =>
     default: module.PrivacyPolicy,
   }))
 );
+const Careers = lazy(() =>
+  import('@/app/pages/Careers').then((module) => ({
+    default: module.Careers,
+  }))
+);
 const WhyGreen = lazy(() =>
   import('@/app/pages/WhyGreen').then((module) => ({
     default: module.WhyGreen,
@@ -118,6 +123,11 @@ const AdminLegalDocuments = lazy(() =>
 const AdminNewsletters = lazy(() =>
   import('@/app/pages/admin/Newsletters').then((module) => ({
     default: module.Newsletters,
+  }))
+);
+const AdminJobPostings = lazy(() =>
+  import('@/app/pages/admin/JobPostings').then((module) => ({
+    default: module.JobPostings,
   }))
 );
 
@@ -182,6 +192,7 @@ export default function App() {
               />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/careers" element={<Careers />} />
               <Route path="/why-green" element={<WhyGreen />} />
               <Route path="/energy-stats" element={<EnergyStats />} />
               <Route path="/team" element={<Team />} />
@@ -244,6 +255,7 @@ export default function App() {
                   element={<AdminLegalDocuments />}
                 />
                 <Route path="newsletters" element={<AdminNewsletters />} />
+                <Route path="job-postings" element={<AdminJobPostings />} />
                 <Route path="orders" element={<Orders />} />
               </Route>
             </Routes>
