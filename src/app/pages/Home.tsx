@@ -249,15 +249,15 @@ export function Home() {
               {[
                 { 
                   title: 'Proven Legacy', 
-                  value: '25+', 
+                  value: '3+', 
                   suffix: 'Years',
                   desc: 'Delivering solar excellence since 1999' 
                 },
                 { 
                   title: 'Trusted Nationwide', 
-                  value: '500K', 
+                  value: '50', 
                   suffix: '+',
-                  desc: 'Systems powering homes & businesses' 
+                  desc: 'Complete projects across the world with a 4.9+/5 rating' 
                 },
                 { 
                   title: 'Customer First', 
