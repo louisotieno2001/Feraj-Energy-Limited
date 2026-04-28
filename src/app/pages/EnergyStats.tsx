@@ -4,11 +4,6 @@ import { motion } from 'motion/react';
 import { energyData } from '@/app/data/energyData';
 import { TrendingUp, TrendingDown, Minus, Activity, Zap } from 'lucide-react';
 
-// Force WebGL renderer for Firefox compatibility
-if (typeof window !== 'undefined') {
-  (window as any).__THREE_WEBGPU_DISABLED__ = true;
-}
-
 type EnergyTrend = 'increasing' | 'decreasing' | 'stable';
 
 function getTrendIcon(trend: EnergyTrend) {

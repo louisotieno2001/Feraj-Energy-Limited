@@ -223,8 +223,8 @@ export function Home() {
     },
   ];
 
-  return (
-    <div className="min-h-screen text-white/86">
+   return (
+    <div className="min-h-screen pt-24 text-white/86 lg:pt-28">
       <section ref={heroRef} className="relative h-[200vh]">
         <div className="sticky top-0 h-screen overflow-hidden">
           <motion.img
