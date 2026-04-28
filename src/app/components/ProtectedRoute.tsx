@@ -25,6 +25,10 @@ export function ProtectedRoute({
     return <Navigate to="/login" replace />;
   }
 
+  if (!user.email_confirmed_at) {
+    return <Navigate to="/login" replace />;
+  }
+
   if (requireAdmin && profile?.role !== 'admin') {
     return <Navigate to="/" replace />;
   }

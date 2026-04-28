@@ -21,6 +21,31 @@ export interface UserStats {
   recentUsers: Profile[];
 }
 
+function normalizeRoleInput(
+  role: string
+): 'customer' | 'employee' | 'co_admin' | 'admin' {
+  const normalized = role.trim().toLowerCase().replace(/-/g, '_');
+
+  if (normalized === 'coadmin') {
+    return 'co_admin';
+  }
+
+  if (normalized === 'installer') {
+    return 'employee';
+  }
+
+  if (
+    normalized === 'customer' ||
+    normalized === 'employee' ||
+    normalized === 'co_admin' ||
+    normalized === 'admin'
+  ) {
+    return normalized;
+  }
+
+  throw new Error(`Invalid role value: ${role}`);
+}
+
 /**
  * Fetch all users - Admin only
  */
@@ -55,17 +80,31 @@ export async function updateUserRole(
   userId: string,
   newRole: 'customer' | 'employee' | 'co_admin' | 'admin'
 ) {
+  const normalizedRole = normalizeRoleInput(newRole);
+
   const { data, error } = await supabase
     .from('profiles')
     .update({
-      role: newRole,
+      role: normalizedRole,
       updated_at: new Date().toISOString(),
     })
     .eq('id', userId)
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    const isRoleConstraintError =
+      error.code === '23514' ||
+      error.message?.includes('profiles_role_check') ||
+      error.message?.includes('violates check constraint');
+
+    if (isRoleConstraintError) {
+      throw new Error(
+        `Role update to "${normalizedRole}" was blocked by Supabase constraint. Run docs/deployment/FIX_PROFILES_ROLE_CONSTRAINT.sql in Supabase SQL Editor.`
+      );
+    }
+    throw error;
+  }
   return data as Profile;
 }
 

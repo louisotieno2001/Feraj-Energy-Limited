@@ -29,8 +29,13 @@ export function AdminRoute({ children }: AdminRouteProps) {
     return <Navigate to="/login" replace />;
   }
 
-  const allowedRoles = ['admin', 'co_admin', 'employee'] as const;
-  const hasAccess = profile && allowedRoles.includes(profile.role);
+  if (!user.email_confirmed_at) {
+    toast.error('Please verify your email before accessing admin pages');
+    return <Navigate to="/login" replace />;
+  }
+
+  const allowedRoles = new Set(['admin', 'co_admin', 'employee']);
+  const hasAccess = Boolean(profile && allowedRoles.has(profile.role));
 
   // Check if user has staff role
   if (!hasAccess) {
