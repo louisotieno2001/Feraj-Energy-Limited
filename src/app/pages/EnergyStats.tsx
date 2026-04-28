@@ -4,6 +4,11 @@ import { motion } from 'motion/react';
 import { energyData } from '@/app/data/energyData';
 import { TrendingUp, TrendingDown, Minus, Activity, Zap } from 'lucide-react';
 
+// Force WebGL renderer for Firefox compatibility
+if (typeof window !== 'undefined') {
+  (window as any).__THREE_WEBGPU_DISABLED__ = true;
+}
+
 type EnergyTrend = 'increasing' | 'decreasing' | 'stable';
 
 function getTrendIcon(trend: EnergyTrend) {
@@ -25,6 +30,7 @@ export function EnergyStats() {
   const [selectedCountry, setSelectedCountry] = useState<any>(null);
   const [hoveredCountry, setHoveredCountry] = useState<any>(null);
   const [globeSize, setGlobeSize] = useState({ width: 0, height: 0 });
+  const [globeReady, setGlobeReady] = useState(false);
 
   const BASE_AUTO_ROTATE_SPEED = 0.35;
   const INTERACTION_AUTO_ROTATE_SPEED = 0.06;
@@ -62,7 +68,7 @@ export function EnergyStats() {
   }, []);
 
   useEffect(() => {
-    if (globeEl.current) {
+    if (globeEl.current && globeSize.width > 0 && globeSize.height > 0) {
       const controls = globeEl.current.controls();
       controls.autoRotate = true;
       controls.autoRotateSpeed = BASE_AUTO_ROTATE_SPEED;
@@ -82,6 +88,7 @@ export function EnergyStats() {
 
       // Establish a balanced initial altitude so users can rotate naturally from center.
       globeEl.current.pointOfView({ lat: 5, lng: 20, altitude: 1.85 }, 0);
+      setGlobeReady(true);
     }
   }, [globeSize]);
 
@@ -199,7 +206,7 @@ export function EnergyStats() {
   ];
 
   return (
-    <div className="min-h-screen py-10 text-white/86 lg:py-14">
+    <div className="min-h-screen pt-24 pb-10 text-white/86 lg:pt-28 lg:pb-14">
       <div className="mx-auto w-full max-w-[var(--section-max-width)] px-4 sm:px-6 lg:px-8">
         <section className="relative overflow-hidden p-8 sm:p-10 lg:p-14">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(73,201,255,0.12),transparent_35%),radial-gradient(circle_at_84%_78%,rgba(49,209,122,0.1),transparent_42%)]" />
@@ -277,7 +284,7 @@ export function EnergyStats() {
           <div>
             <div
               ref={globeWrapRef}
-              className="relative h-[640px] overflow-hidden lg:sticky lg:top-24"
+              className="relative h-[640px] overflow-hidden"
               onMouseDown={handleInteractionStart}
               onMouseUp={handleInteractionEnd}
               onMouseLeave={handleInteractionEnd}
@@ -286,11 +293,19 @@ export function EnergyStats() {
               onWheelCapture={handleInteractionStart}
               onWheel={handleInteractionEnd}
             >
+              {!globeReady && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="rounded-full border border-white/15 bg-white/6 px-4 py-2 text-sm text-white/72">
+                    Loading globe...
+                  </div>
+                </div>
+              )}
               <Globe
+                key={`${globeSize.width}-${globeSize.height}`}
                 ref={globeEl}
-                width={globeSize.width > 0 ? globeSize.width : undefined}
-                height={globeSize.height > 0 ? globeSize.height : undefined}
-                globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+                width={globeSize.width > 0 ? globeSize.width : (globeWrapRef.current?.clientWidth ?? undefined)}
+                height={globeSize.height > 0 ? globeSize.height : (globeWrapRef.current?.clientHeight ?? undefined)}
+                globeImageUrl="https://unpkg.com/three-globe/example/img/earth-night.jpg"
                 backgroundColor="rgba(0,0,0,0)"
                 pointsData={points}
                 pointLat="lat"
@@ -335,8 +350,8 @@ export function EnergyStats() {
           </div>
 
           <div className="space-y-12">
-            <div className="lg:sticky lg:top-24">
-              {activeCountry ? (
+             <div>
+               {activeCountry ? (
                 <div className="animate-reveal">
                   <p className="cinematic-eyebrow mb-2">Selected Country</p>
                   <h2 className="mb-8 text-4xl font-semibold text-white/90">

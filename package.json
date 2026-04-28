@@ -55,7 +55,7 @@
     "react-day-picker": "8.10.1",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
-    "react-globe.gl": "^2.37.0",
+    "react-globe.gl": "^2.37.1",
     "react-hook-form": "7.55.0",
     "react-markdown": "^10.1.0",
     "react-popper": "2.3.0",
@@ -68,6 +68,7 @@
     "sonner": "2.0.3",
     "tailwind-merge": "3.2.0",
     "three": "^0.182.0",
+    "three-globe": "^2.45.2",
     "tw-animate-css": "1.3.8",
     "vaul": "1.1.2",
     "zod": "^4.3.6"
