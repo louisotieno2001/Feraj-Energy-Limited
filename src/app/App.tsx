@@ -52,6 +52,16 @@ const PartnershipRequest = lazy(() =>
     default: module.PartnershipRequest,
   }))
 );
+const TermsOfService = lazy(() =>
+  import('@/app/pages/TermsOfService').then((module) => ({
+    default: module.TermsOfService,
+  }))
+);
+const PrivacyPolicy = lazy(() =>
+  import('@/app/pages/PrivacyPolicy').then((module) => ({
+    default: module.PrivacyPolicy,
+  }))
+);
 const WhyGreen = lazy(() =>
   import('@/app/pages/WhyGreen').then((module) => ({
     default: module.WhyGreen,
@@ -98,6 +108,11 @@ const AdminDevices = lazy(() =>
 const AdminPartnershipRequests = lazy(() =>
   import('@/app/pages/admin/PartnershipRequests').then((module) => ({
     default: module.PartnershipRequests,
+  }))
+);
+const AdminLegalDocuments = lazy(() =>
+  import('@/app/pages/admin/LegalDocuments').then((module) => ({
+    default: module.LegalDocuments,
   }))
 );
 
@@ -160,6 +175,8 @@ export default function App() {
                 path="/partnership-request"
                 element={<PartnershipRequest />}
               />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/why-green" element={<WhyGreen />} />
               <Route path="/energy-stats" element={<EnergyStats />} />
               <Route path="/team" element={<Team />} />
@@ -217,6 +234,7 @@ export default function App() {
                   path="partnership-requests"
                   element={<AdminPartnershipRequests />}
                 />
+                <Route path="legal-documents" element={<AdminLegalDocuments />} />
                 <Route path="orders" element={<Orders />} />
               </Route>
             </Routes>

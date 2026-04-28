@@ -11,6 +11,7 @@ import {
   X,
   Home,
   Handshake,
+  FileText,
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -52,6 +53,12 @@ export function AdminLayout() {
       name: 'Partnership Requests',
       href: '/admin/partnership-requests',
       icon: Handshake,
+      visible: true,
+    },
+    {
+      name: 'Legal Documents',
+      href: '/admin/legal-documents',
+      icon: FileText,
       visible: true,
     },
   ].filter((item) => item.visible);

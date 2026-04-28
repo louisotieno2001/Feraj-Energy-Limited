@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Facebook, Twitter, Linkedin, Instagram, FileText, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function Footer() {
@@ -141,11 +141,27 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-white/10 pt-8 text-center text-sm text-white/52">
+        <div className="mt-10 border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/52">
           <p>
             &copy; {new Date().getFullYear()} Feraj Solar. All rights reserved.
             Powering a sustainable future.
           </p>
+          <div className="flex items-center gap-6">
+            <Link
+              to="/terms-of-service"
+              className="hover:text-primary transition flex items-center gap-1.5"
+            >
+              <FileText className="h-3.5 w-3.5" />
+              Terms of Service
+            </Link>
+            <Link
+              to="/privacy-policy"
+              className="hover:text-primary transition flex items-center gap-1.5"
+            >
+              <Globe className="h-3.5 w-3.5" />
+              Privacy Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
