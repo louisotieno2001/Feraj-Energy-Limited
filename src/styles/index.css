@@ -95,6 +95,13 @@
 }
 
 @layer utilities {
+  .font-orbitron {
+    font-family: 'Orbitron', sans-serif;
+  }
+  
+  .font-space-grotesk {
+    font-family: 'Space Grotesk', sans-serif;
+  }
   @keyframes fade-in {
     from {
       opacity: 0;
@@ -165,6 +172,19 @@
 
   .parallax-soft {
     transform: translateY(calc(var(--scroll-progress, 0) * -8px));
+  }
+
+  @keyframes gradient-x {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .animate-gradient-x {
+    animation: gradient-x 3s ease infinite;
   }
 
   @media (prefers-reduced-motion: reduce) {
