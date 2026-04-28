@@ -40,6 +40,11 @@ const Partnerships = lazy(() =>
     default: module.Partnerships,
   }))
 );
+const PartnershipRequest = lazy(() =>
+  import('@/app/pages/PartnershipRequest').then((module) => ({
+    default: module.PartnershipRequest,
+  }))
+);
 const WhyGreen = lazy(() =>
   import('@/app/pages/WhyGreen').then((module) => ({ default: module.WhyGreen }))
 );
@@ -133,6 +138,7 @@ export default function App() {
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/about" element={<About />} />
               <Route path="/partnerships" element={<Partnerships />} />
+              <Route path="/partnership-request" element={<PartnershipRequest />} />
               <Route path="/why-green" element={<WhyGreen />} />
               <Route path="/energy-stats" element={<EnergyStats />} />
               <Route path="/team" element={<Team />} />

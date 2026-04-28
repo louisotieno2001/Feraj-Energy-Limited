@@ -1,4 +1,5 @@
-import { Building2, Handshake, Globe2, Award} from 'lucide-react';
+import { Building2, Handshake, Globe2, Award } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export function Partnerships() {
   const partners = [
@@ -17,6 +18,27 @@ export function Partnerships() {
         vision: 'To become a top provider of technologies and services in transportation development and urban construction industries.',
       }
     },
+    {
+      name: 'Google',
+      type: 'Data Analytics',
+      description: 'AI-powered energy optimization',
+    },
+    {
+      name: 'Microsoft Azure',
+      type: 'Cloud Services',
+      description: 'IoT and monitoring platform',
+    },
+    {
+      name: 'LG Electronics',
+      type: 'Manufacturing',
+      description: 'Solar panel production',
+    },
+    {
+      name: 'Schneider Electric',
+      type: 'Distribution',
+      description: 'Global supply chain',
+    },
+    { name: 'ABB', type: 'Automation', description: 'Smart grid technology' },
   ];
 
   return (
@@ -100,7 +122,7 @@ export function Partnerships() {
                   {partner.name}
                 </h3>
                 <p className="text-white/50 leading-relaxed text-sm">{partner.description}</p>
-                
+
                 {/* CDG Details - Conditionally render */}
                 {partner.name === 'CDG International Group' && partner.details && (
                   <div className="mt-6 text-left text-sm text-white/50 leading-relaxed space-y-2">
@@ -120,14 +142,19 @@ export function Partnerships() {
 
       <section className="py-32 border-t border-white/5">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-reveal">
-          <h2 className="text-4xl font-bold mb-8 text-white/92">Become a Partner</h2>
+          <h2 className="text-4xl font-bold mb-8 text-white/92">
+            Become a Partner
+          </h2>
           <p className="text-xl text-white/50 mb-10 leading-relaxed">
             Join our network of innovators, manufacturers, and distributors
             shaping the future of renewable energy in East Africa.
           </p>
-          <button className="px-10 py-4 bg-primary/10 border border-primary/40 text-primary rounded-lg hover:bg-primary transition-all font-bold uppercase tracking-widest text-sm">
+          <Link
+            to="/partnership-request"
+            className="inline-block px-10 py-4 bg-primary/10 border border-primary/40 text-primary rounded-lg hover:bg-primary text-white transition-all font-bold uppercase tracking-widest text-sm cursor-pointer"
+          >
             Contact Partnership Team
-          </button>
+          </Link>
         </div>
       </section>
     </div>
