@@ -125,17 +125,15 @@ export function LegalDocuments() {
           .filter((d) => d.type === formData.type)
           .reduce((max, d) => Math.max(max, d.version), 0);
 
-        const { error } = await supabase
-          .from('legal_documents')
-          .insert([
-            {
-              type: formData.type,
-              title: formData.title,
-              content: formData.content,
-              version: latestVersion + 1,
-              is_active: formData.is_active,
-            },
-          ]);
+        const { error } = await supabase.from('legal_documents').insert([
+          {
+            type: formData.type,
+            title: formData.title,
+            content: formData.content,
+            version: latestVersion + 1,
+            is_active: formData.is_active,
+          },
+        ]);
 
         if (error) throw error;
         toast.success('New version created successfully');
@@ -143,7 +141,12 @@ export function LegalDocuments() {
 
       setEditingDoc(null);
       setIsCreating(false);
-      setFormData({ type: 'terms_of_service', title: '', content: '', is_active: false });
+      setFormData({
+        type: 'terms_of_service',
+        title: '',
+        content: '',
+        is_active: false,
+      });
       fetchDocuments();
     } catch (error: any) {
       toast.error(error.message || 'Failed to save document');
@@ -154,7 +157,12 @@ export function LegalDocuments() {
   const handleCancel = () => {
     setEditingDoc(null);
     setIsCreating(false);
-    setFormData({ type: 'terms_of_service', title: '', content: '', is_active: false });
+    setFormData({
+      type: 'terms_of_service',
+      title: '',
+      content: '',
+      is_active: false,
+    });
   };
 
   const getDocsByType = (type: string) => {
@@ -176,7 +184,9 @@ export function LegalDocuments() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-white/92">Legal Documents</h1>
-        <p className="text-white/50 mt-1">Manage Terms of Service and Privacy Policy</p>
+        <p className="text-white/50 mt-1">
+          Manage Terms of Service and Privacy Policy
+        </p>
       </div>
 
       {/* Document Types */}
@@ -186,14 +196,19 @@ export function LegalDocuments() {
         const activeDoc = docs.find((d) => d.is_active);
 
         return (
-          <div key={type} className="rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden">
+          <div
+            key={type}
+            className="rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden"
+          >
             <div className="flex items-center justify-between p-6 border-b border-white/10">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-primary/10">
                   <Icon className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-white/90">{typeLabels[type]}</h2>
+                  <h2 className="text-xl font-bold text-white/90">
+                    {typeLabels[type]}
+                  </h2>
                   <p className="text-sm text-white/50">
                     {docs.length} version{docs.length !== 1 ? 's' : ''}
                     {activeDoc && ` • Active: v${activeDoc.version}`}
@@ -219,7 +234,9 @@ export function LegalDocuments() {
                   <div className="flex items-center gap-4">
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-white/90">Version {doc.version}</span>
+                        <span className="font-medium text-white/90">
+                          Version {doc.version}
+                        </span>
                         {doc.is_active && (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-400/10 text-green-400">
                             <CheckCircle className="h-3 w-3" />
@@ -270,7 +287,9 @@ export function LegalDocuments() {
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/10">
               <h2 className="text-xl font-bold text-white/92">
-                {editingDoc ? `Edit Version ${editingDoc.version}` : 'Create New Version'}
+                {editingDoc
+                  ? `Edit Version ${editingDoc.version}`
+                  : 'Create New Version'}
               </h2>
               <button
                 onClick={handleCancel}
@@ -284,13 +303,17 @@ export function LegalDocuments() {
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">Document Type</label>
+                  <label className="block text-sm font-medium text-white/70 mb-2">
+                    Document Type
+                  </label>
                   <select
                     value={formData.type}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        type: e.target.value as 'terms_of_service' | 'privacy_policy',
+                        type: e.target.value as
+                          | 'terms_of_service'
+                          | 'privacy_policy',
                       })
                     }
                     disabled={!!editingDoc}
@@ -301,11 +324,15 @@ export function LegalDocuments() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-white/70 mb-2">Title</label>
+                  <label className="block text-sm font-medium text-white/70 mb-2">
+                    Title
+                  </label>
                   <input
                     type="text"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white/86 focus:outline-none focus:ring-2 focus:ring-primary/35"
                     placeholder="Document title"
                   />
@@ -313,10 +340,14 @@ export function LegalDocuments() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">Content (Markdown)</label>
+                <label className="block text-sm font-medium text-white/70 mb-2">
+                  Content (Markdown)
+                </label>
                 <textarea
                   value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, content: e.target.value })
+                  }
                   rows={16}
                   className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white/86 focus:outline-none focus:ring-2 focus:ring-primary/35 font-mono text-sm"
                   placeholder="Enter document content in Markdown format..."
@@ -328,18 +359,23 @@ export function LegalDocuments() {
                   type="checkbox"
                   id="is_active"
                   checked={formData.is_active}
-                  onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, is_active: e.target.checked })
+                  }
                   className="rounded border-white/20 bg-white/5 text-primary focus:ring-primary/35"
                 />
                 <label htmlFor="is_active" className="text-sm text-white/70">
-                  Set as active version (will deactivate other versions of this type)
+                  Set as active version (will deactivate other versions of this
+                  type)
                 </label>
               </div>
 
               {/* Preview */}
               {formData.content && (
                 <div>
-                  <p className="text-xs text-white/40 mb-2 uppercase tracking-wider font-semibold">Preview</p>
+                  <p className="text-xs text-white/40 mb-2 uppercase tracking-wider font-semibold">
+                    Preview
+                  </p>
                   <div className="prose prose-invert prose-sm max-w-none rounded-lg border border-white/10 bg-white/[0.02] p-4 overflow-y-auto max-h-64">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {formData.content}
@@ -375,7 +411,9 @@ export function LegalDocuments() {
           <div className="w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c12] shadow-2xl flex flex-col">
             <div className="flex items-center justify-between p-6 border-b border-white/10">
               <div>
-                <h2 className="text-xl font-bold text-white/92">{previewDoc.title}</h2>
+                <h2 className="text-xl font-bold text-white/92">
+                  {previewDoc.title}
+                </h2>
                 <p className="text-sm text-white/50">
                   Version {previewDoc.version}
                   {previewDoc.is_active && (

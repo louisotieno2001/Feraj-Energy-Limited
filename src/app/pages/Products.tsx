@@ -14,6 +14,7 @@ import { Slider } from '@/app/components/ui/slider';
 import { Checkbox } from '@/app/components/ui/checkbox';
 import { Badge } from '@/app/components/ui/badge';
 import { Button } from '@/app/components/ui/button';
+import { ProductCarousel } from '@/app/components/ProductCarousel';
 
 // --- Constants & Types ---
 
@@ -185,26 +186,24 @@ export function Products() {
       </div>
 
       <div className="relative z-10">
-        {/* Hero Section */}
+        {/* Hero Section with Product Carousel */}
         <section className="relative py-20 px-4 sm:px-6 lg:px-8 border-b border-white/5">
           <div className="mx-auto max-w-[var(--section-max-width)]">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-            >
-              <p className="cinematic-eyebrow mb-4">
-                Professional Grade • Solutions
-              </p>
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white/90 mb-6">
-                Production Systems
-              </h1>
-              <p className="text-xl text-white/50 max-w-2xl leading-relaxed">
-                Explore our curated selection of high-performance solar
-                components, engineered for reliability and maximum energy
-                yields.
-              </p>
-            </motion.div>
+              className="mb-1 text-center"
+            ></motion.div>
+
+            {/* Product Carousel */}
+            {!loading && products.length > 0 && (
+              <ProductCarousel
+                products={products}
+                autoPlay={true}
+                autoPlayInterval={5000}
+              />
+            )}
           </div>
         </section>
 

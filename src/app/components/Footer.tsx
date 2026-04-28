@@ -1,4 +1,11 @@
-import { Facebook, Twitter, Linkedin, Instagram, FileText, Globe } from 'lucide-react';
+import {
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+  FileText,
+  Globe,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function Footer() {

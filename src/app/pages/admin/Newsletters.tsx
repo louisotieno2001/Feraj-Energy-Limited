@@ -50,9 +50,13 @@ interface NewsletterRecipient {
 export function Newsletters() {
   const [newsletters, setNewsletters] = useState<Newsletter[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editingNewsletter, setEditingNewsletter] = useState<Newsletter | null>(null);
+  const [editingNewsletter, setEditingNewsletter] = useState<Newsletter | null>(
+    null
+  );
   const [isCreating, setIsCreating] = useState(false);
-  const [previewNewsletter, setPreviewNewsletter] = useState<Newsletter | null>(null);
+  const [previewNewsletter, setPreviewNewsletter] = useState<Newsletter | null>(
+    null
+  );
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [sending, setSending] = useState<string | null>(null);
@@ -162,7 +166,7 @@ export function Newsletters() {
 
         if (error) throw error;
         toast.success('Newsletter saved as draft');
-        
+
         if (data && selectedUsers.length > 0) {
           await addRecipients(data.id, selectedUsers);
         }
@@ -278,10 +282,30 @@ export function Newsletters() {
   };
 
   const statusConfig = {
-    draft: { color: 'text-gray-400', bg: 'bg-gray-400/10', icon: Edit, label: 'Draft' },
-    sending: { color: 'text-yellow-400', bg: 'bg-yellow-400/10', icon: Loader2, label: 'Sending' },
-    sent: { color: 'text-green-400', bg: 'bg-green-400/10', icon: CheckCircle, label: 'Sent' },
-    failed: { color: 'text-red-400', bg: 'bg-red-400/10', icon: XCircle, label: 'Failed' },
+    draft: {
+      color: 'text-gray-400',
+      bg: 'bg-gray-400/10',
+      icon: Edit,
+      label: 'Draft',
+    },
+    sending: {
+      color: 'text-yellow-400',
+      bg: 'bg-yellow-400/10',
+      icon: Loader2,
+      label: 'Sending',
+    },
+    sent: {
+      color: 'text-green-400',
+      bg: 'bg-green-400/10',
+      icon: CheckCircle,
+      label: 'Sent',
+    },
+    failed: {
+      color: 'text-red-400',
+      bg: 'bg-red-400/10',
+      icon: XCircle,
+      label: 'Failed',
+    },
   };
 
   if (loading) {
@@ -300,7 +324,9 @@ export function Newsletters() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-white/92">Newsletters</h1>
-          <p className="text-white/50 mt-1">Compose and send newsletters to your users</p>
+          <p className="text-white/50 mt-1">
+            Compose and send newsletters to your users
+          </p>
         </div>
         <button
           onClick={handleCreateNew}
@@ -331,16 +357,23 @@ export function Newsletters() {
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-medium text-white/90">{newsletter.subject}</h3>
-                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${config.bg} ${config.color}`}>
-                          <StatusIcon className={`h-3 w-3 ${newsletter.status === 'sending' ? 'animate-spin' : ''}`} />
+                        <h3 className="font-medium text-white/90">
+                          {newsletter.subject}
+                        </h3>
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${config.bg} ${config.color}`}
+                        >
+                          <StatusIcon
+                            className={`h-3 w-3 ${newsletter.status === 'sending' ? 'animate-spin' : ''}`}
+                          />
                           {config.label}
                         </span>
                       </div>
                       <div className="flex items-center gap-4 text-xs text-white/50">
                         <span className="flex items-center gap-1">
                           <Users className="h-3 w-3" />
-                          {newsletter.recipient_count} recipient{newsletter.recipient_count !== 1 ? 's' : ''}
+                          {newsletter.recipient_count} recipient
+                          {newsletter.recipient_count !== 1 ? 's' : ''}
                         </span>
                         <span className="flex items-center gap-1">
                           <Mail className="h-3 w-3" />
@@ -400,7 +433,9 @@ export function Newsletters() {
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/10">
               <h2 className="text-xl font-bold text-white/92">
-                {editingNewsletter ? 'Edit Newsletter' : 'Create New Newsletter'}
+                {editingNewsletter
+                  ? 'Edit Newsletter'
+                  : 'Create New Newsletter'}
               </h2>
               <button
                 onClick={handleCancel}
@@ -414,11 +449,15 @@ export function Newsletters() {
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               {/* Subject */}
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">Subject</label>
+                <label className="block text-sm font-medium text-white/70 mb-2">
+                  Subject
+                </label>
                 <input
                   type="text"
                   value={formData.subject}
-                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, subject: e.target.value })
+                  }
                   className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white/86 focus:outline-none focus:ring-2 focus:ring-primary/35"
                   placeholder="Newsletter subject"
                 />
@@ -426,10 +465,14 @@ export function Newsletters() {
 
               {/* Content */}
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">Content (Markdown)</label>
+                <label className="block text-sm font-medium text-white/70 mb-2">
+                  Content (Markdown)
+                </label>
                 <textarea
                   value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, content: e.target.value })
+                  }
                   rows={12}
                   className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white/86 focus:outline-none focus:ring-2 focus:ring-primary/35 font-mono text-sm"
                   placeholder="Enter newsletter content in Markdown format..."
@@ -439,7 +482,9 @@ export function Newsletters() {
               {/* Preview */}
               {formData.content && (
                 <div>
-                  <p className="text-xs text-white/40 mb-2 uppercase tracking-wider font-semibold">Preview</p>
+                  <p className="text-xs text-white/40 mb-2 uppercase tracking-wider font-semibold">
+                    Preview
+                  </p>
                   <div className="prose prose-invert prose-sm max-w-none rounded-lg border border-white/10 bg-white/[0.02] p-4 overflow-y-auto max-h-64">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {formData.content}
@@ -474,7 +519,9 @@ export function Newsletters() {
                         className="rounded border-white/20 bg-white/5 text-primary focus:ring-primary/35"
                       />
                       <div className="flex-1">
-                        <p className="text-sm text-white/80">{user.full_name || 'Unnamed User'}</p>
+                        <p className="text-sm text-white/80">
+                          {user.full_name || 'Unnamed User'}
+                        </p>
                         <p className="text-xs text-white/50">{user.email}</p>
                       </div>
                       {selectedUsers.includes(user.id) && (
@@ -489,7 +536,8 @@ export function Newsletters() {
             {/* Modal Footer */}
             <div className="flex items-center justify-between p-6 border-t border-white/10">
               <p className="text-sm text-white/50">
-                {selectedUsers.length} recipient{selectedUsers.length !== 1 ? 's' : ''} selected
+                {selectedUsers.length} recipient
+                {selectedUsers.length !== 1 ? 's' : ''} selected
               </p>
               <div className="flex items-center gap-3">
                 <button
@@ -517,9 +565,12 @@ export function Newsletters() {
           <div className="w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c12] shadow-2xl flex flex-col">
             <div className="flex items-center justify-between p-6 border-b border-white/10">
               <div>
-                <h2 className="text-xl font-bold text-white/92">{previewNewsletter.subject}</h2>
+                <h2 className="text-xl font-bold text-white/92">
+                  {previewNewsletter.subject}
+                </h2>
                 <p className="text-sm text-white/50 mt-1">
-                  Created: {new Date(previewNewsletter.created_at).toLocaleString()}
+                  Created:{' '}
+                  {new Date(previewNewsletter.created_at).toLocaleString()}
                 </p>
               </div>
               <button

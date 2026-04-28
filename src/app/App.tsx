@@ -239,7 +239,10 @@ export default function App() {
                   path="partnership-requests"
                   element={<AdminPartnershipRequests />}
                 />
-                <Route path="legal-documents" element={<AdminLegalDocuments />} />
+                <Route
+                  path="legal-documents"
+                  element={<AdminLegalDocuments />}
+                />
                 <Route path="newsletters" element={<AdminNewsletters />} />
                 <Route path="orders" element={<Orders />} />
               </Route>

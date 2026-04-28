@@ -77,7 +77,8 @@ export function PrivacyPolicy() {
           {document && (
             <p className="text-white/50 flex items-center gap-2">
               <Calendar className="h-4 w-4" />
-              Last updated: {new Date(document.updated_at).toLocaleDateString('en-US', {
+              Last updated:{' '}
+              {new Date(document.updated_at).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
@@ -100,7 +101,9 @@ export function PrivacyPolicy() {
             <div className="text-center py-12">
               <Globe className="h-12 w-12 mx-auto mb-4 text-white/20" />
               <p className="text-white/50">Privacy Policy not available yet.</p>
-              <p className="text-sm text-white/30 mt-2">Please check back later.</p>
+              <p className="text-sm text-white/30 mt-2">
+                Please check back later.
+              </p>
             </div>
           )}
         </div>

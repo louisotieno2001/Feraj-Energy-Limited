@@ -25,7 +25,8 @@ serve(async (req) => {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'POST',
-          'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+          'Access-Control-Allow-Headers':
+            'authorization, x-client-info, apikey, content-type',
         },
       });
     }
@@ -40,7 +41,8 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2.39.3');
+    const { createClient } =
+      await import('https://esm.sh/@supabase/supabase-js@2.39.3');
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch newsletter
@@ -75,7 +77,11 @@ serve(async (req) => {
       .update({ status: 'sending' })
       .eq('id', newsletter_id);
 
-    const emailResults = await sendNewsletterEmails(newsletter, recipients, supabase);
+    const emailResults = await sendNewsletterEmails(
+      newsletter,
+      recipients,
+      supabase
+    );
 
     // Update newsletter status to 'sent' if all successful
     const allSent = emailResults.every((r: any) => r.success);
@@ -108,7 +114,8 @@ serve(async (req) => {
     try {
       const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
       const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2.39.3');
+      const { createClient } =
+        await import('https://esm.sh/@supabase/supabase-js@2.39.3');
       const supabase = createClient(supabaseUrl, supabaseKey);
 
       const { newsletter_id } = await req.json().catch(() => ({}));
@@ -122,16 +129,13 @@ serve(async (req) => {
       console.error('Failed to update newsletter status:', e);
     }
 
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
   }
 });
 
@@ -177,7 +181,11 @@ async function sendNewsletterEmails(
         })
         .eq('id', recipient.id);
 
-      results.push({ recipient: recipient.email, success: false, error: error.message });
+      results.push({
+        recipient: recipient.email,
+        success: false,
+        error: error.message,
+      });
     }
   }
 
