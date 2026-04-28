@@ -1,33 +1,22 @@
-import { Building2, Handshake, Globe2, Award } from 'lucide-react';
+import { Building2, Handshake, Globe2, Award} from 'lucide-react';
 
 export function Partnerships() {
   const partners = [
     {
-      name: 'Tesla Energy',
-      type: 'Technology Partner',
-      description: 'Integrated battery solutions',
+      name: 'CDG International Group',
+      type: 'Strategic Partner',
+      description: 'Make the world more connectible, Make the cities more livable',
+      details: {
+        website: 'www.cdg.com.cn',
+        address: 'No.9 Ziyun Avenue, Nanjing, Jiangsu Province, China',
+        postalCode: '210014',
+        switchboard: '+86-25-88018888',
+        fax: '+86-25-84405744',
+        about: 'Founded in 1960, CDG International Group is a leading full-service engineering consulting and technology provider in China, focusing on transportation and urban-rural infrastructure. With over 6200 employees and a global presence, CDG is committed to creating a more connectible world and promoting livable cities.',
+        mission: 'To create a more connectible world and promote more livable cities. Aims to create exceptional value for customers through excellent technologies and impeccable services.',
+        vision: 'To become a top provider of technologies and services in transportation development and urban construction industries.',
+      }
     },
-    {
-      name: 'Google',
-      type: 'Data Analytics',
-      description: 'AI-powered energy optimization',
-    },
-    {
-      name: 'Microsoft Azure',
-      type: 'Cloud Services',
-      description: 'IoT and monitoring platform',
-    },
-    {
-      name: 'LG Electronics',
-      type: 'Manufacturing',
-      description: 'Solar panel production',
-    },
-    {
-      name: 'Schneider Electric',
-      type: 'Distribution',
-      description: 'Global supply chain',
-    },
-    { name: 'ABB', type: 'Automation', description: 'Smart grid technology' },
   ];
 
   return (
@@ -72,7 +61,7 @@ export function Partnerships() {
               </div>
               <h3 className="text-xl font-bold mb-4 text-white/90">Industry Leader</h3>
               <p className="text-white/50 text-sm leading-relaxed">
-                25+ years of solar innovation excellence
+                3+ years of solar innovation excellence
               </p>
             </div>
 
@@ -82,7 +71,7 @@ export function Partnerships() {
               </div>
               <h3 className="text-xl font-bold mb-4 text-white/90">Enterprise Scale</h3>
               <p className="text-white/50 text-sm leading-relaxed">
-                500K+ installations generating 2.5GW capacity
+                50+ installations generating 2.5GW capacity
               </p>
             </div>
 
@@ -111,6 +100,18 @@ export function Partnerships() {
                   {partner.name}
                 </h3>
                 <p className="text-white/50 leading-relaxed text-sm">{partner.description}</p>
+                
+                {/* CDG Details - Conditionally render */}
+                {partner.name === 'CDG International Group' && partner.details && (
+                  <div className="mt-6 text-left text-sm text-white/50 leading-relaxed space-y-2">
+                    <p>{partner.details.about}</p>
+                    <p className="font-semibold text-white/70">Mission: {partner.details.mission}</p>
+                    <p className="font-semibold text-white/70">Vision: {partner.details.vision}</p>
+                    <p>Website: <a href={`http://${partner.details.website}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{partner.details.website}</a></p>
+                    <p>Address: {partner.details.address}</p>
+                    <p>Switchboard: {partner.details.switchboard} | Fax: {partner.details.fax}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
